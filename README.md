@@ -1,4 +1,5 @@
 <img src="microbepy_logo.png" alt="drawing" width="200"/>
+
 # MicrobEPy (Pronounced "microbe pie")
 
 Python package for analysis of the evolutionary dynamics of microbial communities.
