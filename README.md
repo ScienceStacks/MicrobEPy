@@ -1,4 +1,6 @@
 # PyMicrobE
+![](microbepy_logo.png)
+
 Python package for analysis of the evolutionary dynamics of microbial communities.
 
 This package provides python tools for analyzing the evolution of microbial communities in support of two research questions:
