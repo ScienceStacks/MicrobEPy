@@ -1,7 +1,7 @@
 import os
 import sys
 
-PROJECT_ROOT = "coevolution"
+PROJECT_ROOT = "MicrobEPy"
 
 def getProjectDirectory():
   """
@@ -22,8 +22,7 @@ def getProjectDirectory():
     raise RuntimeError("Could not find project path.")
   return path
 
-path = os.path.join(getProjectDirectory(), "Code")
-path = os.path.join(path, "Python")
+path = os.path.join(getProjectDirectory(), PROJECT_ROOT)
 sys.path.append(path)  # Get the directory for python code
 from project_base import addPythonPaths
 addPythonPaths()
