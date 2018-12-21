@@ -75,7 +75,7 @@ class RangeConstraintVector(object):
 
   def __repr__(self):
     stgs = ["%s: %s" % (str(k), str(c))
-        for k, c in self.constraints.iteritems()]
+        for k, c in self.constraints.items()]
     return ", ".join(stgs)
 
   def update(self, name, value):

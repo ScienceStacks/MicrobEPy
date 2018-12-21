@@ -22,18 +22,15 @@ class CombinationIterator(object):
     self._current_size = 0
 
   def __iter__(self):
-    return self
-
-  def next(self):
     while True:
       if self._combination_iterator is None:
         self._current_size += 1
         if self._current_size > self._max_size:
-          raise StopIteration
+          break
         self._combination_iterator = itertools.combinations(
             self._elements, self._current_size)
       for vals in self._combination_iterator:
         vals = [v for v in vals]
         if not vals in self._excludes:
-          return vals
+          yield vals
       self._combination_iterator = None

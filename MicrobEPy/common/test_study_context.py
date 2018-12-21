@@ -75,7 +75,7 @@ class TestStudyContextIterator(unittest.TestCase):
         study_context.nextStudyContext(specification=SPECIFICATION):
       self.results.append(ctx)
     length = 1
-    for _, value in SPECIFICATION.iteritems():
+    for _, value in SPECIFICATION.items():
       length *= len(value)
     self.assertEqual(len(self.results), length)
 

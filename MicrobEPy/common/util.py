@@ -57,10 +57,10 @@ def toNumber(obj):
 
 def isStr(obj):
   """
-  :return bool: True if string or unicode
+  :return bool: True if string or bytes
   """
   type_string = str(type(obj))
-  if 'str' in type_string or 'unicode' in type_string:
+  if 'str' in type_string or 'bytes' in type_string:
     return True
   else:
     return False
@@ -166,15 +166,6 @@ def getODTimeseriesDataPath(filename):
   return getPath([getRootDataDirectory(),
       "growth_data", "OD_timeseries"],  filename)
 
-def makeDataframeFromXlsx(path, sheet_no=0):
-  """
-  Creates a dataframe from an xlsx file in a data directory
-  :param str path: Path to data files
-  :param int sheet_no: Number of the worksheet
-  """
-  data = pd.ExcelFile(path)
-  return data.parse(sheet_no)
-
 def getGeneNamesFromList(columns):
   """
   :param list-of-str columns: list of names, some of which are genes
@@ -192,7 +183,7 @@ def getGeneNamesFromList(columns):
 def isStr(v):
   if isinstance(v, str):
     return True
-  if isinstance(v, unicode):
+  if isinstance(v, bytes):
     return True
 
 def messageConsole(msg):
@@ -207,7 +198,7 @@ def isNan(v):
 def isNull(v):
   if isNan(v):
     return True
-  singleton_types = [str, int, unicode, types.NoneType]
+  singleton_types = [str, int, bytes, type(None)]
   if any([isinstance(v, t) for t in singleton_types]):
     if v is None:
       return True
@@ -424,21 +415,13 @@ def addNullRow(df, null=np.nan):
 
 def getDBPath():
   filename = "%s.db" % cn.DB_NAME
+  return getPath([getProjectDirectory(), cn.DB_PATH],
+        filename)
+
   return getDataModelPath(filename)
 
 def getDBConnection():
   return sql.connect(getDBPath())
-
-def makeCSVFilename(identifier):
-  """
-  :param TableSchema/str identifier:
-  :return str: CSV file for the schema
-  """
-  if isStr(identifier):
-    filename = identifier
-  elif isinstance(identifier, schema.TableSchema):
-    filename = identifier.name
-  return "%s.csv" % filename
 
 def getDuplicates(values):
   """
@@ -625,28 +608,6 @@ def unifyNullValues(df_value):
   """
   return df_value.fillna(value=np.nan)
   #return df_value.applymap(lambda v: cn.NONE if isNull(v) else v)
-
-def readDataModelCSV(filename):
-  """
-  Reads the CSV for the file or table. Does fixups on data.
-  :param str or TableSchema filename: filename with or without .csv extension
-  :return pd.DataFrame:
-  """
-  def makeCSVFilename(ffile):
-    name = "%s.csv" % ffile
-    return name
-  #
-  csv_file = str(filename)
-  if isinstance(filename, schema.TableSchema):
-    csv_file = makeCSVFilename(filename.name)
-  elif not filename.count(".csv") > 0:
-    csv_file = makeCSVFilename(filename)
-  path = getDataModelPath(csv_file)
-  df = unifyNullValues(pd.read_csv(path))
-  if cn.INDEX in df.columns:
-    del df[cn.INDEX]
-  pruneNullRows(df)
-  return df
 
 def pruneNullRows(df):
   """
@@ -1103,41 +1064,3 @@ def getIsolatesFromIndices(indices):
   for idx, key in enumerate(keys):
     result[key] = [v[idx] for v in indices.values]
   return result
-
-
-########################################
-# Classes
-#######################################
-class CatConverter(object):
-  """Convert between categorical data and integer encoding."""
-
-  def __init__(self, categoricals):
-    """
-    :param list categoricals: list (possibly redundant) of
-                              the categorical values
-    """
-    self.categoricals = list(set(categoricals))
-    self.categoricals.sort()
-      
-  def encode(self, value):
-    """
-    Encodes categoricals as integers
-    :param categorical or list-of-categorical:
-    :return int or list-of-int:
-    """
-    if isinstance(value, list):
-      result = [self.categoricals.index(v) for v in value]
-    else:
-      result = self.categoricals.index(value)
-    return result
-  
-  def decode(self, value):
-    """
-    Decodes categoricals into original values.
-    :param int or list-of-int:
-    :return categorical or list-of-categorical:
-    """
-    if isinstance(value, list):
-      return [self.categoricals[v] for v in value]
-    else:
-      return self.categoricals[value]

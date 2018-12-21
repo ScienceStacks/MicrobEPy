@@ -55,7 +55,7 @@ def isValidDataFrame(df, expected_columns, min_rows=1,
         import pdb; pdb.set_trace()
       return False
   if valid_dict is not None:
-    for col, func in valid_dict.iteritems():
+    for col, func in valid_dict.items():
       trues = [func(x) for x in df[col]]
       if not all(trues):
         import pdb; pdb.set_trace()

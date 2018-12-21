@@ -4,7 +4,7 @@ import os
 import sys
 
 
-PROJECT_ROOT = "coevolution"
+PROJECT_ROOT = "MicrobEPy"
 PYTHON_SUBDIRECTORIES = [
     "statistics", "model", "data_access", "correlation",
     "data", "plot", "search", "common",

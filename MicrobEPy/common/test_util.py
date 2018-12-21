@@ -1,5 +1,4 @@
 import __init__
-from api import Api
 import helpers
 import util
 
@@ -20,11 +19,11 @@ COL_B = 'b'
 COL_C = 'c'
 COL_D = 'd'
 SIZE = 10
-DATA = range(10)
+DATA = list(range(10))
 COLUMNS = [COL_A, COL_B, COL_C]
 DATAFRAME = pd.DataFrame()
 for column in COLUMNS:
-  DATAFRAME [column] = range(SIZE)
+  DATAFRAME [column] = list(range(SIZE))
 
 ################## HELPERS #################
 makeData = lambda: [random.normalvariate(0, 1) for _ in range(SIZE)]
@@ -115,7 +114,8 @@ class TestFunctions(unittest.TestCase):
     if IGNORE_TEST:
       return
     length = 10
-    df = pd.DataFrame({'a': range(length), 'b': range(length)})
+    df = pd.DataFrame({'a': list(range(length)), 
+        'b': list(range(length))})
     b, columns = util.isNanInDataFrame(df)
     self.assertFalse(b)
     self.assertEqual(len(columns), 0)
@@ -136,7 +136,7 @@ class TestFunctions(unittest.TestCase):
   def testGetColumnsFromDataFrame(self):
     if IGNORE_TEST:
       return
-    data = range(10)
+    data = list(range(10))
     col = 'a'
     df = pd.DataFrame({col: data, 'b': data})
     df2 = util.getColumnsFromDataFrame(df, [col])
@@ -221,12 +221,6 @@ class TestFunctions(unittest.TestCase):
     self.assertTrue(np.isclose(df['a'].sum(), 0))
     self.assertTrue(np.isclose(df['b'].sum(), 0))
     self.assertTrue(np.isclose(np.std(df['a'].tolist()), 1))
-
-  def testMakeDataframeFromXlsx(self):
-    if IGNORE_TEST:
-      return
-    test_file = util.getSequenceDataPath("dvh_mutations.xlsx")
-    df = util.makeDataframeFromXlsx(test_file)
 
   def testDeleteColumns(self):
     if IGNORE_TEST:
@@ -377,44 +371,25 @@ class TestFunctions(unittest.TestCase):
     self.assertTrue(util.isNumber(True))
     self.assertFalse(util.isNumber('a'))
 
-  def testReadDataModelCSV(self):
-    if IGNORE_TEST:
-      return
-    def test(filename):
-      expecteds = set(
-          cn.TABLE_SCHEMAS.getSchema(cn.TABLE_ISOLATE).columns)
-      df = util.readDataModelCSV(filename)
-      self.assertEqual(set(df.columns), expecteds)
-    #
-    test(cn.TABLE_ISOLATE)
-    test("%s.csv" % cn.TABLE_ISOLATE)
-    test(cn.TABLE_SCHEMAS.getSchema(cn.TABLE_ISOLATE))
-
-  def testReadDataModelCSVCulture(self):
-    if IGNORE_TEST:
-      return
-    df = util.readDataModelCSV(cn.TABLE_CULTURE)
-    nulls = [r for _,r in df.iterrows() 
-             if util.isNull(r[cn.KEY_CULTURE])]
-    self.assertTrue(len(nulls) == 0)
-
   def testUnifyNullValuesList(self):
     if IGNORE_TEST:
       return
+    def makeDF(values):
+      return pd.DataFrame({'a': values})
+    #
     values = range(10)
-    df_value = pd.DataFrame(values)
+    df_value = makeDF(values)
     df_result = util.unifyNullValues(df_value)
     self.assertTrue(df_value.equals(df_result))
-    values = pd.DataFrame([0, np.nan, 2])
-    df_value = pd.DataFrame(values)
+    df_value = pd.DataFrame(makeDF([0, np.nan, 2]))
     df_result = util.unifyNullValues(df_value)
     self.assertTrue(df_value.equals(df_result))
     values = [None, np.nan, 2.0]
-    df_value = pd.DataFrame(values)
+    df_value = pd.DataFrame(makeDF(values))
     df_result = util.unifyNullValues(df_value)
     expected = list(values)
     expected[0] = cn.NONE
-    df_expected = pd.DataFrame(expected)
+    df_expected = pd.DataFrame(makeDF(expected))
     self.assertTrue(df_result.equals(df_result))
 
   def testUnifyNullValuesDF(self):
@@ -452,17 +427,6 @@ class TestFunctions(unittest.TestCase):
     df_new = util.pruneNullRows(df)
     df_expected = df.loc[0:1,:]
     self.assertTrue(df_expected.equals(df_new))
-
-  def testMakeCSVFilename(self):
-    if IGNORE_TEST:
-      return
-    expected = "isolate.csv"
-    self.assertEqual(util.makeCSVFilename(cn.TABLE_ISOLATE),
-        expected)
-    self.assertEqual(
-        util.makeCSVFilename(
-        cn.TABLE_SCHEMAS.getSchema(cn.TABLE_ISOLATE)),
-        expected)
 
   def testPruneRowsWithNullColumns(self):
     if IGNORE_TEST:
@@ -549,9 +513,9 @@ class TestFunctions(unittest.TestCase):
   def testMakeMatrix(self):
     if IGNORE_TEST:
       return
-    api_object = Api()
+    df_base = util.readSQL("select * from genotype_phenotype")
     def test(row_name, column_name):
-      df = api_object.makeDF(columns=[row_name, column_name])
+      df = df_base[[row_name, column_name]].copy()
       df[cn.COUNT] = 1
       df_matrix = util.makeMatrix(df, row_name=row_name,
           column_name=column_name)
@@ -594,7 +558,9 @@ class TestFunctions(unittest.TestCase):
     self.assertGreater(mean3, mean1)
 
   def testTrimExtremeValues(self):
-    values = range(11)
+    if IGNORE_TEST:
+      return
+    values = list(range(11))
     values.append(100)
     new_values1 = util.trimExtremeValues(values, 100)
     self.assertEqual(values, new_values1)
@@ -798,31 +764,6 @@ class TestFunctions(unittest.TestCase):
     self.assertTrue(helpers.isValidDataFrame(df,
       [cn.GGENE_ID, cn.GENE_DESC]))
     self.assertEqual(len(ggene_ids), len(df.index) + 1)
-
-
-#######################################################
-CATEGORICALS = ['a', 'a', 'b', 'c', 'a', 'c']
-EXPECTED_ENCODING = [0, 0, 1, 2, 0, 2]
-
-class TestCatConverter(unittest.TestCase):
-
-  def setUp(self):
-    self.cc = util.CatConverter(CATEGORICALS)
-
-  def testEncode(self):
-    if IGNORE_TEST:
-      return
-    result = self.cc.encode('b')
-    self.assertEqual(1, result)
-    result = self.cc.encode(CATEGORICALS)
-    self.assertEqual(result, EXPECTED_ENCODING)
-
-  def testDecode(self):
-    if IGNORE_TEST:
-      return
-    self.assertEqual(self.cc.decode(0), 'a')
-    self.assertEqual(self.cc.decode(self.cc.encode(CATEGORICALS)), 
-        CATEGORICALS)
     
 
 if __name__ == '__main__':

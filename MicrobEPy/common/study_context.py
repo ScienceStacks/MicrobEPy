@@ -33,7 +33,7 @@ class StudyContext(dict):
     """
     self.kwargs = kwargs
     # Create instance variables
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
       setattr(self, key, value)
 
   def __repr__(self):

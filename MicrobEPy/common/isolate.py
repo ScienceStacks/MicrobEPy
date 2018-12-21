@@ -174,7 +174,7 @@ class Isolate(object):
     """
     cls = self.__class__
     count = 0
-    for _,f in cls.TYPE_DICT.iteritems():
+    for _,f in cls.TYPE_DICT.items():
       if f(self):
         count += 1
     if count == 0:
