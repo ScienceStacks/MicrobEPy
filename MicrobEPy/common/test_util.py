@@ -81,7 +81,7 @@ class TestFunctions(unittest.TestCase):
   def testGetDataPaths(self):
     if IGNORE_TEST:
       return
-    path = util.getDataModelPath("culture.csv")
+    path = util.getDataModelPath(cn.DB_NAME + ".db")
     def test(func, is_directory=False):
       if is_directory:
         path = func()
@@ -91,10 +91,6 @@ class TestFunctions(unittest.TestCase):
  
     funcs = [
         util.getDataModelPath,
-        util.getReferenceDataPath,
-        util.getSequenceDataPath,
-        util.getRateYieldDataPath,
-        util.getODTimeseriesDataPath,
         ]
     test(util.getRootDataDirectory, is_directory=True)
     for func in funcs:
@@ -532,19 +528,21 @@ class TestFunctions(unittest.TestCase):
     test(cn.LINE, cn.GENE_POSITION)
 
   def testRemoveDuplicatesFromList(self):
-    if IGNORE_TEST:
-      return
     def test(values, trimmed_values):
       new_values = util.removeDuplicatesFromList(values)
-      self.assertEqual(new_values, trimmed_values)
+      if isinstance(values[0], list):
+        self.assertEqual(new_values, trimmed_values)
+      else:
+        self.assertEqual(set(new_values), set(trimmed_values))
     #
+    test(['1', '2'], ['1', '2'])
     test([1, 2], [1, 2])
     test([1, 1, 2], [1, 2])
-    test(['1', '2'], ['1', '2'])
     test(['1', '1', '2'], ['1', '2'])
-    test([['a', 'b'], ['c', 'd'], ['a', 'b']],
-        [['a', 'b'], ['c', 'd']])
     test([['a', 'b'], ['c', 'd']],
+        [['a', 'b'], ['c', 'd']])
+    #
+    test([['a', 'b'], ['c', 'd'], ['a', 'b']],
         [['a', 'b'], ['c', 'd']])
 
   def testNormalizedMean(self):

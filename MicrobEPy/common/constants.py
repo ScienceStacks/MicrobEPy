@@ -8,7 +8,6 @@ import numpy as np
 
 # Database
 DB_NAME = "microbepy"
-DB_PATH = "data"
 
 # Species
 SPECIES_MIX_DVH = 'D'

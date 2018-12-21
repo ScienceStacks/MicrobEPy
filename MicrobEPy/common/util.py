@@ -415,10 +415,8 @@ def addNullRow(df, null=np.nan):
 
 def getDBPath():
   filename = "%s.db" % cn.DB_NAME
-  return getPath([getProjectDirectory(), cn.DB_PATH],
-        filename)
-
-  return getDataModelPath(filename)
+  path = getDataModelPath(filename)
+  return path
 
 def getDBConnection():
   return sql.connect(getDBPath())
@@ -732,21 +730,26 @@ def makeMatrix(df,
   df_result = df_result.applymap(lambda x: 0 if isNull(x) else x)
   return df_result
 
+def set2list(aSet):
+  return [x for x in aSet]
+
 def removeDuplicatesFromList(values):
   """
   Trims the list to remove duplicates. List elements
   may be a string or a list of strings or int.
+  Order is not preserved.
   :param list-of-str or list-of-list-of-other values:
   :return list-of-inputtype:
   """
   if isStr(values[0]) or isNumber(values[0]):
-    return list(set(values))
+    new_values = set(values)
+    return set2list(new_values)
   else:
     df = pd.DataFrame(values)
     df = df.drop_duplicates()
     results = []
     for _,row in df.iterrows():
-      results.append(row.to_dict().values())
+      results.append([v for v in row.to_dict().values()])
     return results
 
 def getParentClass(cls):
