@@ -415,9 +415,9 @@ class MutationLinePlot(MutationPlot):
     plot_pos = {1:1, 2:3, 3:4, 4:6, 5: 7}
     transfers = self.getTransfers()
     if is_time_lag:
-      pairs = zip(transfers[0:-1], transfers[1:])
+      pairs = [p for p in zip(transfers[0:-1], transfers[1:])]
     else:
-      pairs = zip(transfers[:-1], transfers[:-1])
+      pairs = [p for p in zip(transfers[:-1], transfers[:-1])]
     #
     nrows = 2 if (len(pairs) == 4) else 3
     fig = plt.figure(figsize=parms[cn.PLT_FIGSIZE])

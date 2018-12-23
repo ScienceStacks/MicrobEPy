@@ -513,7 +513,7 @@ class AncestralPairingIsolateRegression(IsolateRegression):
           keys.append(im.BETA_AVG)
         if len(keys) == 0:
           return None
-        X = df_predictor[keys].as_matrix()
+        X = df_predictor[keys].values
         y = df_predictor[cn.DEPVAR].tolist()
         lr = linear_model.LinearRegression(fit_intercept=True, copy_X=True)
         fit = lr.fit(X, y)
