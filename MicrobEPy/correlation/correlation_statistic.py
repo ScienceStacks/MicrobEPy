@@ -115,6 +115,12 @@ class SetSignificanceLevel(object):
 #####################################
 # Functions
 #####################################
+def multlist(values):
+  result = 1
+  for value in values:
+    result *= value
+  return result
+
 def NChooseR(n, r):
   if r < 0:
     return 0
@@ -124,8 +130,8 @@ def NChooseR(n, r):
     return 0
   r = min(r, n-r)
   if r == 0: return 1
-  numer = reduce(op.mul, xrange(n, n-r, -1))
-  denom = reduce(op.mul, xrange(1, r+1))
+  numer = multlist(range(n, n-r, -1))
+  denom = multlist(range(1, r+1))
   return numer//denom
 
 def calcSimpleProb(M, n_1, n_2, k):

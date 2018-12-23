@@ -16,8 +16,9 @@ def addPythonPaths():
   Adds the paths needed for python code.
   """
   project_dir = getProjectDirectory()
-  main_code_path = os.path.join(project_dir, "Code")
-  main_code_path = os.path.join(main_code_path, "Python")
+  # Directory of python codes
+  main_code_path = os.path.join(project_dir, PROJECT_ROOT)
+  # Directory of python codes
   sys.path.append(main_code_path)
   for directory in PYTHON_SUBDIRECTORIES:
     path = os.path.join(main_code_path, directory)

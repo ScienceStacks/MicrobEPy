@@ -99,7 +99,7 @@ class TestGenomeCorrelation(unittest.TestCase):
         df_trues = df.applymap(
             lambda v: ((v <= 1) and (v >= 0) )
                       or np.isclose(v, 1.0))
-        trues = [x for x in c for c in df_trues.as_matrix()]
+        trues = [[x for x in c] for c in df_trues.values]
         if not all(trues):
           import pdb; pdb.set_trace()
         self.assertTrue(all(trues))

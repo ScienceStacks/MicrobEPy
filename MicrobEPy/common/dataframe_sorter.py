@@ -5,6 +5,7 @@ import util
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
+import warnings
 
 
 CLASS = "class"
@@ -33,7 +34,9 @@ class DataframeSorter(object):
     df_result = self._df.copy()
     df_result = df_result.applymap(lambda v: 0 if np.isnan(v) else v)
     # Construct cluster groups
-    kmeans = KMeans(n_clusters=n_clusters).fit(df_result)
+    with warnings.catch_warnings():
+      warnings.simplefilter("ignore")
+      kmeans = KMeans(n_clusters=n_clusters).fit(df_result)
     df_result[CLASS] = kmeans.labels_
     # Compute group score
     df_result[SCORE] = df_result.sum(axis=1)

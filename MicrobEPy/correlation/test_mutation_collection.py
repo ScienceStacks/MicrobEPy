@@ -65,6 +65,8 @@ class TestMutationCollection(unittest.TestCase):
         len(collection.groups))
     
   def testPlot(self):
+    if IGNORE_TEST:
+      return
     # Smoke tests
     self.collection.plot()
     collection = MutationCollection.makeMutationCollectionForLine(

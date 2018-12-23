@@ -92,6 +92,8 @@ class TestCorrelationGroup(unittest.TestCase):
     test(cg.KMEANS, cg.FRAC_DICT)
 
   def testMakeCorrelationGroupDF(self):
+    if IGNORE_TEST:
+      return
     species = cn.SPECIES_MIX_DVH
     line_row = 'HA2'
     line_col = 'HR2'
@@ -101,13 +103,11 @@ class TestCorrelationGroup(unittest.TestCase):
       df = dfs[key]
       self.assertTrue(helpers.isValidDataFrame(df, df.columns))
       for column in df.columns:
-        self.assertTrue(isinstance(column, int))
+        self.assertTrue(isinstance(column, np.int64))
       for idx in df.index:
         self.assertTrue(isinstance(idx, int))
 
   def testMakeCorrelationGroupDF2(self):
-    if IGNORE_TEST:
-      return
     dfs = cg.CorrelationGroup.makeCorrelationGroupDF(cn.SPECIES_MIX_MMP, 
         'HA2', 'HR2')
     self.assertIsNone(dfs)

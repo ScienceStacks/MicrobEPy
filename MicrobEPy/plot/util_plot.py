@@ -34,7 +34,7 @@ class PlotParms(dict):
     :param str attr:
     :return bool: True if attribute is present and True
     """
-    if self.has_key(attr):
+    if attr in self:
       return self.get(attr)
     else:
       return False
@@ -50,7 +50,7 @@ class PlotParms(dict):
     """
     :param str attr:
     """
-    if not self.has_key(attr):
+    if not attr in self:
       self.setattr(attr, True)
     
   def do(self, is_plot=True):
@@ -58,7 +58,7 @@ class PlotParms(dict):
     plt.ylabel(self[cn.PLT_YLABEL])
     plt.title(self[cn.PLT_TITLE])
     # if no entry for PLT_LEGEND, take no action
-    if self.has_key(cn.PLT_LEGEND):
+    if cn.PLT_LEGEND in self:
       if self[cn.PLT_LEGEND] is None:
         plt.legend("")
       else:
@@ -66,7 +66,7 @@ class PlotParms(dict):
     if is_plot:
       plt.show()
       plt.close()
-    if self.has_key(cn.PLT_XLIM):
+    if cn.PLT_XLIM in self:
       plt.xlim(self[cn.PLT_XLIM])
-    if self.has_key(cn.PLT_YLIM):
+    if cn.PLT_YLIM in self:
       plt.ylim(self[cn.PLT_YLIM])

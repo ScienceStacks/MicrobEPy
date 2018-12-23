@@ -14,6 +14,7 @@ import numpy as np
 import os
 import pandas as pd
 from sklearn.cluster import KMeans
+import warnings
 
 
 # Clustering algorithms
@@ -84,7 +85,7 @@ class CorrelationGroup(object):
       df = df.applymap(lambda x: -np.log(max(x, SMALL_VALUE)))
     else:
       df = df.applymap(lambda x: -np.log(x))
-    return df.as_matrix()
+    return df.values
 
   def makeKmeansGroups(self, num_groups):
     """
@@ -95,8 +96,10 @@ class CorrelationGroup(object):
     """
     #
     matrix = self._makeMatrix()  # 2-d array with normalized values
-    kmeans = KMeans(
-        n_clusters=num_groups, random_state=0).fit(matrix)
+    with warnings.catch_warnings():
+      warnings.simplefilter("ignore")
+      kmeans = KMeans(
+          n_clusters=num_groups, random_state=0).fit(matrix)
     df = pd.DataFrame({
         cn.CATEGORICAL: self.categoricals,
         cn.GROUP: kmeans.labels_
@@ -279,8 +282,10 @@ class CorrelationGroup(object):
     """
     matrix = self._makeMatrix()
     def calc(num):
+      with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
         kmeans = KMeans(n_clusters=num, random_state=0).fit(matrix)
-        return kmeans.inertia_
+      return kmeans.inertia_
     #
     sizes = range(1, len(self.categoricals))
     ssqs = [calc(num) for num in sizes]

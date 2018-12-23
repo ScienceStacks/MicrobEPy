@@ -40,7 +40,7 @@ class TestFunctions(unittest.TestCase):
     nulls = [r for _,r in df.iterrows() 
              if util.isNull(r[cn.KEY_CULTURE])]
     self.assertTrue(len(nulls) == 0)
-
+ 
   def testMakeDataframeFromXlsx(self):
     if IGNORE_TEST:
       return
