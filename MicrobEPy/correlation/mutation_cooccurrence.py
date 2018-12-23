@@ -170,7 +170,7 @@ class MutationCooccurrence(object):
     df_X_final = df_X[columns]
     # FInd the common mutations
     ser = df_X_final.product()
-    mutations = [i for i, r in ser.iteritems() if ser[i] == 1]
+    mutations = [i for i, r in ser.items() if ser[i] == 1]
     #
     return isolates, mutations
 
@@ -199,7 +199,7 @@ class MutationCooccurrence(object):
       mutation_stgs.append(str(mutations))
     # Calculate the isolate strings
     isolates = []
-    for key, values in groups.iteritems():
+    for key, values in groups.items():
       size = len(groups[key])
       isolate_stg =  [str(v) for v in values]
       isolate_stg.sort
@@ -363,7 +363,7 @@ class MutationCooccurrence(object):
         }
     rsqs = []
     slopes = []
-    for key, col in col_dict.iteritems():
+    for key, col in col_dict.items():
       if key == cn.MAX:
         new_key = cn.MIN
       else:
