@@ -13,7 +13,7 @@ import util
 MAX_STD = 3.0
 MUTATION_GROUP_STRING = "--"  # Mutation group string
 
-def makeCultureIsolateMutationDF():
+def makeCultureIsolateMutationDF(is_separate_species=True):
   """
   Retrieves the data required for making plots
   :return pd.DataFrame:
@@ -22,7 +22,7 @@ def makeCultureIsolateMutationDF():
     cn.RATE, cn.YIELD
   """
   query1 = '''
-  select distinct key_culture, line, 
+  select distinct key_culture, line, key_isolate, 
       gene_id, ggene_id, position, key_mutation, effect,
       rate, yield
     from genotype_phenotype
@@ -30,27 +30,34 @@ def makeCultureIsolateMutationDF():
           and is_an_mutation = 0
   '''
   df1 = util.readSQL(query1)
-  # Get the DVH, MMP isolates
-  query2 = '''
-  select distinct key_culture,
-          key_isolate as key_isolate_dvh, 
-          key_isolate_mmp 
-        from genotype_phenotype,
-          (select distinct key_isolate as key_isolate_mmp, 
-              line as line_mmp,
-              key_culture as key_culture_mmp from genotype_phenotype 
-            where species='M' 
-              and line_mmp != 'AN') sub 
-        where species_mix = 'B' 
-            and species = 'D' 
-            and key_culture_mmp = key_culture
-            and line != 'AN'
-  '''
-  df2 = util.readSQL(query2)
-  sel = [Isolate.create(i).experiment == cn.EXPERIMENT_CI 
-        for i in df2[cn.KEY_ISOLATE_DVH]]
-  df2 = df2.loc[sel]
-  df = df1.merge(df2, on=cn.KEY_CULTURE, how='inner')
+  if is_separate_species:
+    # Separate columns for species
+    del df1[cn.KEY_ISOLATE]
+    query2 = '''
+    select distinct key_culture,
+            key_isolate as key_isolate_dvh, 
+            key_isolate_mmp 
+          from genotype_phenotype,
+            (select distinct key_isolate as key_isolate_mmp, 
+                line as line_mmp,
+                key_culture as key_culture_mmp from genotype_phenotype 
+              where species='M' 
+                and line_mmp != 'AN') sub 
+          where species_mix = 'B' 
+              and species = 'D' 
+              and key_culture_mmp = key_culture
+              and line != 'AN'
+    '''
+    df2 = util.readSQL(query2)
+    sel = [Isolate.create(i).experiment == cn.EXPERIMENT_CI 
+          for i in df2[cn.KEY_ISOLATE_DVH]]
+    df2 = df2.loc[sel]
+    df = df1.merge(df2, on=cn.KEY_CULTURE, how='inner')
+  else:
+    sel = [Isolate.create(i).experiment == cn.EXPERIMENT_CI 
+          for i in df1[cn.KEY_ISOLATE]]
+    df1 = df1.loc[sel]
+    df = df1
   df[cn.POSITION] = df[cn.POSITION].apply(lambda v: int(v))
   return df
 
@@ -414,3 +421,11 @@ def stripMutationGroup(mutation_group):
     new_element = element.split(MUTATION_GROUP_STRING)[0]
     results.append(new_element)
   return results
+
+def makeIsolateData(**kwargs):
+  """
+  Creates a dataframe of isolates from genotype_phenotype.
+  :return pd.DataFrame:
+  """
+  df = makeCultureIsolateMutationDF(**kwargs)
+  return filterOutlierCultures(df)

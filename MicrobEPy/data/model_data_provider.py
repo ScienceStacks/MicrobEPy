@@ -55,7 +55,8 @@ class ModelDataProvider(PredictorProvider):
     self._is_standardize = is_standardize
     self._is_standardize_by_line = is_standardize_by_line
     #
-    cls._makeData()
+    if cls.df_data is None:
+      cls.df_data = ud.makeIsolateData()
     #
     self.df_X = None
     self.df_y = None
@@ -85,12 +86,6 @@ class ModelDataProvider(PredictorProvider):
     isolate_dict = cls.getIsolatesFromIndices(df.index)
     return [Isolate.create(v).line for v in
         isolate_dict[cn.KEY_ISOLATE_DVH]]
-
-  @classmethod
-  def _makeData(cls):
-      if cls.df_data is None:
-        cls.df_data = ud.makeCultureIsolateMutationDF()
-        cls.df_data = ud.filterOutlierCultures(cls.df_data)
 
   def _makeXyDF(self):
     """

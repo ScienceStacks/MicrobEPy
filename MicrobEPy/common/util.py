@@ -40,6 +40,16 @@ def isNumber(obj):
   except:
     return False
 
+def isStr(obj):
+  """
+  :return bool: True if string or unicode
+  """
+  type_string = str(type(obj))
+  if 'str' in type_string or 'unicode' in type_string:
+    return True
+  else:
+    return False
+
 def toNumber(obj):
   """
   Attempts to convert object to a number.
@@ -1067,3 +1077,12 @@ def getIsolatesFromIndices(indices):
   for idx, key in enumerate(keys):
     result[key] = [v[idx] for v in indices.values]
   return result
+
+def makeDataframeFromXlsx(path, sheet_no=0):
+  """
+  Creates a dataframe from an xlsx file in a data directory
+  :param str path: Path to data files
+  :param int sheet_no: Number of the worksheet
+  """
+  data = pd.ExcelFile(path)
+  return data.parse(sheet_no)

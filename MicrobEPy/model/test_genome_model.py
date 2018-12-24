@@ -75,10 +75,9 @@ class TestGenomeModel(unittest.TestCase):
     #
     if False:
       print ("****All lines")
-      print cvr.score
-      print cvr.df_parameter
-      #plotCvr(cvr, 'all')
-      print cvr.fitted_models[0]
+      print (cvr.score)
+      print (cvr.df_parameter)
+      print (cvr.fitted_models[0])
       import pdb; pdb.set_trace()
     #
     if False:
@@ -118,9 +117,9 @@ class TestGenomeModel(unittest.TestCase):
         min_incr_score=0)
     if False:
       for line in cn.LINE_CIS:
-        print "\n\n***%s" % line
-        print result[line].score
-        print result[line].df_parameter
+        print ("\n\n***%s" % line)
+        print (result[line].score)
+        print (result[line].df_parameter)
     self.assertEqual(set(cn.LINE_CIS), set(result.keys()))
     for line in cn.LINE_CIS:
       df = result[line].df_parameter

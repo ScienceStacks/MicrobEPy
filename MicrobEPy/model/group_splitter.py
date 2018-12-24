@@ -70,24 +70,20 @@ class GroupSplitter:
     return df_fold
 
   def __iter__(self):
-    return self
-
-  def next(self):
     """
     Returns the next split.
     :return dict-pd.DataFarme: TRAIN_X, TRAIN_Y, TEST_X, TEST_Y;
       all have their original indices
     """
-    if self._fold >= self._num_folds:
-      raise StopIteration
-    dfs = {}
-    sel_test = self._df_fold[
-        self._df_fold[cn.FOLD] == self._fold].index.tolist()
-    sel_train = self._df_fold[
-        self._df_fold[cn.FOLD] != self._fold].index.tolist()
-    dfs[cn.TEST_X] =  self._df_X.loc[sel_test].copy()
-    dfs[cn.TEST_Y] =  self._df_y.loc[sel_test].copy()
-    dfs[cn.TRAIN_X] =  self._df_X.loc[sel_train].copy()
-    dfs[cn.TRAIN_Y] =  self._df_y.loc[sel_train].copy()
-    self._fold += 1
-    return dfs
+    while self._fold < self._num_folds:
+      dfs = {}
+      sel_test = self._df_fold[
+          self._df_fold[cn.FOLD] == self._fold].index.tolist()
+      sel_train = self._df_fold[
+          self._df_fold[cn.FOLD] != self._fold].index.tolist()
+      dfs[cn.TEST_X] =  self._df_X.loc[sel_test].copy()
+      dfs[cn.TEST_Y] =  self._df_y.loc[sel_test].copy()
+      dfs[cn.TRAIN_X] =  self._df_X.loc[sel_train].copy()
+      dfs[cn.TRAIN_Y] =  self._df_y.loc[sel_train].copy()
+      self._fold += 1
+      yield dfs

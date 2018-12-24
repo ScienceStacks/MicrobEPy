@@ -5,6 +5,7 @@ import data_model as dm
 import helpers
 from isolate import Isolate
 import util
+import util_data_access
 
 import numpy as np
 import os
@@ -285,8 +286,12 @@ class TestDataModel(unittest.TestCase):
         sel = [not util.isNull(x) for x in df[key]]
         df = df.loc[sel,:]
       df.drop_duplicates(inplace=True)
-      df1 = util.readDataModelCSV(schema)
-      test(df1, df, schema)
+      try:
+        df1 = util_data_access.readDataModelCSV(schema)
+        test(df1, df, schema)
+      except FileNotFoundError:
+        print ("No data model CSV for %s" % schema.name)
+        
 
   def _setupDF(self):
     # Sets up internal state for data model combination DataFrames

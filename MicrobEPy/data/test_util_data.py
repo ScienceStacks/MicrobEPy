@@ -221,5 +221,10 @@ class TestFunctions(unittest.TestCase):
     result = test(["aaa" + ud.MUTATION_GROUP_STRING + "ccc", "bbb"], 
         ["aaa", "bbb"])
 
+  def testMakeIsolateData(self):
+    df = ud.makeIsolateData()
+    self.assertTrue(helpers.isValidDataFrame(df, df.columns,
+        nan_columns=df.columns))
+
 if __name__ == '__main__':
     unittest.main()

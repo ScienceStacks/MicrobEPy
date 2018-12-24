@@ -180,7 +180,7 @@ class BinaryTreeModel(object):
     """
     self.validate()
     found = False
-    for k,v in self.trees.iteritems():
+    for k,v in self.trees.items():
       if v == child:
         found = True
         self.trees[k] = None

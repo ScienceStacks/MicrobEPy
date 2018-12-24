@@ -314,6 +314,7 @@ class ParametricIsolateRegression(IsolateRegression):
         }, inplace=True)
     sel = [not np.isnan(x) for x in df[im.BETA_STD]]
     df = df.loc[sel].copy()
+    colors = [c for i, c in enumerate(colors) if sel[i]]
     avg = np.mean(df[cn.ESTIMATE])
     std = np.std(df[cn.ESTIMATE])
     df[SIZE] = [40*(v - avg)/std for v in df[cn.ESTIMATE]]

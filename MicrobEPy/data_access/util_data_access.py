@@ -1,5 +1,11 @@
 
+import __init__
 import constants as cn
+import util
+import schema
+
+import numpy as np
+import pandas as pd
 
 def readDataModelCSV(filename):
   """
@@ -16,8 +22,8 @@ def readDataModelCSV(filename):
     csv_file = makeCSVFilename(filename.name)
   elif not filename.count(".csv") > 0:
     csv_file = makeCSVFilename(filename)
-  path = getDataModelPath(csv_file)
-  df = unifyNullValues(pd.read_csv(path))
+  path = util.getDataModelPath(csv_file)
+  df = util.unifyNullValues(pd.read_csv(path))
   if cn.INDEX in df.columns:
     del df[cn.INDEX]
   pruneNullRows(df)
@@ -28,7 +34,7 @@ def makeCSVFilename(identifier):
   :param TableSchema/str identifier:
   :return str: CSV file for the schema
   """
-  if isStr(identifier):
+  if util.isStr(identifier):
     filename = identifier
   elif isinstance(identifier, schema.TableSchema):
     filename = identifier.name

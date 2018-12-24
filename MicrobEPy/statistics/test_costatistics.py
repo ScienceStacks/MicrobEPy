@@ -5,16 +5,16 @@ import util
 from costatistics import CoStatistics
 import costatistics as co
 import constants as cn
-import api as aa
 import helpers
+import util_data
 
 import numpy as np
 import os
 import pandas as pd
 import unittest
 
-API_OBJECT = aa.Api()
 IGNORE_TEST = False
+DF_DATA = util_data.makeIsolateData(is_separate_species=False)
 
 ########################################
 class TestCoStatistics(unittest.TestCase):
@@ -22,7 +22,7 @@ class TestCoStatistics(unittest.TestCase):
   def setUp(self):
     if IGNORE_TEST:
       return
-    self.statistics = CoStatistics(api_object=API_OBJECT)
+    self.statistics = CoStatistics(df_data=DF_DATA)
 
   def testMakeCountDF(self):
     if IGNORE_TEST:
@@ -44,7 +44,7 @@ class TestCoStatistics(unittest.TestCase):
 
     checkFunc = lambda xs: any([x[0] == cn.SPECIES_MIX_DVH for x in xs])  \
         and any([x[0] == cn.SPECIES_MIX_DVH for x in xs])
-    test(cn.KEY_MUTATION, cn.KEY_ISOLATE, checkFunc, min_rows=205)
+    test(cn.KEY_MUTATION, cn.KEY_ISOLATE, checkFunc)
     test(cn.GENE_ID, cn.KEY_ISOLATE, checkFunc)
     test(cn.GENE_ID, cn.KEY_CULTURE, checkFunc)
 

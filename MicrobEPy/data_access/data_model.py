@@ -46,6 +46,7 @@ import constants as cn
 from isolate import Isolate
 import isolate as iso
 import util
+import util_data_access
 
 import os
 import pandas as pd
@@ -276,13 +277,13 @@ class DataModel(object):
         tabs += "\t"
       if is_print:
         print("  %s%s%d" % (table_name, tabs, kilobytes))
-      self._write(df, util.makeCSVFilename(table_name))
+      self._write(df, util_data_access.makeCSVFilename(table_name))
       try:
         df.to_sql(table_name, conn, if_exists="replace",
             index=False)
       except Exception as err:
         import pdb; pdb.set_trace()
-        print err
+        print (err)
     conn.close()
     if is_print:
       print("Total storage(KB):\t\t%d" % total)
@@ -437,7 +438,7 @@ class DataModel(object):
     deleteUnneededMutationColumns(df_mmp)
     self._renameGene(df_mmp)
     df_mmp[cn.SPECIES] = cn.SPECIES_MIX_MMP
-    df = pd.concat([df_dvh, df_mmp])
+    df = pd.concat([df_dvh, df_mmp], sort=True)
     df[cn.KEY_MUTATION] = makeKeyMutation(df)
     df[cn.KEY_ISOLATE] = self._makeIsolatesForMutations(df)
     df[cn.GENE_POSITION] = ['.'.join(k.split('.')[0:2]) 
@@ -475,7 +476,7 @@ class DataModel(object):
       df[cn.KEY_CULTURE] =  \
           [makeCultureKey() for _ in range(len(df.index))]
       dfs.append(df)
-    return pd.concat(dfs)
+    return pd.concat(dfs, sort=True)
 
   def _getRawIsolatesInRateYieldFiles(self):
     """
@@ -644,7 +645,7 @@ class DataModel(object):
          cn.SPECIES_MIX_DVH)
     df_mmp = process(self._mmp_pairing_file,
          cn.SPECIES_MIX_MMP)
-    df = pd.concat([df_dvh, df_mmp])
+    df = pd.concat([df_dvh, df_mmp], sort=True)
     del df[KEY_ISOLATE_FRONT]
     del df[KEY_ISOLATE_BACK]
     return df
@@ -706,7 +707,7 @@ class DataModel(object):
     df2 = pd.DataFrame([r for _,r in df2.iterrows()
                         if not util.isNull(r[cn.ISOLATE2])])
     df2.rename(columns={cn.ISOLATE2: cn.KEY_ISOLATE}, inplace=True)
-    return pd.concat([df1, df2])
+    return pd.concat([df1, df2], sort=True)
 
   def _makeIsolateMutationLinkDF(self):
     """

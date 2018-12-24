@@ -19,8 +19,6 @@ Example of plotting a correlation heatmap:
 import matplotlib.pyplot as plt
 
 import __init__
-from api import Api
-import api
 import constants as cn
 import pandas as pd
 import numpy as np
