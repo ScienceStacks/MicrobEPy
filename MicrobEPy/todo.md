@@ -1,5 +1,8 @@
 # Action items
 1. Eliminate warnings on tests
+1. Embed in coevolution
+1. setup
+1. travis
 1. Create synthetic data
   1. In genotype for key\_mutation
      1. randomly reorder mutations
@@ -9,9 +12,6 @@
   1. in genotype\_phenotype 
      1. Insert values of mutations at different granularities
         from genotype
-1. Embed in coevolution
-1. setup
 1. pylint
-1. travis
 1. Inform Stahl et al. about paper
 1. Examples directory - Jupyter notebooks, one for each analysis directory
