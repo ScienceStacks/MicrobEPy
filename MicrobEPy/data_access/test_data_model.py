@@ -290,7 +290,8 @@ class TestDataModel(unittest.TestCase):
         df1 = util_data_access.readDataModelCSV(schema)
         test(df1, df, schema)
       except FileNotFoundError:
-        print ("No data model CSV for %s" % schema.name)
+        # Ignore this warning if have *.db file
+        print ("**Warning: No data model CSV for %s" % schema.name)
         
 
   def _setupDF(self):
