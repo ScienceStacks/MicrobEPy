@@ -108,8 +108,8 @@ class TestAll(unittest.TestCase):
       bt_classify.fit(df_X, df_y)
       classify_score = bt_classify.score(None, None)
       if False:
-        print classify_score
-        print bt_classify
+        print (classify_score)
+        print (bt_classify)
         import pdb; pdb.set_trace()
       if np.isclose(noise_prob, 0):
         self.assertTrue(np.isclose(classify_score, 1.0))

@@ -1,5 +1,4 @@
 import __init__
-from api import Api
 import helpers
 import isolate_model as im
 import util

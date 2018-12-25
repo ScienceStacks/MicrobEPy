@@ -4,7 +4,6 @@ import unittest
 
 import __init__
 import __init__
-from api import Api
 import constants as cn
 import helpers
 import correlation_statistic as cs
