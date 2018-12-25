@@ -1,6 +1,9 @@
 # Action items
 1. Eliminate warnings on tests
 1. Embed in coevolution
+   1. Need a configuration file for MicrobEPy so point to
+      correct files
+   1. Handle paths so that data\_access can use MicrobeEPy codes
 1. setup
 1. travis
 1. Create synthetic data

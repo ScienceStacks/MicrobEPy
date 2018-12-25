@@ -11,11 +11,12 @@ PYTHON_SUBDIRECTORIES = [
     ]
 
 
-def addPythonPaths():
+def addPythonPaths(project_dir=None):
   """
   Adds the paths needed for python code.
   """
-  project_dir = getProjectDirectory()
+  if project_dir is None:
+    project_dir = getProjectDirectory()
   # Directory of python codes
   main_code_path = os.path.join(project_dir, PROJECT_ROOT)
   # Directory of python codes
