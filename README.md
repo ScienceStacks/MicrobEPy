@@ -12,3 +12,7 @@ The core concepts used in this analysis are:
 - Mutation. A change in the reference genome including SNPs and INDELs.
 - Community. The collection of genomes present, possibility from more than one species.
 - Culture. The environment in which a community is grown and the phenotypes that are result.
+
+## Usage Notes
+1. The project is intended to be used as a git submodule.
+1. The root directory of the containing project should have the file ".root\_directory"

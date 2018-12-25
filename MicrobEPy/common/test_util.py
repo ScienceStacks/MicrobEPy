@@ -762,6 +762,12 @@ class TestFunctions(unittest.TestCase):
     self.assertTrue(helpers.isValidDataFrame(df,
       [cn.GGENE_ID, cn.GENE_DESC]))
     self.assertEqual(len(ggene_ids), len(df.index) + 1)
+
+  def testGetRootDirectory(self):
+    with self.assertRaises(ValueError):
+      path = util.getRootDirectory()
+    path = util.getRootDirectory(".gitignore")
+    self.assertGreater(len(path), 1)
     
 
 if __name__ == '__main__':

@@ -1086,3 +1086,19 @@ def makeDataframeFromXlsx(path, sheet_no=0):
   """
   data = pd.ExcelFile(path)
   return data.parse(sheet_no)
+
+def getRootDirectory(key_file=".root_directory"):
+  """
+  :return str: first directory in the path with the key file
+  """
+  curdir = os.getcwd()
+  paths = []
+  while len(curdir) > 1:
+    paths.append(curdir)
+    curdir = os.path.split(curdir)[0]
+  paths.reverse()
+  for path in paths:
+    if key_file in os.listdir(path):
+      return path
+  raise ValueError(".project_directory not found.")
+      
