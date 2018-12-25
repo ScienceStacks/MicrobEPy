@@ -3,7 +3,6 @@
 import unittest
 
 import __init__
-from api import Api
 import constants as cn
 import genome_correlation
 from genome_correlation import GenomeCorrelation
@@ -15,7 +14,6 @@ import util
 
 
 IGNORE_TEST = False
-API_OBJECT = Api()
 DF15 = pd.DataFrame({
     'HA2': [1, 1],
     'HA3': [0, 0],
