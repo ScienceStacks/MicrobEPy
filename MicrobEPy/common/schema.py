@@ -1,8 +1,8 @@
 """
 Represents the Schemas of Tables and Columns.
 Each class creates a singleton instance.
-This module cannot depend on any other module in coevolution to avoid
-circular references.
+This module cannot depend on any other modules in the project
+in order to avoid circular references.
 """
 
 import __init__

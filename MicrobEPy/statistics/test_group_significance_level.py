@@ -64,7 +64,7 @@ class TestGroupSignificanceLevel(unittest.TestCase):
     if IGNORE_TEST:
       return
     """
-    Test the calculations on the coevolution data. Do on
+    Test the calculations. Do on
     random mutations and then on a mutation combination that
     looks like it should be significant.
     """
@@ -80,7 +80,7 @@ class TestGroupSignificanceLevel(unittest.TestCase):
     if IGNORE_TEST:
       return
     """
-    Test the calculations on the coevolution data. Do on
+    Test the calculations. Do on
     random mutations and then on a mutation combination that
     looks like it should be significant.
     """

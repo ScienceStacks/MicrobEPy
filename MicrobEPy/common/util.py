@@ -6,7 +6,6 @@ import __init__
 import combination_iterator
 import constants as cn
 from equivalence_class import EquivalenceClass
-import project_base
 import schema
 import util
 
@@ -22,7 +21,6 @@ import sys
 import types
 
 
-PROJECT_ROOT = "coevolution"
 PYTHON_SUBDIRECTORIES = [
     "statistics", "model", "correlation",
     "data", "plot", "search", "common",
@@ -299,9 +297,6 @@ def changeColumnValues(df, func):
     values = df[col].tolist()
     new_values = [func(col, v) for v in values]
     df[col] = new_values
-
-def addPythonPaths():
-  project_base.addPythonPaths()
 
 def setNoneList(values):
   """

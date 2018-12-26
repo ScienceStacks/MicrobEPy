@@ -1,9 +1,5 @@
 # Action items
 1. Eliminate warnings on tests
-1. Embed in coevolution
-   1. Sufficient to be able to find the correct project path?
-      Detect by finding the upper most directory with the
-      name "project_root".
 1. setup
 1. travis
 1. Create synthetic data

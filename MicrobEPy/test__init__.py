@@ -1,4 +1,4 @@
-import project_base
+import __init__
 
 import sys
 import unittest
@@ -9,13 +9,18 @@ IGNORE_TEST = False
 class TestFunctions(unittest.TestCase):
 
   def testGetProjectDirectory(self):
-    path = project_base.getProjectDirectory()
+    path = __init__.getProjectDirectory()
     self.assertGreater(len(path), 1)
 
   def testAdPythonPaths(self):
     old_length = len(sys.path)
-    project_base.addPythonPaths()
+    __init__.addPythonPaths()
     self.assertGreater(len(sys.path), old_length)
+
+  def testPath(self):
+    for path in sys.path:
+      if __init__.PROJECT_NAME in path:
+        self.assertEqual(path.count(__init__.PROJECT_NAME), 2)
 
 
 if __name__ == '__main__':
