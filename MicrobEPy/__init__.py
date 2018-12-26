@@ -8,7 +8,7 @@ PYTHON_SUBDIRECTORIES = [
     "data", "plot", "search", "common",
     ]
 
-def getProjectDirectory():
+def getProjectDirectory(is_report_error=True):
   """
   :return str path:
   """
@@ -25,16 +25,17 @@ def getProjectDirectory():
     if PROJECT_NAME in path:
       found = True
       break
+  import pdb; pdb.set_trace()
   if not found:
     raise RuntimeError("Could not find project path.")
   return path
 
-def addPythonPaths(project_dir=None):
+def addPythonPaths(project_dir=None, **kwargs):
   """
   Adds the paths needed for python code.
   """
   if project_dir is None:
-    project_dir = getProjectDirectory()
+    project_dir = getProjectDirectory(**kwargs)
   # Directory of python codes
   main_code_path = os.path.join(project_dir, PROJECT_NAME)
   # Directory of python codes
@@ -43,4 +44,8 @@ def addPythonPaths(project_dir=None):
     path = os.path.join(main_code_path, directory)
     sys.path.append(path)
 
-addPythonPaths()
+addPythonPaths(is_report_error=False)
+some_trues = [PYTHON_SUBDIRECTORIES in path for path in sys.info]
+if not any(some_trues):
+  _ = getProjectDirectory()  # Check for an error
+  
