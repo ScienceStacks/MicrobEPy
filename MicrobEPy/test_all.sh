@@ -11,7 +11,7 @@ run_tests () {
 }
 
 
-for d in common correlation data data_access model plot search statistics
+for d in common correlation data model plot search statistics
   do
     cd $d
     echo ""
