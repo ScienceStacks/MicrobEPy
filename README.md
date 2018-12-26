@@ -15,5 +15,4 @@ The core concepts used in this analysis are:
 
 ## Usage Notes
 1. The project is intended to be used as a git submodule.
-1. The root directory of the containing project should have the file ".root\_directory"
 1. The "project directory" refers to the folder containing this repository.
