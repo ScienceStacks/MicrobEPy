@@ -3,11 +3,12 @@ Utilities
 """
 
 import __init__
+import combination_iterator
 import constants as cn
 from equivalence_class import EquivalenceClass
 import project_base
 import schema
-import combination_iterator
+import util
 
 from collections import namedtuple
 import math
@@ -90,14 +91,12 @@ def isFloatsEqual(fp1, fp2, tolerance=TOLERANCE):
       return False
   return (fp1 - fp2)/fp2 < tolerance
 
-def getProjectDirectory():
-  return project_base.getProjectDirectory()
-
 def getRootDataDirectory():
   """
   :return str path: path to data model
   """
-  return getPath([getProjectDirectory(), "Data"], None)
+  root_directory = util.getRootDirectory()
+  return getPath([root_directory, "Data"], None)
 
 def getPath(path_initial, path_last):
   """
@@ -137,7 +136,7 @@ def getDataModelPath(filename):
   if cn.IS_TEST:
     return cn.TEST_PATH
   else:
-    return getPath([getProjectDirectory(), "Data", "data_model"],
+    return getPath([getRootDirectory(), "Data", "data_model"],
         filename)
 
 def getReferenceDataPath(filename):
@@ -146,7 +145,8 @@ def getReferenceDataPath(filename):
   :param str filename or None: name of file in sequence data
      if None, returns the path to the directory
   """
-  return getPath([getProjectDirectory(), "Data", "reference"],
+  root_directory = util.getRootDirectory()
+  return getPath([root_directory, "Data", "reference"],
       filename)
 
 def getSequenceDataPath(filename):
@@ -1087,7 +1087,7 @@ def makeDataframeFromXlsx(path, sheet_no=0):
   data = pd.ExcelFile(path)
   return data.parse(sheet_no)
 
-def getRootDirectory(key_file=".root_directory"):
+def getRootDirectory(key_directory=".git"):
   """
   The root directory is the root of the enclosing project
   (since MicrobEPy is intended to be a submodule).
@@ -1100,7 +1100,7 @@ def getRootDirectory(key_file=".root_directory"):
     curdir = os.path.split(curdir)[0]
   paths.reverse()
   for path in paths:
-    if key_file in os.listdir(path):
+    if key_directory in os.listdir(path):
       return path
-  raise ValueError(".project_directory not found.")
+  raise ValueError("%s not found." % key_directory)
       

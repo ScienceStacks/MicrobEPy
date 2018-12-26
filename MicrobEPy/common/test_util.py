@@ -38,7 +38,7 @@ class TestFunctions(unittest.TestCase):
   def testGetProjectDirectory(self):
     if IGNORE_TEST:
       return
-    result = util.getProjectDirectory()
+    result = util.getRootDirectory()
     split_result = result.split(DIR_SEPARATOR)
     cur_path = os.getcwd()
     split_cur_path = cur_path.split(DIR_SEPARATOR)
@@ -765,7 +765,7 @@ class TestFunctions(unittest.TestCase):
 
   def testGetRootDirectory(self):
     with self.assertRaises(ValueError):
-      path = util.getRootDirectory(key_file="dummy")
+      path = util.getRootDirectory(key_directory="dummy")
     path = util.getRootDirectory()
     self.assertGreater(len(path), 1)
     
