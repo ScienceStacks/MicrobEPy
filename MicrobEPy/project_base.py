@@ -7,7 +7,7 @@ import sys
 PROJECT_NAME = "MicrobEPy"
 # Names of the directories in this project
 PYTHON_SUBDIRECTORIES = [
-    "statistics", "model", "data_access", "correlation",
+    "statistics", "model", "correlation",
     "data", "plot", "search", "common",
     ]
 

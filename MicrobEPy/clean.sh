@@ -1,6 +1,6 @@
 #!/bin/bash
 # Cleans up files used in testing
-DIRS="data_access phenotype_explorer regression statistics growth_data ."
+DIRS="phenotype_explorer regression statistics growth_data ."
 
 mv_file () {
   FILE=$1

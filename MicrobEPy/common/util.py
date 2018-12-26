@@ -24,7 +24,7 @@ import types
 
 PROJECT_ROOT = "coevolution"
 PYTHON_SUBDIRECTORIES = [
-    "statistics", "model", "data_access", "correlation",
+    "statistics", "model", "correlation",
     "data", "plot", "search", "common",
     ]
 SPECIES = [cn.SPECIES_MIX_DVH, cn.SPECIES_MIX_MMP]
