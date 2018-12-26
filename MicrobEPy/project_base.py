@@ -4,12 +4,12 @@ import os
 import sys
 
 
-PROJECT_ROOT = "MicrobEPy"
+PROJECT_NAME = "MicrobEPy"
+# Names of the directories in this project
 PYTHON_SUBDIRECTORIES = [
     "statistics", "model", "data_access", "correlation",
     "data", "plot", "search", "common",
     ]
-
 
 def addPythonPaths(project_dir=None):
   """
@@ -18,7 +18,7 @@ def addPythonPaths(project_dir=None):
   if project_dir is None:
     project_dir = getProjectDirectory()
   # Directory of python codes
-  main_code_path = os.path.join(project_dir, PROJECT_ROOT)
+  main_code_path = os.path.join(project_dir, PROJECT_NAME)
   # Directory of python codes
   sys.path.append(main_code_path)
   for directory in PYTHON_SUBDIRECTORIES:
@@ -29,15 +29,17 @@ def getProjectDirectory():
   """
   :return str path:
   """
-  path = os.getcwd()
-  # Go up to coevolution
-  max_iteration = path.count("/")
+  curdir = os.getcwd()
+  paths = []
+  # Find the list of subpaths to this name
+  while len(curdir) > 1:
+    paths.append(curdir)
+    curdir = os.path.split(curdir)[0]
+  paths.reverse()
+  # Find the path to the directory for this project
   found = False
-  for n in range(max_iteration):
-    last_path = path
-    path = os.path.split(path)[0]
-    if path.find(PROJECT_ROOT) < 0:
-      path = last_path
+  for path in paths:
+    if PROJECT_NAME in path:
       found = True
       break
   if not found:

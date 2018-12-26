@@ -357,27 +357,3 @@ SL_RESAMPLE = "sl_resample"  # Computed from resample
 EXT_MIN = "min"
 EXT_MAX = "max"
 EXT_VALUES = [EXT_MIN, EXT_MAX]
-
-# Configuration defaults. Paths are from project root.
-PROJECT_PATH = None  # Set below
-
-################## Script to override defaults ##################
-from __init__ import getProjectDirectory
-import os
-
-def getRootDirectory(key_file=".root_directory"):
-  """
-  :return str: first directory in the path with the key file
-  """
-  curdir = os.getcwd()
-  paths = []
-  while len(curdir) > 1:
-    paths.append(curdir)
-    curdir = os.path.split(curdir)[0]
-  paths.reverse()
-  for path in paths:
-    if key_file in os.listdir(path):
-      return path
-  raise ValueError(".project_directory not found.")
-
-PROJECT_PATH = getRootDirectory()

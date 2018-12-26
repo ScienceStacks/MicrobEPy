@@ -765,8 +765,8 @@ class TestFunctions(unittest.TestCase):
 
   def testGetRootDirectory(self):
     with self.assertRaises(ValueError):
-      path = util.getRootDirectory()
-    path = util.getRootDirectory(".gitignore")
+      path = util.getRootDirectory(key_file="dummy")
+    path = util.getRootDirectory()
     self.assertGreater(len(path), 1)
     
 

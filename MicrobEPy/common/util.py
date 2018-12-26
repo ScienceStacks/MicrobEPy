@@ -1089,7 +1089,9 @@ def makeDataframeFromXlsx(path, sheet_no=0):
 
 def getRootDirectory(key_file=".root_directory"):
   """
-  :return str: first directory in the path with the key file
+  The root directory is the root of the enclosing project
+  (since MicrobEPy is intended to be a submodule).
+  :return str: path to top folder of enclosed project
   """
   curdir = os.getcwd()
   paths = []
