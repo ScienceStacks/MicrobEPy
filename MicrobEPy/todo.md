@@ -1,7 +1,7 @@
 # Action items
-1. Eliminate warnings on tests
 1. setup
 1. travis
+1. sphinx
 1. Create synthetic data
   1. In genotype for key\_mutation
      1. randomly reorder mutations

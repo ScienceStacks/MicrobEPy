@@ -1,5 +1,12 @@
 import os
 import sys
+import warnings
+
+# Get rid of bogus warning messages from sklearn
+def warn(*args, **kwargs):
+  pass
+warnings.warn = warn
+
 
 PROJECT_NAME = "MicrobEPy"
 # Names of the directories in this project
