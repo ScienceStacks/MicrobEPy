@@ -21,20 +21,6 @@ MicrobEPy provides extensive capabilities for analysis of data about microbe com
 
 Our work identified a number of specialized visualizations that seemed particularly effective at revealing insights into microbe communities. The visualizations provided by MicrobEPy include: a plot of  “phenotype space” that relates growth rate to yield, plots of mutation frequencies, heatmaps of mutation correlations, and visual assessments of the effectiveness of phenotype predictions.
 
-MicrobeEPy can be found on github at https://github.com/ScienceStacks/MicrobEPy. It is an open source project
-
-
-Python package for analysis of the evolutionary dynamics of microbial communities.
-
-This package provides python tools for analyzing the evolution of microbial communities in support of two research questions:
-1. How do genomes change over time?
-1. How does genotype affect phenotype?
-
-The core concepts used in this analysis are:
-- Mutation. A change in the reference genome including SNPs and INDELs.
-- Community. The collection of genomes present, possibility from more than one species.
-- Culture. The environment in which a community is grown and the phenotypes that are result.
-
 ## Usage Notes
 1. The project can be used as a git submodule.
 1. The "project directory" refers to the folder containing this repository.
