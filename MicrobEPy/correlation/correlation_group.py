@@ -255,7 +255,7 @@ class CorrelationGroup(object):
         sel = [g in groupables for g in df_group[cn.CATEGORICAL]]
         df_group = df_group.loc[sel,:]
         dfs.append(df_group)
-    df_result = pd.concat(dfs, axis=0)
+    df_result = pd.concat(dfs, axis=0, sort=True)
     df_result.rename(columns={cn.CATEGORICAL: cn.GGENE_ID}, inplace=True)
     # Add the counts
     df_result_sub = df_result[[cn.SPECIES, cn.LINE, cn.GROUP, cn.GGENE_ID]]

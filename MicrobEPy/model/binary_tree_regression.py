@@ -43,7 +43,7 @@ class BinaryTreeRegression(binary_tree_model.BinaryTreeModel):
     """
     df_count = df_X.sum()
     width = len(df_X.columns)
-    df_y_wide = pd.concat([df_y]*width, axis=1)
+    df_y_wide = pd.concat([df_y]*width, axis=1, sort=True)
     df_y_wide.columns = df_X.columns
     df_val = df_X * df_y_wide
     df_sum = df_val.sum()

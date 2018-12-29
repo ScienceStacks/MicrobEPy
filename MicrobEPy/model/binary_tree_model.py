@@ -286,7 +286,7 @@ class BinaryTreeModel(object):
           cn.STD: [node.std],
           })
       dfs.append(df)
-    df_result = pd.concat(dfs)
+    df_result = pd.concat(dfs, sort=True)
     df_result.index = df_X.index
     return df_result
 

@@ -77,7 +77,7 @@ class IsolateModelTester(rm.IsolateModel):
       df[cls.COL_A] = [key_values[0]]
       df[cls.COL_B] = [key_values[1]]
       dfs.append(df)
-    result = pd.concat(dfs)
+    result = pd.concat(dfs, sort=True)
     result[cn.ESTIMATE] = range(len(result.index))
     result[cn.OBSERVED] = result[cn.ESTIMATE]
     return result

@@ -16,7 +16,7 @@ IGNORE_TEST = False
 IS_PLOT = False
 
 
-def testIsolateMutationStatistics(statistics):
+def dotestIsolateMutationStatistics(statistics):
   result = isinstance(statistics.ser_count, pd.Series)  \
       and (len(statistics.ser_count) > 5)
   return result
@@ -42,7 +42,7 @@ class TestIsolateMutationStatistics(unittest.TestCase):
     if IGNORE_TEST:
       return
     self.statistics.do()
-    self.assertTrue(testIsolateMutationStatistics(self.statistics))
+    self.assertTrue(dotestIsolateMutationStatistics(self.statistics))
 
 
 class TestDepvarGroup(unittest.TestCase):
@@ -55,7 +55,7 @@ class TestDepvarGroup(unittest.TestCase):
   def testConstructor(self):
     if IGNORE_TEST:
       return
-    self.assertTrue(testIsolateMutationStatistics(
+    self.assertTrue(dotestIsolateMutationStatistics(
         self.group._statistics))
 
   def testMakeStatisticsDF(self):

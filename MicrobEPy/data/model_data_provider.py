@@ -202,7 +202,7 @@ class ModelDataProvider(PredictorProvider):
       del df[cn.LINE]
       util.standardize(df)
       dfs.append(df)
-    return pd.concat(dfs)
+    return pd.concat(dfs, sort=True)
       
 
 class ModelDataDualProvider(PredictorProvider):

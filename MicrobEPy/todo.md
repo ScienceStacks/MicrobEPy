@@ -1,4 +1,7 @@
 # Action items
+1. Nosetests with coverage
+1. Fix remaining warnings
+1. Examples directory - Jupyter notebooks, one for each analysis directory
 1. setup
 1. travis
 1. sphinx
@@ -13,4 +16,3 @@
         from genotype
 1. pylint
 1. Inform Stahl et al. about paper
-1. Examples directory - Jupyter notebooks, one for each analysis directory

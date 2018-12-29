@@ -7,7 +7,6 @@ import combination_iterator
 import constants as cn
 from equivalence_class import EquivalenceClass
 import schema
-import util
 
 from collections import namedtuple
 import math
@@ -19,6 +18,10 @@ from sklearn import linear_model
 import sqlite3 as sql
 import sys
 import types
+
+DATA_DIR = "Data"
+REFERENCE_DIR = "reference"
+DATA_MODEL_DIR = "data_model"
 
 
 PYTHON_SUBDIRECTORIES = [
@@ -89,19 +92,13 @@ def isFloatsEqual(fp1, fp2, tolerance=TOLERANCE):
       return False
   return (fp1 - fp2)/fp2 < tolerance
 
-def getRootDataDirectory():
-  """
-  :return str path: path to data model
-  """
-  root_directory = util.getRootDirectory()
-  return getPath([root_directory, "Data"], None)
-
 def getPath(path_initial, path_last):
   """
   Constructs a path from the initial segment and the
   termination (path_list).
   :param list-of-str path_initial:
   :param str/None pat_list:
+  :return str:
   """
   def makeItem(item):
     """
@@ -134,7 +131,7 @@ def getDataModelPath(filename):
   if cn.IS_TEST:
     return cn.TEST_PATH
   else:
-    return getPath([getRootDirectory(), "Data", "data_model"],
+    return getPath([getRootDirectory(), DATA_DIR, DATA_MODEL_DIR],
         filename)
 
 def getReferenceDataPath(filename):
@@ -143,8 +140,8 @@ def getReferenceDataPath(filename):
   :param str filename or None: name of file in sequence data
      if None, returns the path to the directory
   """
-  root_directory = util.getRootDirectory()
-  return getPath([root_directory, "Data", "reference"],
+  root_directory = getRootDirectory()
+  return getPath([root_directory, DATA_DIR, REFERENCE_DIR],
       filename)
 
 def getSequenceDataPath(filename):
@@ -473,7 +470,7 @@ def removeDuplicateColumns(df):
     else:
       idx += 1
   df_add = pd.DataFrame(additions_dict)
-  df_result = pd.concat([df_result, df_add], axis=1)
+  df_result = pd.concat([df_result, df_add], axis=1, sort=True)
   return df_result
 
 def makeVenn(group1, group2):
@@ -688,7 +685,7 @@ def mergeLeft(df1, df2, merge_column):
     if column != merge_column:
       df_null[column] = cn.NONE
   # Add the missing rows
-  df_result = pd.concat([df_result, df_null])
+  df_result = pd.concat([df_result, df_null], sort=True)
   # Finalize result
   cleanDF(df_result)
   return df_result
@@ -1081,6 +1078,9 @@ def makeDataframeFromXlsx(path, sheet_no=0):
   """
   data = pd.ExcelFile(path)
   return data.parse(sheet_no)
+
+def getRootDataDirectory():
+  return getPath([getRootDirectory(), DATA_DIR], None)
 
 def getRootDirectory(key_directory=".git"):
   """

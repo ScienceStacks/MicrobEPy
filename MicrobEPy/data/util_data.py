@@ -210,7 +210,7 @@ def makeNoisyOr(predictor_probs, num_rows, noise_prob):
   # predictor has a value equal to the dependent variable.
   score = rand_prob*noise_prob + 1 - noise_prob
   #
-  df_X = pd.concat(dfs)
+  df_X = pd.concat(dfs, sort=True)
   df_y = pd.DataFrame(ys, columns=[col_y])
   (df_X, df_y)  = randomizeIndex((df_X, df_y))
   #
@@ -389,7 +389,7 @@ def generatePhenotypeData(values, group_sizes, num_replications):
       for m, s in enumerate(group_sizes)]
   df_result[cn.GROUP] = group_vals
   df_result = pd.concat([df_result]*num_replications,
-      ignore_index=True)
+      ignore_index=True, sort=True)
   # Construct the replications
   replications = []
   [replications.extend(np.repeat(n, len(values)))

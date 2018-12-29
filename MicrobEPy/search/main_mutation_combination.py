@@ -61,8 +61,8 @@ def doCombination(max_combination, mutation_context,
     is_resample=True, lines=lines, excludes=combinations,
     num_combinations=WRITE_COUNT)
   if len(df_min) != 0:
-    df_min_full = pd.concat([df_min_full, df_min])
-    df_max_full = pd.concat([df_max_full, df_max])
+    df_min_full = pd.concat([df_min_full, df_min], sort=True)
+    df_max_full = pd.concat([df_max_full, df_max], sort=True)
   else:
     # Signal that everything has been processed
     df_min_full = df_min

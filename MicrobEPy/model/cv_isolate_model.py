@@ -117,13 +117,13 @@ class CVIsolateModel(object):
         for idx in range(MAX_REPLICATION):
           updateEstimatePredict(key_value, dfs_estimate, dfs_predict, idx=idx)
     # Compute statistics
-    df_full_estimate = pd.concat(dfs_estimate)
+    df_full_estimate = pd.concat(dfs_estimate, sort=True)
     groupby = df_full_estimate.groupby(KEY_NAMES)
     result[cn.AVG] = groupby.mean().reset_index()
     result[cn.STD] = groupby.std().reset_index()
-    df_full_predict = pd.concat(dfs_predict)
+    df_full_predict = pd.concat(dfs_predict, sort=True)
     groupby = df_full_predict.groupby(KEY_NAMES).var()
-    df = pd.concat(dfs_predict)
+    df = pd.concat(dfs_predict, sort=True)
     rsq = 1 - np.var(df[cn.RESIDUAL]) / np.var(df[cn.OBSERVED])
     result[cn.RSQ] = min(max(rsq, 0.0), 1.0)
     residual_columns = [cn.OBSERVED, cn.ESTIMATE, cn.RESIDUAL]

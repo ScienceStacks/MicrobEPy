@@ -62,7 +62,7 @@ class BinaryTreeClassification(binary_tree_model.BinaryTreeModel):
     """
     # Calculate counts of correct classification
     width = len(df_X.columns)
-    df_y_wide = pd.concat([df_y]*width, axis=1)
+    df_y_wide = pd.concat([df_y]*width, axis=1, sort=True)
     df_y_wide.columns = df_X.columns
     df_both_one = df_X * df_y_wide
     #

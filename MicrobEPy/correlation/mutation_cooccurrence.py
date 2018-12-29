@@ -82,7 +82,8 @@ class CoStatistic(object):
     :param CoStatistic other:
     """
     for key in self.__class__.SCHEMA.keys():
-      self.dfs[key] = pd.concat([self.dfs[key], other.dfs[key]])
+      self.dfs[key] = pd.concat([self.dfs[key], other.dfs[key]],
+          sort=True)
 
 
 RegressionResult = namedtuple('RegressionResult', 
@@ -228,10 +229,10 @@ class MutationCooccurrence(object):
         })
     df_result_min[cn.MAX] = pd.concat(
         [df_result_rate[cn.RNG], df_result_yield[cn.RNG]],
-        axis=1).max(axis=1)
+        axis=1, sort=True).max(axis=1)
     df_result_min[cn.MIN] = pd.concat(
         [df_result_rate[cn.RNG], df_result_yield[cn.RNG]],
-        axis=1).min(axis=1)
+        axis=1, sort=True).min(axis=1)
     result = CoStatistic()
     result.set(cn.RATE, df_result_rate)
     result.set(cn.YIELD, df_result_yield)
@@ -309,7 +310,7 @@ class MutationCooccurrence(object):
     length = len(df_base)
     df_base[cn.RATE] = self.df_ys[cn.RATE][cn.VALUE]
     df_base[cn.YIELD] = self.df_ys[cn.YIELD][cn.VALUE]
-    df_sample = pd.concat([df_base] * num_replications)
+    df_sample = pd.concat([df_base] * num_replications, sort=True)
     groups = []
     [groups.extend([n] * length) for n in range(num_replications)]
     df_sample[cn.GROUP] = groups
@@ -419,7 +420,7 @@ class MutationCooccurrence(object):
       df[cn.LINE] = context.line
       df[cn.MUTATION_COLUMN] = context.mutation_column
       dfs.append(df)
-    return pd.concat(dfs)
+    return pd.concat(dfs, sort=True)
 
   @classmethod
   def makeLineCoStatistic(cls, study_context, rc_vector=None):

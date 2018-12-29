@@ -429,7 +429,7 @@ class AncestralPairingIsolateRegression(IsolateRegression):
     if cls.df_save is None:
       cls.df_save = df_save.copy()
     else:
-      cls.df_save = pd.concat([cls.df_save, df_save])
+      cls.df_save = pd.concat([cls.df_save, df_save], sort=True)
 
   def estimate(self, isIndex=lambda x: True, key=None):
     """
@@ -555,7 +555,7 @@ class AncestralPairingIsolateRegression(IsolateRegression):
         isIndexAdj = lambda v: True  # Use all data if not the modelled isolate
       dfs.append(cls.getDepvarDF(self._depvar, isIndex=isIndexAdj, 
            constraint=constraint))
-    df_depvar = pd.concat(dfs)
+    df_depvar = pd.concat(dfs, sort=True)
     df_predictor = df_predictor.merge(df_depvar, on=cn.KEY_CULTURE,
         how='inner')
     # Fit the model, checking for colinearity
