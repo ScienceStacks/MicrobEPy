@@ -2,7 +2,7 @@
 
 # MicrobEPy (Pronounced "microbe pie")
 
-Microbes such as bacteria and archaea are fundamental to life on earth, especially to human health. Characteristics (referred to as phenotypes) of microbes such as growth rate can evolve rapidly, often as a result of interactions with other microbes in a community. 
+Microbes such as bacteria and archaea are fundamental to life on earth, especially to human health. Characteristics of microbes (referred to as phenotypes) such as growth rate can evolve rapidly, often as a result of interactions with other microbes in a community. 
 
 Understanding these evolutionary dynamics requires answering two questions: (a) What mutations are acquired over time by each species in the community? (b) How do mutations affect phenotypes? This paper describes MicrobeEPy, an open source python project for data driven discovery to answer these questions. We describe the use of MicrobeEPy to study a microbial community including: the data used, the analyses done, and the visualizations employed.
 
