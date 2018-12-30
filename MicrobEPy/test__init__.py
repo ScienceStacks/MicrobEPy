@@ -20,7 +20,7 @@ class TestFunctions(unittest.TestCase):
   def testPath(self):
     for path in sys.path:
       if __init__.PROJECT_NAME in path:
-        self.assertEqual(path.count(__init__.PROJECT_NAME), 2)
+        self.assertTrue(path.count(__init__.PROJECT_NAME) in [1, 2])
 
 
 if __name__ == '__main__':

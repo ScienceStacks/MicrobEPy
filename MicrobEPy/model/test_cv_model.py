@@ -37,7 +37,7 @@ NUM_FOLDS = 2
 
 
 ################### HELPERS ########################
-def testCVR(cvr):
+def dotestCVR(cvr):
   """
   :param CVRegression cvr:
   :return dict: boolean values
@@ -80,7 +80,7 @@ class TestCVModel(unittest.TestCase):
     if IGNORE_TEST:
       return
     def test(cvr):
-      results = testCVR(cvr)
+      results = dotestCVR(cvr)
       self.assertTrue(all(results.values()))
     #
     g_splitter = GroupSplitter(DF_X, DF_Y, DF_GROUP,
