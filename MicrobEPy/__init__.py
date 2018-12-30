@@ -48,7 +48,7 @@ def addPythonPaths(project_dir=None):
   sys.path.append(main_code_path)
   for directory in PYTHON_SUBDIRECTORIES:
     path = os.path.join(main_code_path, directory)
-    sys.path.append(path)
+    sys.path.insert(0, path)
 
 def isProjectModule():
   return PROJECT_NAME in os.getcwd()
