@@ -18,7 +18,7 @@ To answer the question “How are mutations acquired over time?”, MicrobEPy us
 
 To answer the question “How do mutations affect growth rate and yield?”, MicrobEPy uses community, mutation, and culture data. We pursued a number of analyses including least squares linear regression, stepwise regression, and regression trees. These approaches failed to provide insight largely because of high variability of the data. (Evolution itself is a highly variable process.) We subsequently used classification (e.g., classification trees) to characterize “low” and “high” values of phenotypes. This ultimately led to substantive results, including the identification of some important mutations.
 
-<img src="microbepy_architecture.png" alt="drawing" widith="200"/>
+<img src="microbepy_architecture.png" alt="drawing" widith="100"/>
 
 The python package MicrobEPy contains the analysis tools developed during the study of the above microbe communities. The package takes as input a SQL database with tables structured for community, mutation, and culture data. 
 As depicted above,
