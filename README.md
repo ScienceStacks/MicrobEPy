@@ -1,6 +1,6 @@
 <img src="microbepy_logo.png" alt="drawing" width="200"/>
 
-# MicrobEPy (Pronounced "microbe pie")
+# ``MicrobEPy`` (Pronounced "microbe pie")
 
 Microbes such as bacteria and archaea are fundamental to life on earth, especially to human health. Characteristics of microbes (referred to as phenotypes) such as growth rate can evolve rapidly, often as a result of interactions with other microbes in a community. 
 
@@ -14,21 +14,21 @@ A study was conducted in which two DVH variants and two MMP variants were grown 
 
 Three kinds of data were collected in this study. Community data details how the cells were obtained, such as the evolutionary line, the time at which they were extracted, and if they are isolates. Mutation data (obtained from DNA sequencing and a subsequent analysis pipeline) specifies the position in the genome where DNA base pairs have changed. Culture data describes the growth rate and yield phenotypes of a community.
 
-To answer the question “How are mutations acquired over time?”, MicrobEPy uses community and mutation data. Our primary technique is a correlation analysis that quantifies the frequency with which a pair of mutations occur in communities over time. We also analyze the co-occurrence of mutations in isolates; that is, is it common for two mutations to co-occur in the same cell. For example, to increase growth rate DVH needs to increase the transport of lactate and increase the efficiency of lactate metabolism. These are different mutations, and so it is interesting if they co-occur in the same isolates.
+To answer the question “How are mutations acquired over time?”, ``MicrobEPy`` uses community and mutation data. Our primary technique is a correlation analysis that quantifies the frequency with which a pair of mutations occur in communities over time. We also analyze the co-occurrence of mutations in isolates; that is, is it common for two mutations to co-occur in the same cell. For example, to increase growth rate DVH needs to increase the transport of lactate and increase the efficiency of lactate metabolism. These are different mutations, and so it is interesting if they co-occur in the same isolates.
 
-To answer the question “How do mutations affect growth rate and yield?”, MicrobEPy uses community, mutation, and culture data. We pursued a number of analyses including least squares linear regression, stepwise regression, and regression trees. These approaches failed to provide insight largely because of high variability of the data. (Evolution itself is a highly variable process.) We subsequently used classification (e.g., classification trees) to characterize “low” and “high” values of phenotypes. This ultimately led to substantive results, including the identification of some important mutations.
+To answer the question “How do mutations affect growth rate and yield?”, ``MicrobEPy`` uses community, mutation, and culture data. We pursued a number of analyses including least squares linear regression, stepwise regression, and regression trees. These approaches failed to provide insight largely because of high variability of the data. (Evolution itself is a highly variable process.) We subsequently used classification (e.g., classification trees) to characterize “low” and “high” values of phenotypes. This ultimately led to substantive results, including the identification of some important mutations.
 
 <img src="microbepy_architecture.png" alt="drawing" width="300"/>
 
-The python package MicrobEPy contains the analysis tools developed during the study of the above microbe communities. The package takes as input a SQL database with tables structured for community, mutation, and culture data. 
+The python package ``MicrobEPy`` contains the analysis tools developed during the study of the above microbe communities. The package takes as input a SQL database with tables structured for community, mutation, and culture data. 
 As depicted above,
-MicrobEPy provides services for data access, analysis, and visualization. Data access is through a SQL query or with helper functions that hide the underlying SQL while providing simple mechanisms for filtering by community and mutation. A higher level interface to data is through the DataProvider class that produces two pandas DataFrames. The first contains information about the community (row index) and mutations (column names) with binary values indicating if the mutation is present or absent. The second DataFrame contains information about the community (row index) and phenotype (columns).
+``MicrobEPy`` provides services for data access, analysis, and visualization. Data access is through a SQL query or with helper functions that hide the underlying SQL while providing simple mechanisms for filtering by community and mutation. A higher level interface to data is through the DataProvider class that produces two pandas DataFrames. The first contains information about the community (row index) and mutations (column names) with binary values indicating if the mutation is present or absent. The second DataFrame contains information about the community (row index) and phenotype (columns).
 
-MicrobEPy provides extensive capabilities for analysis of data about microbe communities including: correlations between mutations and communities; predictive models using linear regression, stepwise regression, and tree regression; and procedures for searching for patterns of mutations.
+``MicrobEPy`` provides extensive capabilities for analysis of data about microbe communities including: correlations between mutations and communities; predictive models using linear regression, stepwise regression, and tree regression; and procedures for searching for patterns of mutations.
 
-MicrobEPy has a number of specialized visualizations that have been effective at revealing insights into microbe communities. The visualizations provided by MicrobEPy include: plots of  “phenotype space” that relates growth rate to yield, plots of mutation frequencies, heatmaps of mutation correlations, and visual assessments of the effectiveness of phenotype predictions.
+``MicrobEPy`` has a number of specialized visualizations that have been effective at revealing insights into microbe communities. The visualizations provided by ``MicrobEPy`` include: plots of  “phenotype space” that relates growth rate to yield, plots of mutation frequencies, heatmaps of mutation correlations, and visual assessments of the effectiveness of phenotype predictions.
 
-The folder ``Examples`` contains ``Jupyter`` notebooks with examples of the analyses provided by MicrobEPy.
+The folder ``Examples`` contains ``Jupyter`` notebooks with examples of the analyses provided by ``MicrobEPy``.
 
 
 ## Usage Notes
