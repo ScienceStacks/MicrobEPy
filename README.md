@@ -64,7 +64,7 @@ The folder ``Examples`` contains ``Jupyter`` notebooks with examples of the anal
 
 
 ## Usage Notes
-1. ``Data/data_model/microbepy.db`` contains a sample SQL file used by ````MicrobEPy````. Replace this file with your data.
-1. The project can be used as a git submodule. 
-The "project directory" refers to the folder containing this repository.
-1. If so, it expects that the top level ``git`` repository as the path ``Data/data_model/microbepy.db``.
+1. This project can be embedded as a git submodule. 
+The "project directory" refers to the repository that contains ``MicrobEPy``.
+1. ``MicrobEPy`` expects that the top level ``git`` repository has the path ``Data/data_model/microbepy.db``,
+a SQL that exemplifies the structure required by this project.
