@@ -4,7 +4,7 @@
 
 Microbes such as bacteria and archaea are fundamental to life on earth, especially to human health. Characteristics of microbes (referred to as phenotypes) such as growth rate can evolve rapidly, often as a result of interactions with other microbes in a community. 
 
-Understanding these evolutionary dynamics requires answering two questions: (a) What mutations are acquired over time by each species in the community? (b) How do mutations affect phenotypes? This paper describes MicrobeEPy, an open source python project for data driven discovery to answer these questions. We describe the use of MicrobeEPy to study a microbial community including: the data used, the analyses done, and the visualizations employed.
+Understanding these evolutionary dynamics requires answering two questions: (a) What mutations are acquired over time by each species in the community? (b) How do mutations affect phenotypes? This paper describes ``MicrobEPy``, an open source python project for data driven discovery to answer these questions. We describe the use of ``MicrobEPy`` to study a microbial community including: the data used, the analyses done, and the visualizations employed.
 
 Some biology background is required to understand the science questions and the data used. Considered is a microbe community of two organisms: a bacteria, Desulfovibrio vulgaris Hildenborough (hereafter, DVH); and an archaea, Methanococcus maripaludis (hereafter, MMP). There is no known natural habitat in which these organisms co-exist. However, by growing both with lactate, each assists the metabolic cycle of the other. When DVH metabolizes lactate, hydrogen is produced. MMP uses hydrogen in its metabolism. By consuming hydrogen, MMP accelerates the rate of DVH metabolic reactions, which in turn provides more hydrogen for the growth of MMP. And so, a virtuous cycle develops (see Stolyar et al., 2007).
 
@@ -32,7 +32,7 @@ The folder ``Examples`` contains ``Jupyter`` notebooks with examples of the anal
 
 
 ## Usage Notes
-1. ``Data/data_model/microbepy.db`` contains a sample SQL file used by ``MicrobeEPy``. Replace this file with your data.
+1. ``Data/data_model/microbepy.db`` contains a sample SQL file used by ````MicrobEPy````. Replace this file with your data.
 1. The project can be used as a git submodule. 
 The "project directory" refers to the folder containing this repository.
 1. If so, it expects that the top level ``git`` repository as the path ``Data/data_model/microbepy.db``.
