@@ -1,9 +1,8 @@
 # Action items
-1. Nosetests with coverage
-1. Fix remaining warnings
-1. Examples directory - Jupyter notebooks, one for each analysis directory
-1. setup
+1. test setup
 1. travis
+1. Examples directory - Jupyter notebooks, one for each analysis directory
+1. Increase coverage
 1. sphinx
 1. Create synthetic data
   1. In genotype for key\_mutation
