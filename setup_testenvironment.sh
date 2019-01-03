@@ -11,4 +11,6 @@ if [ ! -e /home/ubuntu/miniconda3/envs/test-environment ]; then
   pip install coverage
 fi
 conda info --envs
-echo "***Do 'source activate test-environment' and then run tests"
+echo "***Done!."
+echo "***Next: 'source activate test-environment'"
+echo "***Then: cd MicrobeEPy; nosetests"
