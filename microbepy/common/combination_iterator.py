@@ -1,7 +1,6 @@
 """Iteratively supplies combinations with optional exclusions."""
 
 import __init__
-import util
 import constants as cn
 
 import itertools
@@ -17,7 +16,9 @@ class CombinationIterator(object):
     """
     self._elements = elements
     self._max_size = max_size
-    self._excludes = util.setNoneList(excludes)
+    if excludes is None:
+      excludes = []
+    self._excludes = excludes
     self._combination_iterator = None
     self._current_size = 0
 

@@ -56,5 +56,3 @@ def isProjectModule():
 
 if isProjectModule():
   addPythonPaths()
-pass
-  
