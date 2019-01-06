@@ -1,14 +1,14 @@
 <img src="microbepy_logo.png" alt="drawing" width="200"/>
 
-# ``MicrobEPy`` (Pronounced "microbe pie")
+# ``microbepy`` (Pronounced "microbe pie")
 
 Microbes such as bacteria and archaea are fundamental to life on earth, especially to human health. Characteristics of microbes (referred to as phenotypes) such as growth rate can evolve rapidly, often as a result of interactions with other microbes in a community. 
 
 Understanding these evolutionary dynamics requires answering two questions: (a) What mutations are acquired over time by each species in the community? (b) How do mutations affect phenotypes? 
-``MicrobEPy`` is an open source python project for data driven discovery to answer these questions.
-``MicrobEPy`` facilitates the study of microbial communities including: the data used, the analyses done, and the visualizations employed.
+``microbepy`` is an open source python project for data driven discovery to answer these questions.
+``microbepy`` facilitates the study of microbial communities including: the data used, the analyses done, and the visualizations employed.
 
-Some biology background is required to understand the science questions and the data used in the development of ``MicrobEPy``.
+Some biology background is required to understand the science questions and the data used in the development of ``microbepy``.
 Considered is a microbe community of two organisms: a bacteria, Desulfovibrio vulgaris Hildenborough (hereafter, DVH); 
 and an archaea, Methanococcus maripaludis (hereafter, MMP). 
 There is no known natural habitat in which these organisms co-exist. 
@@ -30,14 +30,14 @@ Community data details how the cells were obtained, such as the evolutionary lin
 Mutation data (obtained from DNA sequencing and a subsequent analysis pipeline) specifies the position in the genome where DNA base pairs have changed.
 Culture data describes the growth rate and yield phenotypes of a community.
 
-To answer the question “How are mutations acquired over time?”, ``MicrobEPy`` uses community and mutation data.
-The primary technique used in ``MicrobEPy`` is a correlation analysis that quantifies 
+To answer the question “How are mutations acquired over time?”, ``microbepy`` uses community and mutation data.
+The primary technique used in ``microbepy`` is a correlation analysis that quantifies 
 the frequency with which a pair of mutations occur in communities over time.
 We also analyze the co-occurrence of mutations in isolates; that is, is it common for two mutations to co-occur in the same cell.
 For example, to increase growth rate DVH needs to increase the transport of lactate and increase the efficiency of lactate metabolism.
 These are different mutations, and so it is interesting if they co-occur in the same isolates.
 
-To answer the question “How do mutations affect growth rate and yield?”, ``MicrobEPy`` uses community, mutation, and culture data.
+To answer the question “How do mutations affect growth rate and yield?”, ``microbepy`` uses community, mutation, and culture data.
 A number of analyses are included in the package: least squares linear regression, stepwise regression, and regression trees.
 These approaches failed to provide insight largely because of high variability of the data.
 (Evolution itself is a highly variable process.)
@@ -46,26 +46,26 @@ This ultimately led to substantive results, including the identification of some
 
 <img src="microbepy_architecture.png" alt="drawing" width="300"/>
 
-``MicrobEPy`` contains the analysis tools developed during the study of the above microbe communities.
+``microbepy`` contains the analysis tools developed during the study of the above microbe communities.
 The package takes as input a SQL database with tables structured for community, mutation, and culture data. 
 As depicted above,
-``MicrobEPy`` provides services for data access, analysis, and visualization.
+``microbepy`` provides services for data access, analysis, and visualization.
 Data access is through a SQL query or with helper functions that hide the underlying SQL while providing simple mechanisms for filtering by community and mutation.
 A higher level interface to data is through the DataProvider class that produces two pandas DataFrames.
 The first contains information about the community (row index) and mutations (column names) with binary values indicating if the mutation is present or absent.
 The second DataFrame contains information about the community (row index) and phenotype (columns).
 
-``MicrobEPy`` provides extensive capabilities for analysis of data about microbe communities including: correlations between mutations and communities; predictive models using linear regression, stepwise regression, and tree regression; and procedures for searching for patterns of mutations.
+``microbepy`` provides extensive capabilities for analysis of data about microbe communities including: correlations between mutations and communities; predictive models using linear regression, stepwise regression, and tree regression; and procedures for searching for patterns of mutations.
 
-``MicrobEPy`` has a number of specialized visualizations that have been effective at revealing insights into microbe communities.
-The visualizations provided by ``MicrobEPy`` include: plots of  “phenotype space” that relates growth rate to yield, plots of mutation frequencies, heatmaps of mutation correlations, and visual assessments of the effectiveness of phenotype predictions.
+``microbepy`` has a number of specialized visualizations that have been effective at revealing insights into microbe communities.
+The visualizations provided by ``microbepy`` include: plots of  “phenotype space” that relates growth rate to yield, plots of mutation frequencies, heatmaps of mutation correlations, and visual assessments of the effectiveness of phenotype predictions.
 
-The folder ``Examples`` contains ``Jupyter`` notebooks with examples of the analyses provided by ``MicrobEPy``.
+The folder ``Examples`` contains ``Jupyter`` notebooks with examples of the analyses provided by ``microbepy``.
 
 
 ## Usage Notes
 1. This project can be embedded as a git submodule. 
-The "project directory" refers to the repository that contains ``MicrobEPy``.
-1. ``MicrobEPy`` expects that the top level ``git`` repository has the file ``Data/data_model/microbepy.db``,
+The "project directory" refers to the repository that contains ``microbepy``.
+1. ``microbepy`` expects that the top level ``git`` repository has the file ``Data/data_model/microbepy.db``,
 a SQL file.
-This file should have the same structure as the ``microbeby.db`` file in ``MicrobEPy/Data/data_model/microbepy.db``.
+This file should have the same structure as the ``microbeby.db`` file in ``microbepy/Data/data_model/microbepy.db``.

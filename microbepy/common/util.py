@@ -1085,7 +1085,7 @@ def getRootDataDirectory():
 def getRootDirectory(key_directory=".git"):
   """
   The root directory is the root of the enclosing project
-  (since MicrobEPy is intended to be a submodule).
+  (since microbepy is intended to be a submodule).
   :return str: path to top folder of enclosed project
   """
   curdir = os.getcwd()

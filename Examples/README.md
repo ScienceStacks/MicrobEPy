@@ -1,4 +1,4 @@
-# Examples of using the MicrobEPy tools
+# Examples of using the microbepy tools
 ## Data
 Provides data access.
 ## Model

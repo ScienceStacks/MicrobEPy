@@ -8,7 +8,7 @@ def warn(*args, **kwargs):
 warnings.warn = warn
 
 
-PROJECT_NAME = "MicrobEPy"
+PROJECT_NAME = "microbepy"
 # Names of the directories in this project
 PYTHON_SUBDIRECTORIES = [
     "statistics", "model", "correlation",
