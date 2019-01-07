@@ -5,7 +5,7 @@ This module cannot depend on any other modules in the project
 in order to avoid circular references.
 """
 
-import __init__
+import microbepy_init
 from collections import namedtuple
   
 ColumnSchema = namedtuple('ColumnSchema', ['name', 'data_type'])

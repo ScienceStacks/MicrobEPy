@@ -1,6 +1,6 @@
 """Create and manage groups formed from correlated items."""
 
-import __init__
+import microbepy_init
 import constants as cn
 from correlation_statistic import SetSignificanceLevel
 import correlation_statistic as cs

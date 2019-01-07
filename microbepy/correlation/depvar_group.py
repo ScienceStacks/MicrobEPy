@@ -1,6 +1,6 @@
 """Group by values of a dependent variable."""
 
-import __init__
+import microbepy_init
 import constants as cn
 from dataframe_sorter import DataframeSorter
 from model_data_provider import ModelDataProvider

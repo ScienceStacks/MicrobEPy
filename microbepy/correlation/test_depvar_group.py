@@ -1,6 +1,6 @@
 import unittest
 
-import __init__
+import microbepy_init
 import constants as cn
 from depvar_group import IsolateMutationStatistics, DepvarGroup
 import helpers

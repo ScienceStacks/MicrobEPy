@@ -1,7 +1,7 @@
 from schema import Schemas, ColumnSchemas, TableSchemas, \
     FunctionalDependency
 
-import __init__
+import microbepy_init
 import copy
 import collections
 import constants as cn

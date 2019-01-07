@@ -2,7 +2,7 @@
 
 import unittest
 
-import __init__
+import microbepy_init
 import constants as cn
 import genome_correlation
 from genome_correlation import GenomeCorrelation

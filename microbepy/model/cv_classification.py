@@ -1,7 +1,7 @@
 """ Cross validated classification models. """
 
 
-import __init__
+import microbepy_init
 import constants as cn
 import binary_tree_classification as btc
 from cv_model import CVModel

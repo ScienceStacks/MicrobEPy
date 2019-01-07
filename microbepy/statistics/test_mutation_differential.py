@@ -1,4 +1,4 @@
-import __init__
+import microbepy_init
 import util
 from mutation_differential import MutationDifferential
 from util_plot import PlotParms

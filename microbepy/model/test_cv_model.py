@@ -1,4 +1,4 @@
-import __init__
+import microbepy_init
 import helpers
 from cv_regression import CVLinearRegression
 from group_splitter import GroupSplitter

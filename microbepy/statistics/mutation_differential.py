@@ -9,7 +9,7 @@
 """
 
 
-import __init__
+import microbepy_init
 import constants as cn
 import util_data as ud
 import model_data_provider

@@ -23,7 +23,7 @@ Data are identified at two levels:
    cn.KEY_ISOLATE_DVH, cn.KEY_ISOLATE_MMP
 """
 
-import __init__
+import microbepy_init
 import constants as cn
 import isolate_model as im
 from cv_isolate_model import CVIsolateModel

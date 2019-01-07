@@ -2,7 +2,7 @@
 Creates a plot showing the impact of a set of mutations.
 """
 
-import __init__
+import microbepy_init
 import constants as cn
 import util
 import util_data as ud

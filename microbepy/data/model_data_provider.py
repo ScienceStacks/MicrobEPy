@@ -1,7 +1,7 @@
 """Provides data for models of prediction phenotype from genotype."""
 
 
-import __init__
+import microbepy_init
 import util_data as ud
 import constants as cn
 from isolate import Isolate

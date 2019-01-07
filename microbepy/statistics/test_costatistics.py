@@ -1,6 +1,6 @@
 """Tests for simple_statistics"""
 
-import __init__
+import microbepy_init
 import util
 from costatistics import CoStatistics
 import costatistics as co

@@ -2,7 +2,7 @@
 Plots values in phenotype space: cn.RATE, cn.YIELD
 """
 
-import __init__
+import microbepy_init
 import constants as cn
 import util
 import util_data as ud

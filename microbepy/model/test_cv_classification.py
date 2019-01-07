@@ -1,4 +1,4 @@
-import __init__
+import microbepy_init
 import helpers
 from cv_classification import CVBinaryTreeClassification
 import binary_tree_classification as btc

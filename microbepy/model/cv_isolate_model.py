@@ -13,7 +13,7 @@ we leave out a culture that is being predicted.
 The second case is to leave out the isolate pair being predicted.
 """
 
-import __init__
+import microbepy_init
 import constants as cn
 from isolate_model import IsolateModel
 

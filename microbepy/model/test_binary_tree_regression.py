@@ -1,4 +1,4 @@
-import __init__
+import microbepy_init
 import constants as cn
 import helpers
 import util

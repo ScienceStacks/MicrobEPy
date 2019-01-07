@@ -1,4 +1,4 @@
-import __init__
+import microbepy_init
 import helpers
 import isolate_regression as ir
 import isolate_model as rm

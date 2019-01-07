@@ -1,4 +1,4 @@
-import __init__
+import microbepy_init
 from equivalence_class import EquivalenceClass
 import numpy as np
 import unittest

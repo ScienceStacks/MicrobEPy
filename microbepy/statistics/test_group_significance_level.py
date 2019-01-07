@@ -1,6 +1,6 @@
 """Tests for simple_statistics"""
 
-import __init__
+import microbepy_init
 import util
 from group_significance_level import GroupSignificanceLevel
 from model_data_provider import ModelDataProvider

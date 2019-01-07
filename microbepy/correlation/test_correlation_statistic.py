@@ -2,8 +2,8 @@
 
 import unittest
 
-import __init__
-import __init__
+import microbepy_init
+import microbepy_init
 import constants as cn
 import helpers
 import correlation_statistic as cs

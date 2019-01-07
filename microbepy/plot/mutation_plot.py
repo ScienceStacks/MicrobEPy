@@ -1,6 +1,6 @@
 """Provides plots of  mutations for Isolates and Lines."""
 
-import __init__
+import microbepy_init
 import constants as cn
 from dataframe_sorter import DataframeSorter
 import genome_correlation

@@ -1,6 +1,6 @@
 """Manipulate partitions of a set of elements."""
 
-import __init__
+import microbepy_init
 from collections import namedtuple
 import copy
 

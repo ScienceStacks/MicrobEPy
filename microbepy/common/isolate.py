@@ -28,7 +28,7 @@ An clone pairing ID has the format: LLR.TTT.PP.CC
 Wild type isolates begin with the string 'WT' and ancestral types with 'AN' followed by 'S' with '*' in the other positions.
 """
 
-import __init__
+import microbepy_init
 import util
 import constants as cn
 

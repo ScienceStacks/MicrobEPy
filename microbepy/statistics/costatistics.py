@@ -1,6 +1,6 @@
 """Computes Simple Statistics From the Data"""
 
-import __init__
+import microbepy_init
 import constants as cn
 import util
 import util_data

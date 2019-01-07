@@ -3,7 +3,7 @@ Computes Significance Levels for the occurrence
 of observations grouped by mutations being present or absent.
 """
 
-import __init__
+import microbepy_init
 import constants as cn
 import util_data as ud
 import util

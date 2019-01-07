@@ -1,6 +1,6 @@
 """Utilities for creating data."""
 
-import __init__
+import microbepy_init
 import constants as cn
 from isolate_regression import IsolateRegression
 from isolate import Isolate

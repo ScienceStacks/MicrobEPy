@@ -1,6 +1,6 @@
 """Tests for Helpers"""
 
-import __init__
+import microbepy_init
 import helpers as he
 import numpy as np
 import pandas as pd

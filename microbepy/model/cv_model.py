@@ -1,6 +1,6 @@
 """Abstract class for cross validation for models, either regression or classification."""
 
-import __init__
+import microbepy_init
 import constants as cn
 import util
 

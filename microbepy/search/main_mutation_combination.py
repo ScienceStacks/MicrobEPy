@@ -1,6 +1,6 @@
 """Creates files for mutation combinations."""
 
-import __init__
+import microbepy_init
 import constants as cn
 import pandas as pd
 from mutation_combination import MutationCombination

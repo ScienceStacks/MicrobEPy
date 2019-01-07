@@ -2,7 +2,7 @@
 Utilities
 """
 
-import __init__
+import microbepy_init
 import combination_iterator
 import constants as cn
 from equivalence_class import EquivalenceClass

@@ -15,3 +15,4 @@ sudo apt install python-setuptools
 pip install xlrd
 pip install nose
 pip install coverage
+pip install pyyaml

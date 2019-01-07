@@ -1,6 +1,6 @@
 """Module for common regression plots."""
 
-import __init__
+import microbepy_init
 import constants as cn
 from isolate import Isolate
 import isolate_regression as ir

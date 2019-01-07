@@ -1,7 +1,7 @@
 """Classification tree for binary valued variables."""
 
 
-import __init__
+import microbepy_init
 import constants as cn
 import binary_tree_model
 import util

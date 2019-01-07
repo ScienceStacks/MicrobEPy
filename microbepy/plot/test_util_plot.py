@@ -1,5 +1,5 @@
 
-import __init__
+import microbepy_init
 import constants as cn
 import regression_plot as rp
 from util_plot import PlotParms

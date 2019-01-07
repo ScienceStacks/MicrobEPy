@@ -7,7 +7,7 @@ via regression or classification.
 """
 
 
-import __init__
+import microbepy_init
 import util_data as ud
 import constants as cn
 from model_data_provider import ModelDataProvider

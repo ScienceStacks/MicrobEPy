@@ -1,4 +1,4 @@
-import __init__
+import microbepy_init
 from partition import Partition
 
 import copy
