@@ -1,0 +1,4 @@
+# Configuration of MicrobEPy
+#
+# Path to SQL DB
+SQLDB_PATH = None
