@@ -4,6 +4,7 @@ Utilities
 
 import microbepy_init
 import combination_iterator
+import config
 import constants as cn
 from equivalence_class import EquivalenceClass
 import schema
@@ -416,8 +417,10 @@ def addNullRow(df, null=np.nan):
   return df.append(makeNullRow(df), ignore_index=True)
 
 def getDBPath():
-  filename = "%s.db" % cn.DB_NAME
-  path = getDataModelPath(filename)
+  path = config.SQLDB_PATH
+  if path is None:
+    filename = "%s.db" % cn.DB_NAME
+    path = getDataModelPath(filename)
   return path
 
 def getDBConnection():

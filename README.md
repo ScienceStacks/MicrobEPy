@@ -66,6 +66,8 @@ The folder ``Examples`` contains ``Jupyter`` notebooks with examples of the anal
 ## Usage Notes
 1. This project can be embedded as a git submodule. 
 The "project directory" refers to the repository that contains ``microbepy``.
+1. ``microbepy`` can be installed by the command ``python setup.py install`` which makes its libraries available.
+  1. Before running the install command, edit microbepy/microbepy/config.py to provide the correct path for SQLDB\_PATH.
 1. ``microbepy`` expects that the top level ``git`` repository has the file ``Data/data_model/microbepy.db``,
 a SQL file.
 This file should have the same structure as the ``microbeby.db`` file in ``microbepy/Data/data_model/microbepy.db``.

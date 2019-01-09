@@ -1,4 +1,5 @@
 import microbepy_init
+import config
 import helpers
 import util
 
@@ -34,6 +35,7 @@ class TestFunctions(unittest.TestCase):
 
   def setUp(self):
     self.df = DATAFRAME.copy(deep=True)
+    config.SQLDB_PATH = None
 
   def testGetProjectDirectory(self):
     if IGNORE_TEST:
@@ -768,6 +770,14 @@ class TestFunctions(unittest.TestCase):
       path = util.getRootDirectory(key_directory="dummy")
     path = util.getRootDirectory()
     self.assertGreater(len(path), 1)
+
+  def testGetDBPath(self):
+    path = util.getDBPath()
+    self.assertTrue("microbepy" in path)
+    dummy_path = "dummy_path"
+    config.SQLDB_PATH = dummy_path
+    path = util.getDBPath()
+    self.assertEqual(path, dummy_path)
     
 
 if __name__ == '__main__':
