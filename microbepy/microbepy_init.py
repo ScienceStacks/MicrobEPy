@@ -21,7 +21,7 @@ def getProjectDirectory():
   """
   curdir = os.getcwd()
   paths = []
-  # Find the list of subpaths to this name
+  # Find the list of subpaths to this directory
   while len(curdir) > 1:
     paths.append(curdir)
     curdir = os.path.split(curdir)[0]
@@ -43,8 +43,11 @@ def addPythonPaths(project_dir=None):
   if project_dir is None:
     project_dir = getProjectDirectory()
   # Directory of python codes
-  main_code_path = os.path.join(project_dir, PROJECT_NAME)
-  # Directory of python codes
+  files = os.listdir(project_dir)
+  if "__init__.py" not in files:
+    main_code_path = os.path.join(project_dir, PROJECT_NAME)
+  else:
+    main_code_path = project_dir
   sys.path.append(main_code_path)
   for directory in PYTHON_SUBDIRECTORIES:
     path = os.path.join(main_code_path, directory)

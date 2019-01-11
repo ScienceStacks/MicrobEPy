@@ -20,7 +20,12 @@ class TestFunctions(unittest.TestCase):
   @mock.patch('subprocess.call', return_value=mock.Mock())
   def testDoRequirements(self, _):
     # Smoke test
-    setup.doRequirements()
+    setup.pipInstall()
+
+  @mock.patch('subprocess.call', return_value=mock.Mock())
+  def testDoRequirements(self, _):
+    # Smoke test
+    setup.condaInstall()
 
   @mock.patch('os.mkdir', return_value=mock.Mock())
   @mock.patch('shutil.copyfile', return_value=mock.Mock())
