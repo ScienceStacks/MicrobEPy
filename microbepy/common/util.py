@@ -4,7 +4,6 @@ Utilities
 
 import microbepy_init
 import combination_iterator
-import config
 import constants as cn
 from equivalence_class import EquivalenceClass
 import schema
@@ -132,7 +131,7 @@ def getDataModelPath(filename):
   if cn.IS_TEST:
     return cn.TEST_PATH
   else:
-    return getPath([getRootDirectory(), DATA_DIR, DATA_MODEL_DIR],
+    return getPath([getIdentifiedDirectory(), DATA_DIR, DATA_MODEL_DIR],
         filename)
 
 def getReferenceDataPath(filename):
@@ -141,7 +140,7 @@ def getReferenceDataPath(filename):
   :param str filename or None: name of file in sequence data
      if None, returns the path to the directory
   """
-  root_directory = getRootDirectory()
+  root_directory = getIdentifiedDirectory()
   return getPath([root_directory, DATA_DIR, REFERENCE_DIR],
       filename)
 
@@ -417,9 +416,20 @@ def addNullRow(df, null=np.nan):
   return df.append(makeNullRow(df), ignore_index=True)
 
 def getDBPath():
-  path = config.SQLDB_PATH
-  if path is None:
-    filename = "%s.db" % cn.DB_NAME
+  """
+  There are 3 possibilities for the database path
+  1. in the Data directory at the root of the microbepy project
+  2. in the Data directory at the root of a containing project
+  3. in the data_base directory in an installed package
+  """
+  filename = "%s.db" % cn.DB_NAME
+  try:
+    srcdir = getIdentifiedDirectory(key_directory='data_base')
+  except:
+    srcdir = None
+  if srcdir is not None:
+    path = os.path.join(srcdir, filename)
+  else:
     path = getDataModelPath(filename)
   return path
 
@@ -1083,9 +1093,9 @@ def makeDataframeFromXlsx(path, sheet_no=0):
   return data.parse(sheet_no)
 
 def getRootDataDirectory():
-  return getPath([getRootDirectory(), DATA_DIR], None)
+  return getPath([getIdentifiedDirectory(), DATA_DIR], None)
 
-def getRootDirectory(key_directory=".git"):
+def getIdentifiedDirectory(key_directory=".git"):
   """
   The root directory is the root of the enclosing project
   (since microbepy is intended to be a submodule).

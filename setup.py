@@ -59,8 +59,8 @@ def main():
         description='Python support for analysis of Microbial Communities',
         author='Joseph Hellerstein',
         author_email='jlheller@uw.edu',
-        packages=['microbepy'],
         package_dir={'microbepy': 'microbepy'},
+        packages=['microbepy'],
         package_data={'microbepy': ['data_base/microbepy.db']},
         )
     print("--Pip installs.")
