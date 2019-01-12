@@ -76,25 +76,16 @@ class TestFunctions(unittest.TestCase):
       return
     result = util.getRootDataDirectory()
     split_result = result.split(DIR_SEPARATOR)
-    self.assertTrue('Data' in split_result)
+    self.assertTrue(
+        len(util.DATA_DIRECTORIES.intersection(split_result)) > 0)
 
   def testGetDataPaths(self):
     if IGNORE_TEST:
       return
     path = util.getDataModelPath(cn.DB_NAME + ".db")
-    def test(func, is_directory=False):
-      if is_directory:
-        path = func()
-      else:
-        path = func(None)
-      self.assertTrue(os.path.isdir(path))
- 
-    funcs = [
-        util.getDataModelPath,
-        ]
-    test(util.getRootDataDirectory, is_directory=True)
-    for func in funcs:
-      test(func)
+    self.assertTrue(os.path.isfile(path))
+    path = util.getDataModelPath(None)
+    self.assertTrue(os.path.isdir(path))
     
   def testGetGeneNamesFromList(self):
     if IGNORE_TEST:
@@ -764,12 +755,16 @@ class TestFunctions(unittest.TestCase):
     self.assertEqual(len(ggene_ids), len(df.index) + 1)
 
   def testGetRootDirectory(self):
+    if IGNORE_TEST:
+      return
     with self.assertRaises(ValueError):
       path = util.getIdentifiedDirectory(key_directory="dummy")
     path = util.getIdentifiedDirectory()
     self.assertGreater(len(path), 1)
 
   def testGetDBPath(self):
+    if IGNORE_TEST:
+      return
     path = util.getDBPath()
     self.assertTrue("microbepy" in path)
     

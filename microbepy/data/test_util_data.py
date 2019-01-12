@@ -150,7 +150,7 @@ class TestFunctions(unittest.TestCase):
         _, df_y = ud.makeNoisyBin(num_rows, noise_prob,
           predicate=predicate)
         fract_one = (1.0*df_y[cn.VALUE].sum())/len(df_y)
-        self.assertLess(abs(fract_one - one_prob), 0.05)
+        self.assertLess(abs(fract_one - one_prob), 0.1)
 
   def testMakeMutationGroupDF(self):
     if IGNORE_TEST:

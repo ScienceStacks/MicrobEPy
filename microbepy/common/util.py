@@ -20,8 +20,11 @@ import sys
 import types
 
 DATA_DIR = "Data"
+ALT_DATA_DIR = 'data_base'  # Directory if project is installed
 REFERENCE_DIR = "reference"
 DATA_MODEL_DIR = "data_model"
+DATA_DIRECTORIES = set([DATA_DIR, ALT_DATA_DIR])
+GIT_DIR = ".git"
 
 
 PYTHON_SUBDIRECTORIES = [
@@ -131,8 +134,14 @@ def getDataModelPath(filename):
   if cn.IS_TEST:
     return cn.TEST_PATH
   else:
-    return getPath([getIdentifiedDirectory(), DATA_DIR, DATA_MODEL_DIR],
+    try:
+      path = getIdentifiedDirectory(key_directory=GIT_DIR)
+      result = getPath([path, DATA_DIR, DATA_MODEL_DIR],
         filename)
+    except ValueError:
+      path = getIdentifiedDirectory(key_directory=ALT_DATA_DIR)
+      result = getPath([path, ALT_DATA_DIR], filename)
+  return result
 
 def getReferenceDataPath(filename):
   """
@@ -424,11 +433,12 @@ def getDBPath():
   """
   filename = "%s.db" % cn.DB_NAME
   try:
-    srcdir = getIdentifiedDirectory(key_directory='data_base')
+    srcdir = getIdentifiedDirectory(key_directory=ALT_DATA_DIR)
   except:
     srcdir = None
   if srcdir is not None:
-    path = os.path.join(srcdir, filename)
+    path = os.path.join(srcdir, ALT_DATA_DIR)
+    path = os.path.join(path, filename)
   else:
     path = getDataModelPath(filename)
   return path
@@ -1095,12 +1105,16 @@ def makeDataframeFromXlsx(path, sheet_no=0):
 def getRootDataDirectory():
   return getPath([getIdentifiedDirectory(), DATA_DIR], None)
 
-def getIdentifiedDirectory(key_directory=".git"):
+def getIdentifiedDirectory(key_directory=None):
   """
   The root directory is the root of the enclosing project
   (since microbepy is intended to be a submodule).
   :return str: path to top folder of enclosed project
   """
+  if key_directory is None:
+    directories = DATA_DIRECTORIES
+  else:
+    directories = set([key_directory])
   curdir = os.getcwd()
   paths = []
   while len(curdir) > 1:
@@ -1108,7 +1122,7 @@ def getIdentifiedDirectory(key_directory=".git"):
     curdir = os.path.split(curdir)[0]
   paths.reverse()
   for path in paths:
-    if key_directory in os.listdir(path):
+    if len(directories.intersection(os.listdir(path))) > 0:
       return path
   raise ValueError("%s not found." % key_directory)
       

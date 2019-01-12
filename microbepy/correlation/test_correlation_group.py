@@ -97,8 +97,11 @@ class TestCorrelationGroup(unittest.TestCase):
     species = cn.SPECIES_MIX_DVH
     line_row = 'HA2'
     line_col = 'HR2'
-    dfs = cg.CorrelationGroup.makeCorrelationGroupDF(species,
-        line_row, line_col)
+    try:
+      dfs = cg.CorrelationGroup.makeCorrelationGroupDF(species,
+          line_row, line_col)
+    except FileNotFoundError:
+      return
     for key in list(dfs.keys()):
       df = dfs[key]
       self.assertTrue(helpers.isValidDataFrame(df, df.columns))
@@ -108,8 +111,11 @@ class TestCorrelationGroup(unittest.TestCase):
         self.assertTrue(isinstance(idx, int))
 
   def testMakeCorrelationGroupDF2(self):
-    dfs = cg.CorrelationGroup.makeCorrelationGroupDF(cn.SPECIES_MIX_MMP, 
-        'HA2', 'HR2')
+    try:
+      dfs = cg.CorrelationGroup.makeCorrelationGroupDF(cn.SPECIES_MIX_MMP, 
+          'HA2', 'HR2')
+    except FileNotFoundError:
+      return
     self.assertIsNone(dfs)
 
 
