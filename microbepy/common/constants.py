@@ -1,8 +1,7 @@
 """Data related constants."""
 
-import microbepy_init
 from collections import namedtuple
-from schema import TableSchemas
+from microbepy.common.schema import TableSchemas
 import numpy as np
 
 
