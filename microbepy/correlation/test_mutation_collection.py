@@ -1,10 +1,11 @@
-import microbepy_init
-import constants as cn
-import group_collection
-import helpers
-from mutation_collection import MutationCollection
-import model_data_provider
-import util
+import microbepy
+from microbepy.common import constants as cn
+from microbepy.correlation import group_collection
+from microbepy.common import helpers
+from microbepy.correlation.mutation_collection  \
+    import MutationCollection
+from microbepy.data import model_data_provider
+from microbepy.common import util
 
 import copy
 import numpy as np
@@ -37,7 +38,8 @@ class TestMutationCollection(unittest.TestCase):
     collection = MutationCollection.makeGroups(
         self.provider)
     self.assertGreater(len(collection), 0)
-    self.assertTrue(isinstance(collection[0], group_collection.Group))
+    self.assertTrue(isinstance(collection[0], 
+        microbepy.common.group_collection.Group))
 
   def testConstructor(self):
     if IGNORE_TEST:

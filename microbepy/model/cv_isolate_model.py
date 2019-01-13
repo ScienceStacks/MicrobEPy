@@ -13,9 +13,8 @@ we leave out a culture that is being predicted.
 The second case is to leave out the isolate pair being predicted.
 """
 
-import microbepy_init
-import constants as cn
-from isolate_model import IsolateModel
+from microbepy.common import constants as cn
+from microbepy.model.isolate_model import IsolateModel
 
 import pandas as pd
 import numpy as np
@@ -45,8 +44,6 @@ class CVIsolateModel(object):
         boolean valued function of a dataframe row
     :param dict kwargs: keyword arguments used when instantiating IsolateModel
     """
-    if not issubclass(model_cls, IsolateModel):
-      raise ValueError("model_cls must inherit from IsolateModel!")
     self._model_cls = model_cls
     self._kwargs = kwargs
     self._leave_out = leave_out

@@ -2,13 +2,12 @@
 Utilities
 """
 
-import microbepy_init
-import combination_iterator
-import constants as cn
-from equivalence_class import EquivalenceClass
-import schema
+from microbepy.common import combination_iterator
+from microbepy.common import constants as cn
+from microbepy.common.equivalence_class import EquivalenceClass
+from microbepy.common import schema
 
-from collections import namedtuple
+import collections
 import math
 import matplotlib.cm as cm
 import numpy as np
@@ -36,7 +35,7 @@ TOLERANCE = 0.001
 GENE_PREFIXES = ['MMP', 'DVU']
 SMALL_DETERMINANT = 1e-6
 
-Venn = namedtuple('Venn', ['both', 'only1', 'only2'])
+Venn = collections.namedtuple('Venn', ['both', 'only1', 'only2'])
 
 def isNumber(obj):
   try:

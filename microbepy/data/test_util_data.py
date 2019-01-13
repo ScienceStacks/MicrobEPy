@@ -1,10 +1,9 @@
-import microbepy_init
-import helpers
-import util
-import constants as cn
-import util_data as ud
-from model_data_provider import ModelDataProvider
-from mutation_context import MutationContext
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common.mutation_context import MutationContext
+from microbepy.common import util
+from microbepy.data import util_data as ud
+from microbepy.data.model_data_provider import ModelDataProvider
 
 import numpy as np
 import pandas as pd
@@ -12,7 +11,7 @@ import scipy.stats as stats
 import unittest
 
 
-IGNORE_TEST = False
+IGNORE_TEST = True
 
 MUTATION_CONTEXT = MutationContext(cn.RATE, cn.GENE_ID)
 
@@ -210,6 +209,8 @@ class TestFunctions(unittest.TestCase):
     self.assertEqual(len(df[cn.REPLICATION].unique()), 1)
 
   def testStripMutationGroup(self):
+    if IGNORE_TEST:
+       return
     def test(group, expected):
       result = ud.stripMutationGroup(group)
       trues = [r == e for r, e in zip(result, expected)]
@@ -222,9 +223,25 @@ class TestFunctions(unittest.TestCase):
         ["aaa", "bbb"])
 
   def testMakeIsolateData(self):
+    if IGNORE_TEST:
+       return
     df = ud.makeIsolateData()
     self.assertTrue(helpers.isValidDataFrame(df, df.columns,
         nan_columns=df.columns))
+
+  def testMakeStandardizedResidualsForPairings(self):
+    if IGNORE_TEST:
+       return
+    df = ud.makeStandardizedResidualsForPairings()
+    self.assertTrue(helpers.isValidDataFrame(df,
+        [cn.KEY_CULTURE, ud.RATE_RES, ud.YIELD_RES]))
+
+  def testFilterOutlierCultures(self):
+    df_initial = ud.makeCultureIsolateMutationDF()
+    df = ud.filterOutlierCultures(df_initial)
+    self.assertGreater(len(df_initial), len(df))
+    self.assertTrue(helpers.isValidDataFrame(df, df_initial.columns,
+        nan_columns=df_initial.columns))
 
 if __name__ == '__main__':
     unittest.main()

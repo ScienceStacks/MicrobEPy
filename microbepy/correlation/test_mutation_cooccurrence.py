@@ -1,14 +1,14 @@
-import microbepy_init
-import constants as cn
-import copy
-import helpers
-import util
-import mutation_cooccurrence as mc
-from model_data_provider import ModelDataDualProvider
-from mutation_context import MutationContext
-from range_constraint import RangeConstraintVector, RangeConstraint
-from study_context import nextStudyContext
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.correlation.mutation_cooccurrence as mc
+from microbepy.data.model_data_provider import ModelDataDualProvider
+from microbepy.common.mutation_context import MutationContext
+from microbepy.common.range_constraint  \
+    import RangeConstraintVector, RangeConstraint
+from microbepy.common.study_context import nextStudyContext
 
+import copy
 import numpy as np
 import pandas as pd
 import unittest

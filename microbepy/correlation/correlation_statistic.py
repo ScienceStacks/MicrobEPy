@@ -22,8 +22,7 @@ true of the two binary variables in a binomial in k and
 p = m1/M*m2/M.
 """
 
-import microbepy_init
-import constants as cn
+from microbepy.common import constants as cn
 
 import math
 import operator as op

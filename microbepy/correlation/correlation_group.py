@@ -1,12 +1,11 @@
 """Create and manage groups formed from correlated items."""
 
-import microbepy_init
-import constants as cn
-from correlation_statistic import SetSignificanceLevel
-import correlation_statistic as cs
-from genome_correlation import GenomeCorrelation
-from partition import Partition
-import util
+from microbepy.common import constants as cn
+from microbepy.correlation.correlation_statistic import SetSignificanceLevel
+from microbepy.correlation import correlation_statistic as cs
+from microbepy.correlation.genome_correlation import GenomeCorrelation
+from microbepy.common.partition import Partition
+from microbepy.common import util
 
 import copy
 import matplotlib.pyplot as plt

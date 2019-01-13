@@ -23,12 +23,11 @@ Data are identified at two levels:
    cn.KEY_ISOLATE_DVH, cn.KEY_ISOLATE_MMP
 """
 
-import microbepy_init
-import constants as cn
-import isolate_model as im
-from cv_isolate_model import CVIsolateModel
-from isolate import Isolate
-import util
+from microbepy.common import constants as cn
+from microbepy.common.isolate import Isolate
+from microbepy.common import util
+from microbepy.model import isolate_model as im
+from microbepy.model.cv_isolate_model import CVIsolateModel
 
 import collections
 from sklearn import linear_model

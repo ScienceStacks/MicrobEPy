@@ -1,7 +1,7 @@
 """Abstract class for models of Isolates."""
 
-import constants as cn
-import util
+from microbepy.common import constants as cn
+from microbepy.common import util
 
 import pandas as pd
 import numpy as np

@@ -1,8 +1,7 @@
-import microbepy_init
-import util
-import constants as cn
-from isolate import Isolate
-import isolate
+from microbepy.common import constants as cn
+from microbepy.common.isolate import Isolate
+from microbepy.common import isolate
+from microbepy.common import util
 
 import numpy as np
 import os

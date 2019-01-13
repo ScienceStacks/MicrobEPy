@@ -1,6 +1,6 @@
 """Reorders rows and/or columns to group together categoricals."""
 
-import util
+from microbepy.common import util
 
 import numpy as np
 import pandas as pd

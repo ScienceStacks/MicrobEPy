@@ -1,8 +1,8 @@
-import microbepy_init
-import helpers
-import util
-import constants as cn
-from group_collection import Group, GroupCollection, ELEMENT_SEPARATOR
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.common import constants as cn
+from microbepy.common.group_collection  \
+    import Group, GroupCollection, ELEMENT_SEPARATOR
 
 import numpy as np
 import pandas as pd

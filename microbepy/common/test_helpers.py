@@ -1,7 +1,7 @@
 """Tests for Helpers"""
 
-import microbepy_init
-import helpers as he
+from microbepy.common import helpers as he
+
 import numpy as np
 import pandas as pd
 import os

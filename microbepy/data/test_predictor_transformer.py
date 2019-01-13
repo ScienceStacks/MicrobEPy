@@ -1,12 +1,11 @@
-import microbepy_init
-import helpers
-import util
-import genome_model as gm
-from model_data_provider import ModelDataProvider
-from predictor_transformer import PredictorTransformer
-from mutation_context import MutationContext
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.common.mutation_context import MutationContext
+from microbepy.data.model_data_provider import ModelDataProvider
+from microbepy.data.predictor_transformer import PredictorTransformer
+#from microbepy.model import genome_model as gm
 
-import constants as cn
 import numpy as np
 import pandas as pd
 import unittest

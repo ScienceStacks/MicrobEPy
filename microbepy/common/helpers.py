@@ -1,8 +1,7 @@
 """ Helpers for Tests. """
 
-import microbepy_init
-import constants as cn
-import util
+from microbepy.common import constants as cn
+from microbepy.common import util
 
 import os.path
 import pandas as pd

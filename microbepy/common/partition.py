@@ -1,10 +1,9 @@
 """Manipulate partitions of a set of elements."""
 
-import microbepy_init
-from collections import namedtuple
+import collections
 import copy
 
-SetMutation = namedtuple('SetMutation',
+SetMutation = collections.namedtuple('SetMutation',
     'cur_src new_src cur_dst new_dst')
 
 

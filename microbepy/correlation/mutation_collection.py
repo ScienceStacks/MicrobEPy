@@ -3,14 +3,13 @@ A collection of mutation groups, where each group consists of
 mutations that occur in the same isolates.
 """
 
-import constants as cn
-from dataframe_sorter import DataframeSorter
-import group_collection
-import model_data_provider
-from util_plot import PlotParms
-import util
+from microbepy.common import constants as cn
+from microbepy.common.dataframe_sorter import DataframeSorter
+from microbepy.common import group_collection
+from microbepy.data import model_data_provider
+from microbepy.plot.util_plot import PlotParms
+from microbepy.common import util
 
-from collections import namedtuple
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np

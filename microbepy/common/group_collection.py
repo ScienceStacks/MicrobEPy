@@ -9,11 +9,9 @@ A GroupCollection is a set of Groups.
 """
 
 
-import microbepy_init
-import constants as cn
-import util
+from microbepy.common import constants as cn
+from microbepy.common import util
 
-from collections import namedtuple
 import numpy as np
 import pandas as pd
 

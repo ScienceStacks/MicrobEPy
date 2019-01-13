@@ -1,5 +1,4 @@
-import microbepy_init
-from equivalence_class import EquivalenceClass
+from microbepy.common.equivalence_class import EquivalenceClass
 import numpy as np
 import unittest
 

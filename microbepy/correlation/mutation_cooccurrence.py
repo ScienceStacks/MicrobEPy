@@ -31,14 +31,14 @@ that are indexed by isolate pair and have the following columns:
     cn.GROUP, cn.RATE, cn.YIELD, mutations (with binary values)
 """
 
-import constants as cn
-from model_data_provider import ModelDataDualProvider,  \
-    ModelDataProvider
-from study_context import nextStudyContext
-from range_constraint import RangeConstraint
-import util
+from microbepy.common import constants as cn
+from microbepy.data.model_data_provider  \
+    import ModelDataDualProvider, ModelDataProvider
+from microbepy.common.study_context import nextStudyContext
+from microbepy.common.range_constraint import RangeConstraint
+from microbepy.common import util
 
-from collections import namedtuple
+from collections
 import itertools
 from sklearn import linear_model
 import matplotlib.pyplot as plt
@@ -86,7 +86,7 @@ class CoStatistic(object):
           sort=True)
 
 
-RegressionResult = namedtuple('RegressionResult', 
+RegressionResult = collections.namedtuple('RegressionResult', 
     ['predictions', 'rsq', 'slope'])
 
 class MutationCooccurrence(object):

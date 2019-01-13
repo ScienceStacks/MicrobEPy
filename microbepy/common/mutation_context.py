@@ -6,8 +6,8 @@ A context includes:
   extrema (optional), either min or max
 """
 
-import constants as cn
-import util
+from microbepy.common import constants as cn
+from microbepy.common import util
 
 import itertools
 

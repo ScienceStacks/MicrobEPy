@@ -1,17 +1,19 @@
 """Utilities for creating data."""
 
-import microbepy_init
-import constants as cn
-from isolate_regression import IsolateRegression
-from isolate import Isolate
+from microbepy.common import constants as cn
+from microbepy.common import util
+from microbepy.common.isolate import Isolate
 
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
-import util
 
 MAX_STD = 3.0
 MUTATION_GROUP_STRING = "--"  # Mutation group string
+RATE_AVG = 'rate_avg'
+YIELD_AVG = 'yield_avg'
+RATE_RES = 'rate_res'
+YIELD_RES = 'yield_res'
 
 def makeCultureIsolateMutationDF(is_separate_species=True):
   """
@@ -61,16 +63,45 @@ def makeCultureIsolateMutationDF(is_separate_species=True):
   df[cn.POSITION] = df[cn.POSITION].apply(lambda v: int(v))
   return df
 
-def filterOutlierCultures(df):
+def makeStandardizedResidualsForPairings():
   """
-  Removes cultures that have large residuals for the
-  NonParamatericIsolateRegression.
+  Calculates the standardized residuals from the means of each pairing.
+  :return pd.DataFrame: cn.KEY_CULTURE, RATE_RES, YIELD_RES
+  """
+  def standardizeDF(df, columns):
+    for col in columns:
+      df[col] = (df[col] - df[col].mean()) / df[col].std()
+  #
+  columns = [cn.KEY_CULTURE, cn.KEY_ISOLATE_DVH, cn.KEY_ISOLATE_MMP,
+      cn.RATE, cn.YIELD]
+  df_full = makeCultureIsolateMutationDF()[columns].copy()
+  df_full = df_full.drop_duplicates()
+  df_mean = df_full.groupby(
+      [cn.KEY_ISOLATE_DVH, cn.KEY_ISOLATE_MMP]).mean()
+  df_mean = df_mean.rename(columns={cn.RATE: RATE_AVG,
+      cn.YIELD: YIELD_AVG})
+  df_merge = df_full.merge(df_mean, 
+      on=[cn.KEY_ISOLATE_DVH, cn.KEY_ISOLATE_MMP], how='inner')
+  df_merge[RATE_RES] = df_merge[cn.RATE] - df_merge[RATE_AVG]
+  df_merge[YIELD_RES] = df_merge[cn.YIELD] - df_merge[YIELD_AVG]
+  df_result = df_merge[[cn.KEY_CULTURE, RATE_RES, YIELD_RES]].copy()
+  standardizeDF(df_result, [RATE_RES, YIELD_RES])
+  return df_result
+
+def filterOutlierCultures(df, max_std=MAX_STD):
+  """
+  Removes cultures that have large residuals for the mean
+  of their pairings.
   :param pd.DataFrame df:  has column cn.KEY_CULTURE
   :return pd.DataFrame:
   """
-  cultures = IsolateRegression.getSmallResidualCultures(
-      max_std=MAX_STD)
-  #
+  df_res = makeStandardizedResidualsForPairings()
+  cultures = []
+  for _, row in df_res.iterrows():
+    if ((np.abs(row[RATE_RES]) >= max_std)
+        or (np.abs(row[YIELD_RES]) >= max_std)):
+      cultures.append(row[cn.KEY_CULTURE])
+  # Delete the outlier rows
   rows = []
   for _, row in df.iterrows():
     if row[cn.KEY_CULTURE] in cultures:

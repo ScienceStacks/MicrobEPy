@@ -1,13 +1,12 @@
 """Provides data for models of prediction phenotype from genotype."""
 
 
-import microbepy_init
-import util_data as ud
-import constants as cn
-from isolate import Isolate
-from predictor_transformer import PredictorTransformer
-from study_context import StudyContext
-import util
+from microbepy.common import constants as cn
+from microbepy.common import util
+from microbepy.common.isolate import Isolate
+from microbepy.common.study_context import StudyContext
+from microbepy.data import util_data as ud
+from microbepy.data.predictor_transformer import PredictorTransformer
 
 import numpy as np
 import pandas as pd

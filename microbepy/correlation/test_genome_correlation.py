@@ -2,11 +2,10 @@
 
 import unittest
 
-import microbepy_init
-import constants as cn
-import genome_correlation
-from genome_correlation import GenomeCorrelation
-import genome_correlation as gc
+from microbepy.common import constants as cn
+from microbepy.correlation import genome_correlation
+from microbepy.correlation.genome_correlation import GenomeCorrelation
+from microbepy.common import genome_correlation as gc
 import helpers
 import numpy as np
 import pandas as pd

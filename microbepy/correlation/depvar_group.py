@@ -1,12 +1,12 @@
 """Group by values of a dependent variable."""
 
-import microbepy_init
-import constants as cn
-from dataframe_sorter import DataframeSorter
-from model_data_provider import ModelDataProvider
-from study_context import StudyContext
-from range_constraint import RangeConstraintVector, RangeConstraint
-import util
+from microbepy.common import constants as cn
+from microbepy.common.dataframe_sorter import DataframeSorter
+from microbepy.data.model_data_provider import ModelDataProvider
+from microbepy.common.study_context import StudyContext
+from microbepy.common.range_constraint   \
+    import RangeConstraintVector, RangeConstraint
+from microbepy.common import util
 
 import copy
 import matplotlib.pyplot as plt

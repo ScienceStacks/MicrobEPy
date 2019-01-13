@@ -1,4 +1,4 @@
-from dataframe_sorter import DataframeSorter
+from microbepy.common.dataframe_sorter import DataframeSorter
 
 import unittest
 import numpy as np

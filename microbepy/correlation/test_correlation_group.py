@@ -1,10 +1,9 @@
-import microbepy_init
-import helpers
-import util
-import constants as cn
-import correlation_group as cg
-from genome_correlation import GenomeCorrelation
-import genome_correlation as gc
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.common import constants as cn
+from microbepy.correlation import correlation_group as cg
+from microbepy.correlation.genome_correlation import GenomeCorrelation
+from microbepy.correlation import genome_correlation as gc
 
 
 import numpy as np

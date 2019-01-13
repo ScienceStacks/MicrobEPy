@@ -5,16 +5,16 @@ This module cannot depend on any other modules in the project
 in order to avoid circular references.
 """
 
-import microbepy_init
-from collections import namedtuple
+import collections
   
-ColumnSchema = namedtuple('ColumnSchema', ['name', 'data_type'])
-TableSchema = namedtuple('TableSchema', [
+ColumnSchema = collections.namedtuple('ColumnSchema', 
+    ['name', 'data_type'])
+TableSchema = collections.namedtuple('TableSchema', [
     'name',     # Table name
     'columns',  # columns in the table
     'key',       # join column
     ])
-FunctionalDependency = namedtuple('FunctionalDependency',
+FunctionalDependency = collections.namedtuple('FunctionalDependency',
   ['ind', 'dep'])
 
 #################################

@@ -5,7 +5,7 @@ RangeConstraintVector is for a set of intervals.
 """
 
 import numpy as np
-import constants as cn
+from microbepy.common import constants as cn
 
 
 class RangeConstraint(object):

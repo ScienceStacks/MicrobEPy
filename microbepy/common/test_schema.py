@@ -1,10 +1,9 @@
-from schema import Schemas, ColumnSchemas, TableSchemas, \
-    FunctionalDependency
+from microbepy.common.schema  \
+    import Schemas, ColumnSchemas, TableSchemas, FunctionalDependency
+from microbepy.common import constants as cn
 
-import microbepy_init
 import copy
 import collections
-import constants as cn
 import unittest
 
 

@@ -5,8 +5,8 @@ changed such as the dependent variable, mutation granularity,
 and line.
 """
 
-import constants as cn
-import util
+from microbepy.common import constants as cn
+from microbepy.common import util
 
 import itertools
 

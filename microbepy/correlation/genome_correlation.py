@@ -16,15 +16,15 @@ Example of plotting a correlation heatmap:
   genome_correlation.plotHeatmap(df)
 """
 
-import matplotlib.pyplot as plt
 
-import microbepy_init
-import constants as cn
+from microbepy.common import constants as cn
+from microbepy.correlation import correlation_statistic as cs
+from microbepy.common.isolate import Isolate
+from microbepy.common import util
+
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import util
-from isolate import Isolate
-import correlation_statistic as cs
 
 import copy
 

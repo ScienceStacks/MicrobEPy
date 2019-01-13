@@ -1,9 +1,8 @@
 """ Transforms predictor variables.  """
 
 
-import microbepy_init
-import constants as cn
-import util
+from microbepy.common import constants as cn
+from microbepy.common import util
 
 import numpy as np
 import pandas as pd

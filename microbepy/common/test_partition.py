@@ -1,5 +1,4 @@
-import microbepy_init
-from partition import Partition
+from microbepy.common.partition import Partition
 
 import copy
 import numpy as np

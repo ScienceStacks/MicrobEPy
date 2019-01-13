@@ -7,21 +7,19 @@ via regression or classification.
 """
 
 
-import microbepy_init
-import util_data as ud
-import constants as cn
-from model_data_provider import ModelDataProvider
-import util_data as ud
-from group_splitter import GroupSplitter
-from cv_regression import CVLinearRegression,  \
+from microbepy.common import constants as cn
+from microbepy.common import util
+from microbepy.common.mutation_context import MutationContext
+from microbepy.data import util_data as ud
+from microbepy.data.model_data_provider import ModelDataProvider
+from microbepy.data.predictor_transformer import PredictorTransformer
+from microbepy.model.cv_regression import CVLinearRegression,  \
     CVLassoRegression,  \
     CVForwardRegression, CVBinaryTreeRegression
-from cv_classification import CVBinaryTreeClassification,  \
-    CVClassification
-from isolate_regression import IsolateRegression
-from predictor_transformer import PredictorTransformer
-from mutation_context import MutationContext
-import util
+from microbepy.model.cv_classification   \
+    import CVBinaryTreeClassification,  CVClassification
+from microbepy.model.group_splitter import GroupSplitter
+from microbepy.model.isolate_regression import IsolateRegression
 
 import inspect
 import numpy as np

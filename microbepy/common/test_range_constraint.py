@@ -1,8 +1,8 @@
-import microbepy_init
-import helpers
-import util
-import constants as cn
-from range_constraint import RangeConstraint, RangeConstraintVector
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.common import constants as cn
+from microbepy.common.range_constraint  \
+    import RangeConstraint, RangeConstraintVector
 
 import numpy as np
 import pandas as pd

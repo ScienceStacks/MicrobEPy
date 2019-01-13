@@ -1,7 +1,6 @@
 """Iteratively supplies combinations with optional exclusions."""
 
-import microbepy_init
-import constants as cn
+from microbepy.common import constants as cn
 
 import itertools
 
