@@ -1,12 +1,11 @@
 """Creates files for mutation combinations."""
 
-import microbepy_init
-import constants as cn
-import pandas as pd
-from mutation_combination import MutationCombination
-from mutation_context import nextMutationContext
+from microbepy.common import constants as cn
+from microbepy.search.mutation_combination import MutationCombination
+from microbepy.common.mutation_context import nextMutationContext
 
 import os
+import pandas as pd
 
 WRITE_COUNT = 5  # Number of combinations between writes
 COMBINATION_SIZE_ONE_LINE = 2

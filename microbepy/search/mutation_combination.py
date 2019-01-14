@@ -1,11 +1,12 @@
 """Finds significant mutation combinations."""
 
-import constants as cn
-from group_significance_level import GroupSignificanceLevel
-from model_data_provider import ModelDataProvider
-from combination_iterator import CombinationIterator
-import util
-import util_data as ud
+from microbepy.common import constants as cn
+from microbepy.common import util
+from microbepy.common.combination_iterator import CombinationIterator
+from microbepy.data import util_data as ud
+from microbepy.data.model_data_provider import ModelDataProvider
+from microbepy.statistics.group_significance_level  \
+    import GroupSignificanceLevel
 
 import itertools
 import numpy as np

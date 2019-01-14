@@ -1,9 +1,10 @@
-import microbepy_init
-import helpers
-import util
-import constants as cn
-from main_mutation_combination import main, doCombination
-import mutation_context
+
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common import mutation_context
+from microbepy.common import util
+from microbepy.search.main_mutation_combination  \
+    import main, doCombination
 
 import numpy as np
 import os
