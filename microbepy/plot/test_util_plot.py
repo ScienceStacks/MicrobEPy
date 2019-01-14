@@ -1,8 +1,7 @@
 
-import microbepy_init
-import constants as cn
-import regression_plot as rp
-from util_plot import PlotParms
+from microbepy.common import constants as cn
+from microbepy.plot import regression_plot as rp
+from microbepy.plot.util_plot import PlotParms
 
 import matplotlib.pyplot as plt
 import numpy as np

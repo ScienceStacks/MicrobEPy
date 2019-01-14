@@ -1,8 +1,7 @@
-import microbepy_init
-import constants as cn
-import helpers
-import util
-from phenotype_plot import PhenotypePlot
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.plot.phenotype_plot import PhenotypePlot
 
 import numpy as np
 import pandas as pd

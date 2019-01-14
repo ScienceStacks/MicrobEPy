@@ -2,14 +2,14 @@
 Creates a plot showing the impact of a set of mutations.
 """
 
-import microbepy_init
-import constants as cn
-import util
-import util_data as ud
-from isolate import Isolate
-from model_data_provider import ModelDataProvider
-from group_significance_level import GroupSignificanceLevel
-from mutation_context import MutationContext
+from microbepy.common import constants as cn
+from microbepy.common.isolate import Isolate
+from microbepy.common.mutation_context import MutationContext
+from microbepy.common import util
+from microbepy.data import util_data as ud
+from microbepy.data.model_data_provider import ModelDataProvider
+from microbepy.statistics.group_significance_level  \
+    import GroupSignificanceLevel
 
 import matplotlib.pyplot as plt
 import numpy as np

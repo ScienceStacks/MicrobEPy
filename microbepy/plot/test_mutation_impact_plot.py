@@ -1,8 +1,7 @@
-import microbepy_init
-import constants as cn
-import helpers
-import util
-from mutation_impact_plot import MutationImpactPlot
+from microbepy.common import constants as cn 
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.plot.mutation_impact_plot import MutationImpactPlot
 
 import numpy as np
 import pandas as pd

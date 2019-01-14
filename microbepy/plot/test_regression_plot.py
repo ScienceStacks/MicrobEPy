@@ -1,10 +1,9 @@
-import microbepy_init
-import helpers
-import util
-import constants as cn
-import regression_plot as rp
-from util_plot import PlotParms
-import isolate_regression as ir
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.common import constants as cn
+from microbepy.plot import regression_plot as rp
+from microbepy.plot.util_plot import PlotParms
+from microbepy.model import isolate_regression as ir
 
 import numpy as np
 import pandas as pd

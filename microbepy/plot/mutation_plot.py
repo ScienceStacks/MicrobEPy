@@ -1,18 +1,17 @@
 """Provides plots of  mutations for Isolates and Lines."""
 
-import microbepy_init
-import constants as cn
-from dataframe_sorter import DataframeSorter
-import genome_correlation
-from isolate import Isolate
-from model_data_provider import ModelDataProvider
-import numpy as np
-import pandas as pd
-from util_plot import PlotParms
-from study_context import StudyContext
-import util
+from microbepy.common import constants as cn
+from microbepy.common.dataframe_sorter import DataframeSorter
+from microbepy.common.isolate import Isolate
+from microbepy.common.study_context import StudyContext
+from microbepy.common import util
+from microbepy.correlation import genome_correlation
+from microbepy.data.model_data_provider import ModelDataProvider
+from microbepy.plot.util_plot import PlotParms
 
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 
 COLORS = ['red', 'green', 'blue']

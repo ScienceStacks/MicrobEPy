@@ -1,10 +1,9 @@
-
-import microbepy_init
-import constants as cn
-import helpers
-from mutation_plot import MutationIsolatePlot, MutationLinePlot
-from model_data_provider import ModelDataProvider
-from study_context import StudyContext
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common.study_context import StudyContext
+from microbepy.data.model_data_provider import ModelDataProvider
+from microbepy.plot.mutation_plot  \
+    import MutationIsolatePlot, MutationLinePlot
 
 import numpy as np
 import pandas as pd

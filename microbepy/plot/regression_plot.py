@@ -1,11 +1,10 @@
 """Module for common regression plots."""
 
-import microbepy_init
-import constants as cn
-from isolate import Isolate
-import isolate_regression as ir
-import isolate_model as im
-from util_plot import PlotParms
+from microbepy.common import constants as cn
+from microbepy.common.isolate import Isolate
+from microbepy.model import isolate_regression as ir
+from microbepy.model import isolate_model as im
+from microbepy.plot.util_plot import PlotParms
 
 import pandas as pd
 import matplotlib.cm as cm
