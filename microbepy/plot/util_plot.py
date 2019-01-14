@@ -1,6 +1,6 @@
 """Utilities for plotting."""
 
-import constants as cn
+from microbepy.common import constants as cn
 
 import matplotlib.pyplot as plt
 

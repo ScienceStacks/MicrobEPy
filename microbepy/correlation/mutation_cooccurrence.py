@@ -38,7 +38,7 @@ from microbepy.common.study_context import nextStudyContext
 from microbepy.common.range_constraint import RangeConstraint
 from microbepy.common import util
 
-from collections
+import collections
 import itertools
 from sklearn import linear_model
 import matplotlib.pyplot as plt

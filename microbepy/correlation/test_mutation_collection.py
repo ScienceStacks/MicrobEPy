@@ -1,6 +1,6 @@
 import microbepy
 from microbepy.common import constants as cn
-from microbepy.correlation import group_collection
+from microbepy.common import group_collection
 from microbepy.common import helpers
 from microbepy.correlation.mutation_collection  \
     import MutationCollection

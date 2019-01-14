@@ -3,13 +3,13 @@
 import unittest
 
 from microbepy.common import constants as cn
-from microbepy.correlation import genome_correlation
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.correlation import genome_correlation as gc
 from microbepy.correlation.genome_correlation import GenomeCorrelation
-from microbepy.common import genome_correlation as gc
-import helpers
+
 import numpy as np
 import pandas as pd
-import util
 
 
 IGNORE_TEST = False
@@ -184,11 +184,11 @@ class TestFunctions(unittest.TestCase):
       # Tests if symmetric
       self.assertTrue(df.equals(df.transpose()) == is_symmetric)
     #
-    df_15_15 = genome_correlation.makeSiglvlDF(DF15, DF15)
+    df_15_15 = gc.makeSiglvlDF(DF15, DF15)
     test(df_15_15)
-    df_152_15 = genome_correlation.makeSiglvlDF(DF152, DF15)
+    df_152_15 = gc.makeSiglvlDF(DF152, DF15)
     test(df_152_15, is_symmetric=False)
-    df_15_152 = genome_correlation.makeSiglvlDF(DF15, DF152)
+    df_15_152 = gc.makeSiglvlDF(DF15, DF152)
     test(df_15_152, is_symmetric=False)
     self.assertTrue(df_15_152.equals(df_152_15.transpose()))
     

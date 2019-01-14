@@ -1,7 +1,7 @@
 from microbepy.common import constants as cn
 from microbepy.common import helpers
 from microbepy.common import util
-from microbepy.correlation.mutation_cooccurrence as mc
+from microbepy.correlation import mutation_cooccurrence as mc
 from microbepy.data.model_data_provider import ModelDataDualProvider
 from microbepy.common.mutation_context import MutationContext
 from microbepy.common.range_constraint  \

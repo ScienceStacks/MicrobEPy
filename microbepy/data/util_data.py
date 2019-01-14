@@ -104,7 +104,7 @@ def filterOutlierCultures(df, max_std=MAX_STD):
   # Delete the outlier rows
   rows = []
   for _, row in df.iterrows():
-    if row[cn.KEY_CULTURE] in cultures:
+    if not row[cn.KEY_CULTURE] in cultures:
       rows.append(row)
   return pd.DataFrame(rows)
 

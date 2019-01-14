@@ -4,7 +4,7 @@ from microbepy.common import constants as cn
 from microbepy.correlation.depvar_group  \
     import IsolateMutationStatistics, DepvarGroup
 from microbepy.common import helpers
-from microbepy.common from study_context import StudyContext
+from microbepy.common.study_context import StudyContext
 from microbepy.data.model_data_provider import ModelDataProvider
 from microbepy.common import util
 

@@ -4,8 +4,8 @@ import unittest
 
 from microbepy.common import constants as cn
 from microbepy.common import helpers
-from microbepy.common.correlation_statistic as cs
 from microbepy.common import util
+from microbepy.correlation import correlation_statistic as cs
 
 import copy
 import math
