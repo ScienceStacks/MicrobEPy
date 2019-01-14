@@ -1,9 +1,8 @@
 """Computes Simple Statistics From the Data"""
 
-import microbepy_init
-import constants as cn
-import util
-import util_data
+from microbepy.common import constants as cn
+from microbepy.common import util
+from microbepy.data import util_data
 
 import pandas as pd
 import numpy as np

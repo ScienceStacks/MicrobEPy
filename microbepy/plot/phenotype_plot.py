@@ -2,14 +2,13 @@
 Plots values in phenotype space: cn.RATE, cn.YIELD
 """
 
-import microbepy_init
-import constants as cn
-import util
-import util_data as ud
-from model_data_provider import ModelDataDualProvider, ModelDataProvider
-from group_significance_level import GroupSignificanceLevel
-from study_context import StudyContext
-from util_plot import PlotParms
+from microbepy.common import constants as cn
+from microbepy.common import util
+from microbepy.data import util_data as ud
+from microbepy.data.model_data_provider  \
+    import ModelDataDualProvider, ModelDataProvider
+from microbepy.common.study_context import StudyContext
+from microbepy.plot.util_plot import PlotParms
 
 import matplotlib.pyplot as plt
 import numpy as np

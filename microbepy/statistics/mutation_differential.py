@@ -9,14 +9,13 @@
 """
 
 
-import microbepy_init
-import constants as cn
-import util_data as ud
-import model_data_provider
-from range_constraint import RangeConstraint
-from phenotype_plot import PhenotypePlot
-from util_plot import PlotParms
-import util
+from microbepy.common import constants as cn
+from microbepy.common import util
+from microbepy.common.range_constraint import RangeConstraint
+from microbepy.data import util_data as ud
+from microbepy.data import model_data_provider
+from microbepy.plot.phenotype_plot import PhenotypePlot
+from microbepy.plot.util_plot import PlotParms
 
 from collections import namedtuple
 import math

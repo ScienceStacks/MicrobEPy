@@ -1,12 +1,11 @@
 """Tests for simple_statistics"""
 
-import microbepy_init
-import util
-from costatistics import CoStatistics
-import costatistics as co
-import constants as cn
-import helpers
-import util_data
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.data import util_data
+from microbepy.statistics.costatistics import CoStatistics
+from microbepy.statistics import costatistics as co
 
 import numpy as np
 import os

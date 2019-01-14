@@ -1,13 +1,13 @@
 """Tests for simple_statistics"""
 
-import microbepy_init
-import util
-from group_significance_level import GroupSignificanceLevel
-from model_data_provider import ModelDataProvider
-from mutation_context import MutationContext
-import util_data as ud
-import constants as cn
-import helpers
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.common.mutation_context import MutationContext
+from microbepy.data import util_data as ud
+from microbepy.data.model_data_provider import ModelDataProvider
+from microbepy.statistics.group_significance_level  \
+    import GroupSignificanceLevel
 
 import numpy as np
 import os

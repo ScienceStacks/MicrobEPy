@@ -1,9 +1,9 @@
-import microbepy_init
-import util
-from mutation_differential import MutationDifferential
-from util_plot import PlotParms
-import constants as cn
-import helpers
+from microbepy.common import util
+from microbepy.statistics.mutation_differential  \
+    import MutationDifferential
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.plot.util_plot import PlotParms
 
 import numpy as np
 import os

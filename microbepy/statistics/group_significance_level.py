@@ -3,12 +3,10 @@ Computes Significance Levels for the occurrence
 of observations grouped by mutations being present or absent.
 """
 
-import microbepy_init
-import constants as cn
-import util_data as ud
-import util
+from microbepy.common import constants as cn
+from microbepy.common import util
+from microbepy.data import util_data as ud
 
-from collections import namedtuple
 import numpy as np
 import pandas as pd
 from scipy.stats import t as t_dist
