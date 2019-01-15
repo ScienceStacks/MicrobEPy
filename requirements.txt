@@ -1,3 +1,8 @@
 coverage
 nose
 xlrd
+numpy
+pandas
+matplotlib
+jupyter
+scikit-learn
