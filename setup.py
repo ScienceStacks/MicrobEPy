@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import distutils.core
+from setuptools import setup, find_packages
 import os
 import subprocess
 import shutil
@@ -14,12 +14,10 @@ CONDA_PKGS = ['python', 'numpy', 'pandas', 'matplotlib',
 'jupyter notebook', 'scikit-learn']
 
 # Install required packages
-def pipInstall():
+def getPipRequirements():
   with open(REQUIREMENTS_FILE) as fd:
     requirements = fd.readlines()
-  for requirement in requirements:
-    pkg = requirement.replace('\n', '')
-    subprocess.call(["pip", "install", pkg])
+  return requirements
 
 # Conda installs
 def condaInstall():
@@ -54,17 +52,15 @@ def isCondaInstalled():
 def main():
   if isCondaInstalled():
     copyData()
-    distutils.core.setup(name='microbepy',
+    setup(name='microbepy',
         version='1.0',
         description='Python support for analysis of Microbial Communities',
         author='Joseph Hellerstein',
         author_email='jlheller@uw.edu',
-        package_dir={'microbepy': 'microbepy'},
-        packages=['microbepy'],
+        packages=find_packages(include="microbepy.*"),
+        install_requires=getPipRequirements(),
         package_data={'microbepy': ['data_base/microbepy.db']},
         )
-    print("--Pip installs.")
-    pipInstall()
     print("--Conda installs.")
     condaInstall()
   else:
