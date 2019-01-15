@@ -1,8 +1,7 @@
-import microbepy_init
-import helpers
-from group_splitter import GroupSplitter
-import constants as cn
-import util
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.model.group_splitter import GroupSplitter
 
 import numpy as np
 import pandas as pd

@@ -1,11 +1,10 @@
 """ Cross validated regression models. """
 
 
-import microbepy_init
-import constants as cn
-import binary_tree_regression as btr
-from cv_model import CVModel
-import util
+from microbepy.common import constants as cn
+from microbepy.common import util
+from microbepy.model import binary_tree_regression as btr
+from microbepy.model.cv_model import CVModel
 
 import copy
 import numpy as np

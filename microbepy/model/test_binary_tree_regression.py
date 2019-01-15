@@ -1,9 +1,8 @@
-import microbepy_init
-import constants as cn
-import helpers
-import util
-import binary_tree_regression as btr
-import util_data as ud
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.data import util_data as ud
+from microbepy.model import binary_tree_regression as btr
 
 import numpy as np
 import pandas as pd

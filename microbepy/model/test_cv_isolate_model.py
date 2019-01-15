@@ -1,10 +1,9 @@
-import microbepy_init
-import helpers
-import util
-import constants as cn
-from cv_isolate_model import CVIsolateModel
-import isolate_model as rm
-import isolate_regression as ir
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.common import constants as cn
+from microbepy.model.cv_isolate_model import CVIsolateModel
+from microbepy.model import isolate_model as rm
+from microbepy.model import isolate_regression as ir
 
 import numpy as np
 import pandas as pd

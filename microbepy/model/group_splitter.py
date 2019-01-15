@@ -1,7 +1,6 @@
 """Splits Data into training and test data by groups."""
 
-import microbepy_init
-import constants as cn
+from microbepy.common import constants as cn
 
 import numpy as np
 import pandas as pd

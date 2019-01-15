@@ -1,10 +1,9 @@
-import microbepy_init
-import helpers
-from cv_regression import CVLinearRegression
-from group_splitter import GroupSplitter
-import constants as cn
-import util
-import util_data as ud
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.data import util_data as ud
+from microbepy.model.cv_regression import CVLinearRegression
+from microbepy.model.group_splitter import GroupSplitter
 
 import numpy as np
 import pandas as pd

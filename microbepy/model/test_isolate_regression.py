@@ -1,14 +1,13 @@
-import microbepy_init
-import helpers
-import isolate_regression as ir
-import isolate_model as rm
-import regression_plot as rp
-from isolate import Isolate
-import util
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common.isolate import Isolate
+from microbepy.common import util
+from microbepy.model import isolate_model as rm
+from microbepy.model import isolate_regression as ir
+from microbepy.plot import regression_plot as rp
 
 import copy
 import collections
-import constants as cn
 import numpy as np
 import pandas as pd
 import os

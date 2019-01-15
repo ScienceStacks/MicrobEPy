@@ -1,12 +1,12 @@
-import microbepy_init
-import helpers
-from cv_regression import CVLinearRegression, CVLassoRegression,  \
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.data import util_data as ud
+from microbepy.model.cv_regression  \
+    import CVLinearRegression, CVLassoRegression,  \
     CVRegression, CVForwardRegression, CVBinaryTreeRegression
-import binary_tree_regression as btr
-from group_splitter import GroupSplitter
-import constants as cn
-import util
-import util_data as ud
+from microbepy.model import binary_tree_regression as btr
+from microbepy.model.group_splitter import GroupSplitter
 
 import numpy as np
 import pandas as pd

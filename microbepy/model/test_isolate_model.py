@@ -1,11 +1,10 @@
-import microbepy_init
-import helpers
-import isolate_model as im
-import util
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.model import isolate_model as im
+from microbepy.common import util
 
 import copy
 import collections
-import constants as cn
 import numpy as np
 import pandas as pd
 import os

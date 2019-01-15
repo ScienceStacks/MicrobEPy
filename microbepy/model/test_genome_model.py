@@ -1,12 +1,12 @@
-import microbepy_init
-import constants as cn
-import helpers
-import util
-import genome_model as gm
-from cv_regression import CVBinaryTreeRegression
-from cv_classification import CVBinaryTreeClassification
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common.isolate import Isolate
+from microbepy.common import util
+from microbepy.model import genome_model as gm
+from microbepy.model.cv_regression import CVBinaryTreeRegression
+from microbepy.model.cv_classification  \
+    import CVBinaryTreeClassification
 
-from isolate import Isolate
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt

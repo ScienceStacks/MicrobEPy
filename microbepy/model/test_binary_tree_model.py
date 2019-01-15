@@ -1,11 +1,10 @@
-import microbepy_init
-import constants as cn
-import helpers
-import util
-import binary_tree_regression as btr
-from helpers_test_model import makeTree
-import binary_tree_model as btm
-import util_data as ud
+from microbepy.common import constants as cn
+from microbepy.common import helpers
+from microbepy.common import util
+from microbepy.data import util_data as ud
+from microbepy.model import binary_tree_regression as btr
+from microbepy.model import binary_tree_model as btm
+from microbepy.model.helpers_test_model import makeTree
 
 import copy
 import numpy as np

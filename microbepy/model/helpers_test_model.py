@@ -1,8 +1,8 @@
 """Helpers for testing the models directory."""
 
-import binary_tree_regression as btr
-import binary_tree_model as btm
-import constants as cn
+from microbepy.common import constants as cn
+from microbepy.model import binary_tree_model as btm
+from microbepy.model import binary_tree_regression as btr
 
 import pandas as pd
 import numpy as np
