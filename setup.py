@@ -56,13 +56,14 @@ def condaInstall():
 # Main logic
 def main():
   if isCondaInstalled():
+    packages = [d for d in find_packages() if not ".tests" in d]
     copyData()
     setup(name='microbepy',
         version='1.0',
         description='Python support for analysis of Microbial Communities',
         author='Joseph Hellerstein',
         author_email='jlheller@uw.edu',
-        packages=find_packages(include="microbepy.*"),
+        packages=packages,
         install_requires=getPipRequirements(),
         package_data={'microbepy': ['data_base/microbepy.db']},
         )
