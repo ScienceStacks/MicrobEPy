@@ -10,6 +10,8 @@ DATA_DIR = "data_base"
 PROJECT_NAME = "microbepy"
 DB_NAME = "%s.db" % PROJECT_NAME
 REQUIREMENTS_FILE = "requirements.txt"
+CONDA_PKGS = ['python', 'numpy', 'pandas', 'matplotlib',
+'jupyter notebook', 'scikit-learn']
 
 # Install required packages
 def getPipRequirements():
@@ -46,6 +48,11 @@ def isCondaInstalled():
     result = False
   return result
 
+# Conda installs
+def condaInstall():
+  for pkg in CONDA_PKGS:
+    subprocess.call(["conda", "install", pkg])
+
 # Main logic
 def main():
   if isCondaInstalled():
@@ -59,6 +66,8 @@ def main():
         install_requires=getPipRequirements(),
         package_data={'microbepy': ['data_base/microbepy.db']},
         )
+    print("--Conda installs")
+    condaInstall()
   else:
     print("***No conda installation detected. Please install.")
 
