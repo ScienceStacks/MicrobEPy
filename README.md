@@ -64,7 +64,7 @@ The folder ``Examples`` contains ``Jupyter`` notebooks with examples of the anal
 
 
 ## Install Notes
-1. Copy the SQL data file to ``Data/data\_model/microbepy.db``
+1. Copy the SQL data file to ``Data/data_model/microbepy.db``
 1. Install miniconda (or anaconda) if it has not been installed.
 1. From the top microbepy folder, run ``python setup.py install``.
 1. Run the tests to verify the install: ``cd microbepy/microbepy; nosetests tests``
