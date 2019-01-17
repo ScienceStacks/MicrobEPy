@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 
+from microbepy.common import config
+from microbepy.common import constants as cn
+
 from setuptools import setup, find_packages
 import os
-import subprocess
 import shutil
+import subprocess
+import sys
 
 
 DATA_DIR = "data_base"
@@ -24,21 +28,6 @@ def condaInstall():
   for pkg in CONDA_PKGS:
     subprocess.call(["conda", "install", pkg])
 
-# Copy data to install directory
-def copyData():
-  curdir = os.path.realpath(os.curdir)
-  dst = os.path.join(curdir, PROJECT_NAME)
-  dst = os.path.join(dst, DATA_DIR)
-  if not os.path.isdir(dst):
-    os.mkdir(dst)
-  dst = os.path.join(dst, DB_NAME)
-  src = os.path.join(curdir, "Data")
-  src = os.path.join(src, "data_model")
-  src = os.path.join(src, DB_NAME)
-  if not os.path.isfile(src):
-    raise ValueError("Cannot file microbepy.db")
-  shutil.copyfile(src, dst)
-
 # Test to see if conda has been installed
 def isCondaInstalled():
   result = True
@@ -56,8 +45,13 @@ def condaInstall():
 # Main logic
 def main():
   if isCondaInstalled():
+    # Setup the configuration directory
+    sqldb_path = os.getcwd()
+    for ele in ["Data", "data_model", cn.SQLDB_FILE]:
+      sqldb_path = os.path.join(sqldb_path, ele)
+    yaml_settings = {cn.SQLDB_PATH_NAME: sqldb_path}
+    config.setup(yaml_default=yaml_settings, is_forced=True)
     packages = [d for d in find_packages() if not ".tests" in d]
-    copyData()
     setup(name='microbepy',
         version='1.0',
         description='Python support for analysis of Microbial Communities',

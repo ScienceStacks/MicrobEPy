@@ -3,6 +3,7 @@ Utilities
 """
 
 from microbepy.common import combination_iterator
+from microbepy.common import config
 from microbepy.common import constants as cn
 from microbepy.common.equivalence_class import EquivalenceClass
 from microbepy.common import schema
@@ -428,18 +429,24 @@ def getDBPath():
   There are 3 possibilities for the database path
   1. in the Data directory at the root of the microbepy project
   2. in the Data directory at the root of a containing project
-  3. in the data_base directory in an installed package
+  3. it is pointed by the .microbepy config.yaml file
   """
-  filename = "%s.db" % cn.DB_NAME
-  try:
-    srcdir = getIdentifiedDirectory(key_directory=ALT_DATA_DIR)
-  except:
-    srcdir = None
-  if srcdir is not None:
-    path = os.path.join(srcdir, ALT_DATA_DIR)
-    path = os.path.join(path, filename)
+  yaml_dict = config.setup()
+  if yaml_dict[cn.SQLDB_PATH_NAME] is not None:
+    path = yaml_dict[cn.SQLDB_PATH_NAME]
   else:
-    path = getDataModelPath(filename)
+    filename = "%s.db" % cn.DB_NAME
+    try:
+      srcdir = getIdentifiedDirectory(key_directory=ALT_DATA_DIR)
+    except:
+      srcdir = None
+    if srcdir is not None:
+      path = os.path.join(srcdir, ALT_DATA_DIR)
+      path = os.path.join(path, filename)
+    else:
+      path = getDataModelPath(filename)
+  if path is None:
+    raise ValueError("***You mus setup .microbepy/config.yaml with 'SQLDB_PATH: <your path>'")
   return path
 
 def getDBConnection():
@@ -1124,4 +1131,3 @@ def getIdentifiedDirectory(key_directory=None):
     if len(directories.intersection(os.listdir(path))) > 0:
       return path
   raise ValueError("%s not found." % key_directory)
-      

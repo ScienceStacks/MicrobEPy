@@ -1,7 +1,10 @@
 """Data related constants."""
 
 from microbepy.common.schema import TableSchemas
+
 import numpy as np
+import os
+from pathlib import Path
 
 
 # Database
@@ -355,3 +358,14 @@ SL_RESAMPLE = "sl_resample"  # Computed from resample
 EXT_MIN = "min"
 EXT_MAX = "max"
 EXT_VALUES = [EXT_MIN, EXT_MAX]
+      
+# File paths
+CONFIG_DIR = ".microbepy"  # Name of the directory with config info
+HOME_DIR = str(Path.home())
+CONFIG_DIR_PATH = os.path.join(HOME_DIR, CONFIG_DIR)
+CONFIG_FILE = "config.yaml"  # Name of the configuration file
+CONFIG_FILE_PATH = os.path.join(CONFIG_DIR_PATH, CONFIG_FILE)
+SQLDB_PATH = None  # Default value for the SQLDB_PATH
+SQLDB_PATH_NAME = "SQLDB_PATH"
+YAML_DEFAULT = {SQLDB_PATH_NAME: SQLDB_PATH}
+SQLDB_FILE = "%s.db" % DB_NAME
