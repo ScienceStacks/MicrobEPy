@@ -435,7 +435,7 @@ def getDBPath():
   if yaml_dict[cn.SQLDB_PATH_NAME] is not None:
     path = yaml_dict[cn.SQLDB_PATH_NAME]
   else:
-    filename = "%s.db" % cn.DB_NAME
+    filename = cn.SQLDB_FILE
     try:
       srcdir = getIdentifiedDirectory(key_directory=ALT_DATA_DIR)
     except:

@@ -81,7 +81,7 @@ class TestFunctions(unittest.TestCase):
   def testGetDataPaths(self):
     if IGNORE_TEST:
       return
-    path = util.getDataModelPath(cn.DB_NAME + ".db")
+    path = util.getDataModelPath(cn.SQLDB_FILE)
     self.assertTrue(os.path.isfile(path))
     path = util.getDataModelPath(None)
     self.assertTrue(os.path.isdir(path))

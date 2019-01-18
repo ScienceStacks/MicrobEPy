@@ -9,8 +9,6 @@ from microbepy.common import constants as cn
 import os
 import yaml
 
-YAML_DEFAULT = {cn.SQLDB_PATH_NAME: cn.SQLDB_PATH}
-
 def initialize():
   """
   Sets up the directory if needed
@@ -19,9 +17,9 @@ def initialize():
     return
   os.mkdir(cn.CONFIG_DIR_PATH)
 
-def setup(yaml_default=YAML_DEFAULT, is_forced=False):
+def setup(yaml_default=cn.YAML_DEFAULT, is_forced=False):
   """
-  Ensures that the cn.CONFIG_FILE is present.
+  Ensures that the cn.SQLDB_FILE is present.
   :param str yaml_default: yaml used if none is present
   :param bool is_forced: force the yaml file to the default
   """
@@ -32,7 +30,7 @@ def setup(yaml_default=YAML_DEFAULT, is_forced=False):
   else:
     yaml_dict = yaml_default
   lines = yaml.dump(yaml_dict, default_flow_style=False)
-  if os.path.isfile(cn.CONFIG_FILE_PATH):
+  if os.path.isdir(cn.CONFIG_DIR_PATH):
     with open(cn.CONFIG_FILE_PATH, 'w') as fd:
       yaml.dump(yaml_dict, fd, default_flow_style=False)
   return yaml_dict

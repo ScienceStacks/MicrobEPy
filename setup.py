@@ -3,7 +3,7 @@
 from microbepy.common import config
 from microbepy.common import constants as cn
 
-from setuptools import setup, find_packages
+import setuptools
 import os
 import shutil
 import subprocess
@@ -46,13 +46,10 @@ def condaInstall():
 def main():
   if isCondaInstalled():
     # Setup the configuration directory
-    sqldb_path = os.getcwd()
-    for ele in ["Data", "data_model", cn.SQLDB_FILE]:
-      sqldb_path = os.path.join(sqldb_path, ele)
-    yaml_settings = {cn.SQLDB_PATH_NAME: sqldb_path}
-    config.setup(yaml_default=yaml_settings, is_forced=True)
-    packages = [d for d in find_packages() if not ".tests" in d]
-    setup(name='microbepy',
+    config.setup(yaml_default=cn.YAML_DEFAULT, is_forced=True)
+    packages = [d for d in setuptools.find_packages() 
+        if not ".tests" in d]
+    setuptools.setup(name='microbepy',
         version='1.0',
         description='Python support for analysis of Microbial Communities',
         author='Joseph Hellerstein',

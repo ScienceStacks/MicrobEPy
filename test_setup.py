@@ -1,6 +1,6 @@
 import setup
-import distutils.core
 
+import setuptools
 import shutil
 import sys
 import unittest
@@ -10,12 +10,6 @@ IGNORE_TEST = False
     
 
 class TestFunctions(unittest.TestCase):
-
-  @mock.patch('os.mkdir', return_value=mock.Mock())
-  @mock.patch('shutil.copyfile', return_value=mock.Mock())
-  def testCopyData(self, _, __):
-    # Smoke test
-    setup.copyData()
 
   @mock.patch('subprocess.call', return_value=mock.Mock())
   def testDoRequirements(self, _):
@@ -30,7 +24,7 @@ class TestFunctions(unittest.TestCase):
   @mock.patch('os.mkdir', return_value=mock.Mock())
   @mock.patch('shutil.copyfile', return_value=mock.Mock())
   @mock.patch('subprocess.call', return_value=mock.Mock())
-  @mock.patch('distutils.core.setup', return_value=mock.Mock())
+  @mock.patch('setuptools.setup', return_value=mock.Mock())
   def testMain(self, _, __, ___, ____):
     # Smoke test
     setup.main()

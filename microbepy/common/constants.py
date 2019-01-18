@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 # Database
-DB_NAME = "microbepy"
+PROJECT_NAME = "microbepy"
 
 # Species
 SPECIES_MIX_DVH = 'D'
@@ -365,7 +365,9 @@ HOME_DIR = str(Path.home())
 CONFIG_DIR_PATH = os.path.join(HOME_DIR, CONFIG_DIR)
 CONFIG_FILE = "config.yaml"  # Name of the configuration file
 CONFIG_FILE_PATH = os.path.join(CONFIG_DIR_PATH, CONFIG_FILE)
-SQLDB_PATH = None  # Default value for the SQLDB_PATH
 SQLDB_PATH_NAME = "SQLDB_PATH"
-YAML_DEFAULT = {SQLDB_PATH_NAME: SQLDB_PATH}
-SQLDB_FILE = "%s.db" % DB_NAME
+SQLDB_FILE = "%s.db" % PROJECT_NAME
+DEFAULT_SQLDB_PATH = HOME_DIR
+for ele in [PROJECT_NAME, "Data", "data_model", SQLDB_FILE]:
+  DEFAULT_SQLDB_PATH = os.path.join(DEFAULT_SQLDB_PATH, ele)
+YAML_DEFAULT = {SQLDB_PATH_NAME: DEFAULT_SQLDB_PATH}
