@@ -2,7 +2,6 @@
 
 from microbepy.common.schema import TableSchemas
 
-import numpy as np
 import os
 from pathlib import Path
 
@@ -62,7 +61,8 @@ EXPERIMENT_SC = "SC"
 EXPERIMENT_NULL = ""
 
 # None values
-NONE = np.nan
+#NONE = np.nan
+NONE = None
 
 # Column in the Data Model
 AA_CHANGE = 'aa_change'  # str amino acid

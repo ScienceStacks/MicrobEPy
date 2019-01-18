@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from microbepy.common import config
 from microbepy.common import constants as cn
 
 import setuptools
@@ -46,7 +45,6 @@ def condaInstall():
 def main():
   if isCondaInstalled():
     # Setup the configuration directory
-    config.setup(yaml_default=cn.YAML_DEFAULT, is_forced=True)
     packages = [d for d in setuptools.find_packages() 
         if not ".tests" in d]
     setuptools.setup(name='microbepy',
@@ -58,6 +56,9 @@ def main():
         install_requires=getPipRequirements(),
         package_data={'microbepy': ['data_base/microbepy.db']},
         )
+    # Other actions
+    from microbepy.common import config
+    config.setup(yaml_default=cn.YAML_DEFAULT, is_forced=True)
     print("--Conda installs")
     condaInstall()
   else:
