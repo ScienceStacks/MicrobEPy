@@ -26,7 +26,7 @@ def getPipRequirements():
 # Conda installs
 def condaInstall():
   for pkg in CONDA_PKGS:
-    subprocess.call(["conda", "install", pkg])
+    subprocess.call(["conda_pkg_install.sh"])
 
 # Test to see if conda has been installed
 def isCondaInstalled():

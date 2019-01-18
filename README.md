@@ -64,8 +64,8 @@ The folder ``Examples`` contains ``Jupyter`` notebooks with examples of the anal
 
 
 ## Install Notes
-1. Install miniconda (or anaconda) if it has not been installed.
-1. From the top microbepy folder, run ``python setup.py install``.
+1. Install miniconda (or anaconda) if it has not been installed. You can use the bash script ``setup_conda.sh``. (After you install miniconda, you'll need to start a new terminal session so that you have the correct search path.)
+1. From the top microbepy folder, run ``python setup.py install``. This may take some time since several conda packages must be installed.
 1. Verify the install by: ``cd microbepy/microbepy; nosetests tests``
 1. Update the configuration.
   1. ``cd $HOME/.microbepy``
