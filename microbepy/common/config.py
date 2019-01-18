@@ -32,6 +32,7 @@ def setup(yaml_default=YAML_DEFAULT, is_forced=False):
   else:
     yaml_dict = yaml_default
   lines = yaml.dump(yaml_dict, default_flow_style=False)
-  with open(cn.CONFIG_FILE_PATH, 'w') as fd:
-    fd.writelines(lines)
+  if os.path.isfile(cn.CONFIG_FILE_PATH):
+    with open(cn.CONFIG_FILE_PATH, 'w') as fd:
+      yaml.dump(yaml_dict, fd, default_flow_style=False)
   return yaml_dict

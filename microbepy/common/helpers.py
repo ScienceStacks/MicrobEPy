@@ -62,3 +62,34 @@ def isValidDataFrame(df, expected_columns, min_rows=1,
           import pdb; pdb.set_trace()
         return False
   return True
+
+
+class MockFileDescriptor():
+
+  def __init__(self, path, mode):
+    self.fd = open(path, mode)
+
+  def __enter__(*pargs, **kwargs):
+    pass
+
+  def __exit__(*pargs, **kwargs):
+    pass
+
+  def close(self):
+    self.fd.close()
+
+  def read(*pargs):
+    self = pargs[0]
+    if len(pargs) > 1:
+      return self.fd.read(pargs[1])
+    else:
+      return self.fd.read()
+
+  def readlines(self):
+    return self.fd.readlines()
+
+  def write(*pargs, **kwargs):
+    pass
+
+  def writelines(*pargs, **kwargs):
+    pass

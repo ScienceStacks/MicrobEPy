@@ -35,6 +35,32 @@ class TestFunctions(unittest.TestCase):
     columns = list(data.keys())
     df3 = pd.DataFrame(data)
     self.assertFalse(he.isValidDataFrame(df3, columns))
+
+
+class TestMockFileDescriptor(unittest.TestCase):
+  
+  def setUp(self):
+    self.mocker = he.MockFileDescriptor(__file__, "r")
+
+  def tearDown(self):
+    self.mocker.close()
+
+  def testRead(self):
+    result = self.mocker.read()
+    self.assertTrue(isinstance(result, str))
+
+  def testReadLines(self):
+    result = self.mocker.readlines()
+    self.assertTrue(isinstance(''.join(result), str))
+
+  def testWrite(self):
+    self.mocker.write()
+
+  def testWriteLines(self):
+    self.mocker.writelines()
+
+
+
     
 
 if __name__ == '__main__':
