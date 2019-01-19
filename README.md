@@ -68,5 +68,5 @@ The folder ``Examples`` contains ``Jupyter`` notebooks with examples of the anal
 1. From the top microbepy folder, run ``python setup.py install``. This may take some time since several conda packages must be installed.
 1. Verify the install by: ``cd microbepy/microbepy; nosetests tests``
 1. Update the configuration.
-  1. ``cd $HOME/.microbepy``
-  1. Edit config.yml to insert the path to your data.
+   1. ``cd $HOME/.microbepy``
+   1. Edit config.yml to insert the path to your data.
