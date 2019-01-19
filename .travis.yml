@@ -14,6 +14,7 @@ install:
   - conda info --all
   - conda env create --quiet --name microbepy --file environment.yml
   - source activate microbepy
+  - pip install pyyaml
 
 script:
   - bash setup_config.sh
