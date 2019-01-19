@@ -17,6 +17,4 @@ install:
 
 script:
   - bash setup_config.sh
-  - coverage run -m unittest discover -s microbepy/tests
-  - flake8 .
-  - coveralls
+  - nosetests microbepy/tests
