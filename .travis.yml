@@ -14,7 +14,7 @@ install:
   - conda info --all
   - conda env create --quiet --name microbepy --file environment.yml
   - source activate microbepy
-  - pip3 install pyyaml xlrd matplotlib numpy pandas python scikit-learn
+  - pip3 install pyyaml xlrd matplotlib numpy pandas scikit-learn
 
 script:
   - bash setup_config.sh
