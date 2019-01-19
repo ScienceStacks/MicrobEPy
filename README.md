@@ -1,3 +1,5 @@
+<img src="https://travis-ci.org/ScienceStacks/microbepy.svg?branch=master" width="50"/>
+
 <img src="microbepy_logo.png" alt="drawing" width="200"/>
 
 # ``microbepy`` (Pronounced "microbe pie")
