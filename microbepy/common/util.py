@@ -450,7 +450,12 @@ def getDBPath():
   return path
 
 def getDBConnection():
-  return sql.connect(getDBPath())
+  path = getDBPath()
+  try:
+    conn = sql.connect(path)
+  except:
+    raise ValueError("Invalid path to DB: %s" % path)
+  return conn
 
 def getDuplicates(values):
   """

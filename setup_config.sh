@@ -1,3 +1,7 @@
 #!/bin/bash
 mkdir ../.microbepy
-echo "SQLDB_PATH: /home/ubuntu/microbepy/Data/data_model/microbepy.db" > ../.microbepy/config.yml
+cd Data/data_model
+PATH="`pwd`/microbepy.db"
+cd ../..
+echo "SQLDB_PATH: ${PATH}" > ../.microbepy/config.yml
+/bin/cat ../.microbepy/config.yml
