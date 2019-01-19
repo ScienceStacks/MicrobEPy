@@ -3,7 +3,6 @@
 from microbepy.common.schema import TableSchemas
 
 import os
-from pathlib import Path
 
 
 # Database
@@ -361,7 +360,9 @@ EXT_VALUES = [EXT_MIN, EXT_MAX]
       
 # File paths
 CONFIG_DIR = ".microbepy"  # Name of the directory with config info
-HOME_DIR = str(Path.home())
+HOME_DIR = os.path.dirname(os.path.abspath(__file__))
+for _ in range(3):
+  HOME_DIR = os.path.dirname(HOME_DIR)
 CONFIG_DIR_PATH = os.path.join(HOME_DIR, CONFIG_DIR)
 CONFIG_FILE = "config.yml"  # Name of the configuration file
 CONFIG_FILE_PATH = os.path.join(CONFIG_DIR_PATH, CONFIG_FILE)
