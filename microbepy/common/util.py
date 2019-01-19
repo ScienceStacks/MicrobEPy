@@ -429,7 +429,7 @@ def getDBPath():
   There are 3 possibilities for the database path
   1. in the Data directory at the root of the microbepy project
   2. in the Data directory at the root of a containing project
-  3. it is pointed by the .microbepy config.yaml file
+  3. it is pointed by the cn.CONFIG_FILE
   """
   yaml_dict = config.setup()
   if yaml_dict[cn.SQLDB_PATH_NAME] is not None:
@@ -446,7 +446,7 @@ def getDBPath():
     else:
       path = getDataModelPath(filename)
   if path is None:
-    raise ValueError("***You mus setup .microbepy/config.yaml with 'SQLDB_PATH: <your path>'")
+    raise ValueError("***You must setup %s" %s cn.CONFIG_FILE)
   return path
 
 def getDBConnection():

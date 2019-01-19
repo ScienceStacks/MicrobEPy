@@ -1,7 +1,7 @@
 """
 Manages configuration information.
 Configuration information is maintained in the .microbepy
-directory of the account root in the file config.yaml
+directory of the account root in the file cn.CONFIG_FILE
 """
 
 from microbepy.common import constants as cn
