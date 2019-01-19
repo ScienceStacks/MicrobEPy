@@ -4,12 +4,9 @@ channels:
   - defaults
 dependencies:
   - xlrd
-  - yaml
   - matplotlib=3.0.2
   - numpy=1.15.4
   - pandas=0.23.4
   - python=3.6.7
   - scikit-learn
-  - pip:
-    - plyfile==0.6
 prefix: /home//anaconda3/envs/microbepy
