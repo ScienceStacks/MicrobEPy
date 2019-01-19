@@ -4,7 +4,7 @@ channels:
   - defaults
 dependencies:
   - xlrd
-  - pyyaml
+  - yaml
   - matplotlib=3.0.2
   - numpy=1.15.4
   - pandas=0.23.4
