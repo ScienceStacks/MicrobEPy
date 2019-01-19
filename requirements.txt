@@ -2,3 +2,5 @@ coverage
 nose
 xlrd
 pyyaml
+flake8
+coveralls

@@ -446,7 +446,7 @@ def getDBPath():
     else:
       path = getDataModelPath(filename)
   if path is None:
-    raise ValueError("***You must setup %s" %s cn.CONFIG_FILE)
+    raise ValueError("***You must setup %s" % cn.CONFIG_FILE)
   return path
 
 def getDBConnection():

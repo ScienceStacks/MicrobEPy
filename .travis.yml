@@ -13,11 +13,11 @@ install:
   - conda update --quiet conda
   - conda info --all
   - conda env create --quiet --name microbepy --file environment.yml
-  - source activate microbebpy
-  - pip install coverage xlrd pyyaml
-  - conda install -c conda-forge coveralls flake8 numpy pandas matplotlib scikit-learn
+  - source activate microbepy
 
 script:
-  - coverage run -m unittest discover -s microbepy
+  - mkdir ../.microbepy
+  - echo "SQLDB_PATH: /home/ubuntu/microbepy/Data/data_model/microbepy.db" > ../.microbepy/config.yml
+  - coverage run -m unittest discover -s microbepy/tests
   - flake8 .
   - coveralls
