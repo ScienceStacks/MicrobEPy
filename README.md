@@ -1,4 +1,4 @@
-<img src="https://travis-ci.org/ScienceStacks/microbepy.svg?branch=master" width="50"/>
+<img src="https://travis-ci.org/ScienceStacks/microbepy.svg?branch=master" width="100"/>
 
 <img src="microbepy_logo.png" alt="drawing" width="200"/>
 
