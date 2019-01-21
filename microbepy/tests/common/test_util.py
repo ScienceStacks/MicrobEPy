@@ -766,6 +766,27 @@ class TestFunctions(unittest.TestCase):
       return
     path = util.getDBPath()
     self.assertTrue("microbepy" in path)
+
+  def testMakeNormalizedDF(self):
+    if IGNORE_TEST:
+      return
+    df_denormalized = util.readSQL("select * from genotype_phenotype")
+    normalized_data = util.makeNormalizedData(df_denormalized)
+    for table_name in util.TABLES_GENOTYPE_PHENOTYPE:
+      columns = cn.TABLE_SCHEMAS.getSchema(table_name).columns
+      difference = set(columns).difference(
+          normalized_data[table_name].columns)
+      self.assertEqual(len(difference), 0)
+
+  def testMakeDenormalizedDF(self):
+    if IGNORE_TEST:
+      return
+    df_denormalized = util.readSQL("select * from genotype_phenotype")
+    normalized_data = util.makeNormalizedData(df_denormalized)
+    df_denormalized2 = util.makeDenormalizedDF(normalized_data)
+    difference = set(df_denormalized2.columns).difference(
+        set(df_denormalized.columns))
+    self.assertEqual(len(difference), 0)
     
 
 if __name__ == '__main__':

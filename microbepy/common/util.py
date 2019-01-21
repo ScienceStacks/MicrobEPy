@@ -35,6 +35,10 @@ SPECIES = [cn.SPECIES_MIX_DVH, cn.SPECIES_MIX_MMP]
 TOLERANCE = 0.001
 GENE_PREFIXES = ['MMP', 'DVU']
 SMALL_DETERMINANT = 1e-6
+TABLES_GENOTYPE_PHENOTYPE = [
+      cn.TABLE_CULTURE, cn.TABLE_MUTATION, cn.TABLE_ISOLATE,
+      cn.TABLE_CULTURE_ISOLATE_LINK, cn.TABLE_ISOLATE_MUTATION_LINK,
+      ]
 
 Venn = collections.namedtuple('Venn', ['both', 'only1', 'only2'])
 
@@ -1136,3 +1140,51 @@ def getIdentifiedDirectory(key_directory=None):
     if len(directories.intersection(os.listdir(path))) > 0:
       return path
   raise ValueError("%s not found." % key_directory)
+
+def makeNormalizedData(df_denormalized):
+  """
+  Creates a set of normalized dataframes that correspond to
+  the denomralized data for genotype_phenotype data.
+  :param pd.DataFrame df_denormalized: 
+      See constants.TABLE_CULTURE_ISOLATE_MUTATION
+  :return NormalizedData:
+  """
+  normalized_data = NormalizedData()
+  for table_name in TABLES_GENOTYPE_PHENOTYPE:
+    schema = cn.TABLE_SCHEMAS.getSchema(table_name)
+    df = df_denormalized[schema.columns].copy()
+    normalized_data[schema.name] = df.drop_duplicates()
+  return normalized_data
+
+def makeDenormalizedDF(normalized_data):
+  """
+  Creates a denormalized dataframe by joining the normalized tables.
+  :param NormalizedData normalized_data:
+  :return pd.DataFrame: has schema of TABLE_CULTURE_ISOLATE_MUTATION
+  """
+  def mergeDF(table1, table2, table_link, columns):
+    df1 = normalized_data[table1].merge(normalized_data[table_link],
+        on=columns[0], how='inner')
+    df2 = df1.merge(normalized_data[table2],
+        on=columns[1], how='inner')
+    df = df2.drop_duplicates()
+    return df
+  #
+  df_im = mergeDF(cn.TABLE_MUTATION, cn.TABLE_ISOLATE,
+      cn.TABLE_ISOLATE_MUTATION_LINK,
+      [cn.KEY_MUTATION, cn.KEY_ISOLATE])
+  df_ci = normalized_data[cn.TABLE_CULTURE].merge(
+      normalized_data[cn.TABLE_CULTURE_ISOLATE_LINK], 
+      on=cn.KEY_CULTURE, how="inner")
+  df = df_im.merge(df_ci, on=cn.KEY_ISOLATE, how="inner")
+  return df
+    
+
+
+################# CLASSES ####################
+class NormalizedData(dict):
+  """
+  Container of tables for Noramlized Data.
+  Has keys for TABLE_PHENOTYPE_GENOTYPE
+  """
+  pass
