@@ -17,13 +17,16 @@ def initialize():
     return
   os.mkdir(cn.CONFIG_DIR_PATH)
 
-def setup(yaml_default=cn.YAML_DEFAULT, is_forced=False):
+def setup(yaml_default=cn.YAML_DEFAULT, 
+    is_forced=False, create_config=True):
   """
   Ensures that the cn.SQLDB_FILE is present.
   :param str yaml_default: yaml used if none is present
+  :parm bool create_config: the config directory and file
   :param bool is_forced: force the yaml file to the default
   """
-  initialize()
+  if create_config:
+    initialize()
   if os.path.isfile(cn.CONFIG_FILE_PATH) and (not is_forced):
     with open(cn.CONFIG_FILE_PATH, 'r') as fd:
       yaml_dict = yaml.load(fd)
