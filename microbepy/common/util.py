@@ -453,8 +453,9 @@ def getDBPath():
     raise ValueError("***You must setup %s" % cn.CONFIG_FILE)
   return path
 
-def getDBConnection():
-  path = getDBPath()
+def getDBConnection(path=None):
+  if path is None:
+    path = getDBPath()
   try:
     conn = sql.connect(path)
   except:
