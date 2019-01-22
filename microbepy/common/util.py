@@ -435,7 +435,7 @@ def getDBPath():
   2. in the Data directory at the root of a containing project
   3. it is pointed by the cn.CONFIG_FILE
   """
-  yaml_dict = config.setup()
+  yaml_dict = config.setup(create_config=False)
   if yaml_dict[cn.SQLDB_PATH_NAME] is not None:
     path = yaml_dict[cn.SQLDB_PATH_NAME]
   else:
