@@ -592,7 +592,7 @@ def mergeRowsColumns(df1, df2, merge_column):
   cleanDF(df_result)
   return df_result
 
-def readSQL(cmd):
+def readSQL(cmd, path=None):
   """
   Creates a dataframe for the SQL query.
     1. Duplicate column names (ending with ':n') are merged.
@@ -600,6 +600,7 @@ def readSQL(cmd):
     3. None values have a consistent representation
   :param str/TableSchema cmd: SQL query command or TableSchema,
       if want the entire table
+  :param str path: path to database
   :return pd.DataFrame:
   """
   SEP = ":"
@@ -607,7 +608,7 @@ def readSQL(cmd):
     sql_cmd = "SELECT * FROM %s" % cmd.name
   else:
     sql_cmd = cmd
-  conn = getDBConnection()
+  conn = getDBConnection(path=path)
   df_result = pd.read_sql(sql_cmd, conn)
   conn.close()
   done = False

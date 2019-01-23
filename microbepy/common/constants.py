@@ -7,6 +7,7 @@ import os
 
 # Database
 PROJECT_NAME = "microbepy"
+PROJECT_DB = "%s.db" % PROJECT_NAME
 
 # Species
 SPECIES_MIX_DVH = 'D'
