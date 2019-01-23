@@ -367,7 +367,7 @@ CONFIG_DIR_PATH = os.path.join(HOME_DIR, CONFIG_DIR)
 CONFIG_FILE = "config.yml"  # Name of the configuration file
 CONFIG_FILE_PATH = os.path.join(CONFIG_DIR_PATH, CONFIG_FILE)
 SQLDB_PATH_NAME = "SQLDB_PATH"
-SQLDB_FILE = "%s.db" % PROJECT_NAME
+SQLDB_FILE = "synthetic.db"
 DEFAULT_SQLDB_PATH = HOME_DIR
 for ele in [PROJECT_NAME, "Data", "data_model", SQLDB_FILE]:
   DEFAULT_SQLDB_PATH = os.path.join(DEFAULT_SQLDB_PATH, ele)

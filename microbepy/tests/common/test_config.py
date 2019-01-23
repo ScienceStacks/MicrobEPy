@@ -11,13 +11,22 @@ import unittest
 
 
 IGNORE_TESTS = False
+CONFIG_DIR_PATH_SAV = "%s.sav" % cn.CONFIG_DIR_PATH
 
 
 class TestFunctions(unittest.TestCase):
 
+  def setUp(self):
+    if os.path.isdir(CONFIG_DIR_PATH_SAV):
+      shutil.rmtree(CONFIG_DIR_PATH_SAV)
+    if os.path.isdir(cn.CONFIG_DIR_PATH):
+      shutil.move(cn.CONFIG_DIR_PATH, CONFIG_DIR_PATH_SAV)
+
   def tearDown(self):
     if os.path.isdir(cn.CONFIG_DIR_PATH):
-      config.setup(yaml_default=cn.YAML_DEFAULT, is_forced=True)
+      shutil.rmtree(cn.CONFIG_DIR_PATH)
+    if os.path.isdir(CONFIG_DIR_PATH_SAV):
+      shutil.move(CONFIG_DIR_PATH_SAV, cn.CONFIG_DIR_PATH)
 
   def testInitialize(self):
     if IGNORE_TESTS:

@@ -38,6 +38,7 @@ SMALL_DETERMINANT = 1e-6
 TABLES_GENOTYPE_PHENOTYPE = [
       cn.TABLE_CULTURE, cn.TABLE_MUTATION, cn.TABLE_ISOLATE,
       cn.TABLE_CULTURE_ISOLATE_LINK, cn.TABLE_ISOLATE_MUTATION_LINK,
+      cn.TABLE_GENE_DESCRIPTION,
       ]
 
 Venn = collections.namedtuple('Venn', ['both', 'only1', 'only2'])
@@ -1178,6 +1179,8 @@ def makeDenormalizedDF(normalized_data):
       normalized_data[cn.TABLE_CULTURE_ISOLATE_LINK], 
       on=cn.KEY_CULTURE, how="inner")
   df = df_im.merge(df_ci, on=cn.KEY_ISOLATE, how="inner")
+  df = df.merge(normalized_data[cn.TABLE_GENE_DESCRIPTION], 
+      on=cn.GENE_ID, how="inner")
   return df
     
 
