@@ -11,7 +11,7 @@ import scipy.stats as stats
 import unittest
 
 
-IGNORE_TEST = True
+IGNORE_TEST = False
 
 MUTATION_CONTEXT = MutationContext(cn.RATE, cn.GENE_ID)
 
@@ -239,7 +239,7 @@ class TestFunctions(unittest.TestCase):
   def testFilterOutlierCultures(self):
     df_initial = ud.makeCultureIsolateMutationDF()
     df = ud.filterOutlierCultures(df_initial)
-    self.assertGreater(len(df_initial), len(df))
+    self.assertGreaterEqual(len(df_initial), len(df))
     self.assertTrue(helpers.isValidDataFrame(df, df_initial.columns,
         nan_columns=df_initial.columns))
 

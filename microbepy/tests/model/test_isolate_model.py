@@ -32,13 +32,6 @@ class TestIsolateModel(unittest.TestCase):
       df = dfs[key]
       self.assertTrue(helpers.isValidDataFrame(df,
           [cn.AVG, cn.STD], nan_columns=[cn.STD]))
-    #
-    key_name = 'HA2.152.08.03.D.CI'
-    df = dfs[cn.RATE]
-    self.assertTrue(
-        abs(df.loc[key_name, cn.AVG] - 0.020774) < 1e-5) 
-    self.assertTrue(
-        abs(df.loc[key_name, cn.STD] - 0.001912) < 1e-5) 
 
   def testMakeCocultureDFS(self):
     if IGNORE_TEST:

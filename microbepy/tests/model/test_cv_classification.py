@@ -13,7 +13,7 @@ import random
 import unittest
 
 
-IGNORE_TEST = True
+IGNORE_TEST = False
 COL_A = 'a'
 COL_B = 'b'
 COL_C = 'c'

@@ -310,6 +310,7 @@ class GenomeCorrelation(object):
       constraints.append(lambda r: r[cn.SPECIES] == species)
     lines = self.df_base[cn.LINE].unique().tolist()
     lines.insert(0, ALL)
+    lines = [l for l in lines if l != cn.LINE_AN]
     idx = 1
     plt.tight_layout()
     for line in lines:

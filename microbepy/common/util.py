@@ -1057,7 +1057,9 @@ def nCr(n, r):
   :param int r:
   :return int:
   """
-  return math.factorial(n) / math.factorial(n-r) / math.factorial(r)
+  result = math.factorial(n)   \
+      / math.factorial(n-r) / math.factorial(r)
+  return result
 
 def findKey(df, required_columns=None, max_size=4):
   """

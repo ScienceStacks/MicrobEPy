@@ -181,10 +181,8 @@ class TestNonParametricIsolateRegression(unittest.TestCase):
     if IGNORE_TEST:
       return
     cultures10 = self.cls.getSmallResidualCultures(max_std=10)
-    cultures3 = self.cls.getSmallResidualCultures(max_std=3)
+    cultures3 = self.cls.getSmallResidualCultures(max_std=1)
     self.assertGreater(len(cultures10), len(cultures3))
-    cultures2 = self.cls.getSmallResidualCultures(max_std=2)
-    self.assertGreater(len(cultures3), len(cultures2))
     
 
 class TestAncestralPairingIsolateRegression(unittest.TestCase):

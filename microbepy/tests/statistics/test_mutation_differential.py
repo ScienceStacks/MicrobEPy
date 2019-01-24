@@ -60,9 +60,9 @@ class TestMutationDifferential(unittest.TestCase):
     sl2 = self.differential._calcSL(4, 0)
     self.assertGreater(sl1, sl2)
     #
-    sl = self.differential._calcSL(20, 0)
-    self.assertTrue(sl < 1e-6)
-    sl = self.differential._calcSL(20, 11)
+    sl1 = self.differential._calcSL(15, 0)
+    sl2 = self.differential._calcSL(15, 11)
+    self.assertLess(sl1, sl2)
     #
     testValid(self.differential._calcSL(2, 2))
     testValid(self.differential._calcSL(0, 1))

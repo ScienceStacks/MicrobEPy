@@ -14,7 +14,7 @@ import pandas as pd
 import unittest
 
 
-IGNORE_TEST = True
+IGNORE_TEST = False
 MUTATION_CONTEXT = MutationContext(cn.RATE, cn.GGENE_ID)
     
 

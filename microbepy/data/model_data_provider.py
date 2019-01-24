@@ -159,7 +159,6 @@ class ModelDataProvider(PredictorProvider):
     #
     transformer = PredictorTransformer(self.df_X, 
         self.context.mutation_column)
-    test(transformer.df_X)
     if transform_type == cn.TRANSFORM_DEFAULT:
       transformer.transformDefault(**kwargs)
     elif transform_type == cn.TRANSFORM_LOW_FREQUENCY_ISOLATES:

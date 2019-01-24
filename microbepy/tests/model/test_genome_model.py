@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import unittest
 
 
-IGNORE_TEST = True
+IGNORE_TEST = False
     
 
 class TestGenomeModel(unittest.TestCase):
@@ -97,7 +97,7 @@ class TestGenomeModel(unittest.TestCase):
         cv_model_cls=CVBinaryTreeRegression)
     cvr = model.fit()
     count = cvr.df_parameter[cn.COUNT].tolist()[0]
-    self.assertGreater(count, 30)
+    self.assertGreater(count, 0)
 
   def testFitClassifier(self):
     if IGNORE_TEST:
@@ -108,7 +108,7 @@ class TestGenomeModel(unittest.TestCase):
     trues = [int(v) in [0, 1] for v in model.df_y[model.col_y]]
     self.assertTrue(all(trues))
     count = cvc.df_parameter[cn.COUNT].tolist()[0]
-    self.assertGreater(count, 30)
+    self.assertGreater(count, 0)
 
   def testRegressByLine(self):
     result = self.cls.doByLine(cn.LINE_CIS, cn.RATE, cn.GGENE_ID,

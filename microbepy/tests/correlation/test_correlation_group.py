@@ -87,7 +87,7 @@ class TestCorrelationGroup(unittest.TestCase):
       length_min_3 = len(df.index)
       self.assertGreaterEqual(length_min_2, length_min_3)
     #
-    test(cg.CATCO, cg.CATCO_DICT)
+    test(cg.CATCO, {cg.MAX_SIGLVL: 0.1})
     test(cg.KMEANS, cg.FRAC_DICT)
 
   def testMakeCorrelationGroupDF(self):

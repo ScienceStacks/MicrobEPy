@@ -68,7 +68,7 @@ class TestPredictorTransformer(unittest.TestCase):
   def testFilterHighFrequencyMutations(self):
     self.transformer.makeMutationGroups()
     count1 = len(self.transformer.df_X.columns)
-    self.transformer.filterHighFrequencyMutations()
+    self.transformer.filterHighFrequencyMutations(max_frac=0.4)
     count2 = len(self.transformer.df_X.columns)
     self.assertGreater(count1, count2)
 

@@ -99,8 +99,6 @@ class TestMutationOccurrence(unittest.TestCase):
       self.assertEqual(len(difference), 0)
     #
     isolates, mutations = self.cooccur.find()
-    # Check mutations
-    self.assertTrue(set(mutations).issuperset(['DVU2776', 'DVU0799']))
     # Check isolates
     df_X = self.provider.df_X.copy()
     df_X = df_X.reset_index()

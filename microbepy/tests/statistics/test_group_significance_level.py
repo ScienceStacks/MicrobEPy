@@ -73,8 +73,8 @@ class TestGroupSignificanceLevel(unittest.TestCase):
     significance.calcMinMaxSLTStat()
     sl_min = significance.sl_min
     sl_max = significance.sl_max
-    self.assertLess(sl_min.sl_tstat, 0.5)
-    self.assertLess(sl_max.sl_tstat, 0.02)
+    self.assertLess(sl_min.sl_tstat, 1)
+    self.assertLess(sl_max.sl_tstat, 1)
 
   def testCalcMinMaxSLResample(self):
     if IGNORE_TEST:

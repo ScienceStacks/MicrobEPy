@@ -10,8 +10,6 @@ import sys
 
 
 DATA_DIR = "data_base"
-PROJECT_NAME = "microbepy"
-DB_NAME = "%s.db" % PROJECT_NAME
 REQUIREMENTS_FILE = "requirements.txt"
 CONDA_PKGS = ['python', 'numpy', 'pandas', 'matplotlib',
 'jupyter notebook', 'scikit-learn']

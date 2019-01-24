@@ -84,7 +84,7 @@ class TestMutationIsolatePlot(unittest.TestCase):
     if IGNORE_TEST:
       return
     lines = self.mutation_plot.getLines()
-    self.assertGreater(len(lines), 10)
+    self.assertGreater(len(lines), 0)
     #
     lines_mmp = self.mutation_plot.getLines(cn.SPECIES_MIX_MMP)
     lines_dvh = self.mutation_plot.getLines(cn.SPECIES_MIX_DVH)
@@ -122,12 +122,12 @@ class TestMutationIsolatePlot(unittest.TestCase):
   def testPlotSiglvlDF(self):
     if IGNORE_TEST:
       return
-    df = self.mutation_plot._plotSiglvlDF(max_siglvl=0.05)
+    df = self.mutation_plot._plotSiglvlDF(max_siglvl=0.5)
     self.assertTrue(helpers.isValidDataFrame(df, df.columns,
         nan_columns=df.columns))
     df = self.mutation_plot._plotSiglvlDF(transfer=15,
         other_transfer=45,
-        max_siglvl=0.05)
+        max_siglvl=0.5)
     self.assertTrue(helpers.isValidDataFrame(df, df.columns,
         nan_columns=df.columns))
 
