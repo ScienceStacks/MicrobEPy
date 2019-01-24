@@ -98,14 +98,15 @@ class IsolateModel(object):
       query = '''
         select distinct key_isolate,
               key_culture as key_culture_ev, key_isolate_an, %s
-          from culture_isolate_mutation,
+          from %s,
             (select distinct key_isolate as key_isolate_an, 
-             key_culture as key_culture_wt from culture_isolate_mutation) sub
+             key_culture as key_culture_wt from %s) sub
          where key_culture_ev = key_culture_wt
             and key_isolate not like ("%s")
         	and key_isolate_an like("%s")
         order by key_isolate, key_isolate_an
-      ''' % (depvar, anpat, anpat)
+      ''' % (depvar, cn.TABLE_CULTURE_ISOLATE_MUTATION,
+          cn.TABLE_CULTURE_ISOLATE_MUTATION, anpat, anpat)
       df = util.readSQL(query)
       df = df[[cn.KEY_ISOLATE, depvar]].drop_duplicates()
       groupby = df.groupby(cn.KEY_ISOLATE)

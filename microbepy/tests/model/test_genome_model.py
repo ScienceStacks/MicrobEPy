@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import unittest
 
 
-IGNORE_TEST = False
+IGNORE_TEST = True
     
 
 class TestGenomeModel(unittest.TestCase):
@@ -111,8 +111,6 @@ class TestGenomeModel(unittest.TestCase):
     self.assertGreater(count, 30)
 
   def testRegressByLine(self):
-    if IGNORE_TEST:
-      return
     result = self.cls.doByLine(cn.LINE_CIS, cn.RATE, cn.GGENE_ID,
         min_incr_score=0)
     if False:

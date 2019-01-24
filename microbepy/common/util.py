@@ -1149,7 +1149,7 @@ def makeNormalizedData(df_denormalized):
   Creates a set of normalized dataframes that correspond to
   the denomralized data for genotype_phenotype data.
   :param pd.DataFrame df_denormalized: 
-      See constants.TABLE_CULTURE_ISOLATE_MUTATION
+      See constants.TABLE_GENOTYPE_PHENOTYPE
   :return NormalizedData:
   """
   normalized_data = NormalizedData()

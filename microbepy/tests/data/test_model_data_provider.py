@@ -14,7 +14,7 @@ import pandas as pd
 import unittest
 
 
-IGNORE_TEST = False
+IGNORE_TEST = True
 MUTATION_CONTEXT = MutationContext(cn.RATE, cn.GGENE_ID)
     
 
@@ -93,8 +93,12 @@ class TestModelDataProvider(unittest.TestCase):
         lambda v: np.isclose(v, 1.0) or np.isclose(v, 0.0))
 
   def testDo(self):
-    if IGNORE_TEST:
-      return
+    def test(df):
+      tester = lambda v: np.isclose(v, 1.0) or np.isclose(v, 0.0)
+      for col in df.columns:
+        trues = [tester(v) for v in df[col]]
+        self.assertTrue(all(trues))
+    #
     provider = self.cls(MUTATION_CONTEXT)
     provider.do()
     self.assertTrue(helpers.isValidDataFrame(provider.df_y,
@@ -106,6 +110,8 @@ class TestModelDataProvider(unittest.TestCase):
     trues = [i1 == i2 for i1, i2 in 
         zip(provider.df_X.index, provider.df_y.index)]
     self.assertTrue(all(trues))
+    test(provider.df_X)
+
 
   def testDoByLine(self):
     if IGNORE_TEST:
