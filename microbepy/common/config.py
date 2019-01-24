@@ -17,23 +17,33 @@ def initialize():
     return
   os.mkdir(cn.CONFIG_DIR_PATH)
 
-def setup(yaml_default=cn.YAML_DEFAULT, 
-    is_forced=False, create_config=True):
+def setup(yaml_dict=cn.YAML_DEFAULT):
   """
-  Ensures that the cn.SQLDB_FILE is present.
-  :param str yaml_default: yaml used if none is present
-  :parm bool create_config: the config directory and file
-  :param bool is_forced: force the yaml file to the default
+  Sets up the configuration file if it doesn't exist.
+  :param str yaml_dict: yaml used if none is present
   """
-  if create_config:
-    initialize()
-  if os.path.isfile(cn.CONFIG_FILE_PATH) and (not is_forced):
-    with open(cn.CONFIG_FILE_PATH, 'r') as fd:
-      yaml_dict = yaml.load(fd)
+  initialize()
+  if os.path.isfile(cn.CONFIG_FILE_PATH):
+    pass
   else:
-    yaml_dict = yaml_default
-  lines = yaml.dump(yaml_dict, default_flow_style=False)
-  if os.path.isdir(cn.CONFIG_DIR_PATH):
     with open(cn.CONFIG_FILE_PATH, 'w') as fd:
       yaml.dump(yaml_dict, fd, default_flow_style=False)
-  return yaml_dict
+
+def get(key=None):
+  """
+  Returns the value of a configuration key.
+  :param str key: Configuration key. If key
+    is None, then returns entire dictionary.
+  :return value:
+  :Raises KeyError: Key not present
+  """
+  if os.path.isfile(cn.CONFIG_FILE_PATH):
+    with open(cn.CONFIG_FILE_PATH, 'r') as fd:
+      yaml_dict = yaml.load(fd)
+      if key is None:
+        result = yaml_dict
+      else:
+        result = yaml_dict[key]
+  else:
+    raise KeyError("%s does not exist." % key)
+  return result

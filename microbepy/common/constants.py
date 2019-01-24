@@ -2,12 +2,14 @@
 
 from microbepy.common.schema import TableSchemas
 
+from pathlib import Path
 import os
 
 
 # Database
 PROJECT_NAME = "microbepy"
 PROJECT_DB = "%s.db" % PROJECT_NAME
+SYNTHETIC_DB = "synthetic.db"
 
 # Species
 SPECIES_MIX_DVH = 'D'
@@ -360,16 +362,17 @@ EXT_MAX = "max"
 EXT_VALUES = [EXT_MIN, EXT_MAX]
       
 # File paths
+HOME_PATH = str(Path.home())
 CONFIG_DIR = ".microbepy"  # Name of the directory with config info
-HOME_DIR = os.path.dirname(os.path.abspath(__file__))
-for _ in range(3):
-  HOME_DIR = os.path.dirname(HOME_DIR)
-CONFIG_DIR_PATH = os.path.join(HOME_DIR, CONFIG_DIR)
+PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
+for _ in range(2):
+  PROJECT_PATH = os.path.dirname(PROJECT_PATH)
+CONFIG_DIR_PATH = os.path.join(HOME_PATH, CONFIG_DIR)
 CONFIG_FILE = "config.yml"  # Name of the configuration file
 CONFIG_FILE_PATH = os.path.join(CONFIG_DIR_PATH, CONFIG_FILE)
 SQLDB_PATH_NAME = "SQLDB_PATH"
-SQLDB_FILE = "synthetic.db"
-DEFAULT_SQLDB_PATH = HOME_DIR
+SQLDB_FILE = SYNTHETIC_DB
+DEFAULT_SQLDB_PATH = PROJECT_PATH
 for ele in [PROJECT_NAME, "Data", "data_model", SQLDB_FILE]:
   DEFAULT_SQLDB_PATH = os.path.join(DEFAULT_SQLDB_PATH, ele)
 YAML_DEFAULT = {SQLDB_PATH_NAME: DEFAULT_SQLDB_PATH}

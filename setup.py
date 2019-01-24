@@ -56,7 +56,7 @@ def main():
         )
     # Other actions
     from microbepy.common import config
-    config.setup(yaml_default=cn.YAML_DEFAULT, is_forced=True)
+    config.setup(yaml_dict=cn.YAML_DEFAULT)
     print("--Conda installs")
     condaInstall()
   else:

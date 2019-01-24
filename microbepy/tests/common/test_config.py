@@ -12,6 +12,9 @@ import unittest
 
 IGNORE_TESTS = False
 CONFIG_DIR_PATH_SAV = "%s.sav" % cn.CONFIG_DIR_PATH
+KEY = "key"
+VALUE = "dummy"
+YAML_DICT = {KEY: VALUE}
 
 
 class TestFunctions(unittest.TestCase):
@@ -33,16 +36,21 @@ class TestFunctions(unittest.TestCase):
       return
     config.initialize()
 
-  def testSetup(self):
+  def testSetupAndGet(self):
     if IGNORE_TESTS:
       return
-    YAML_SETTING = {'x': 'dummy'}
-    config.setup()
-    if True:
-      self.assertTrue(os.path.isfile(cn.CONFIG_FILE_PATH))
-      _ = config.setup(yaml_default=YAML_SETTING, is_forced=True)
-      result = config.setup()
-      self.assertEqual(result, YAML_SETTING)
+    config.setup(yaml_dict=YAML_DICT)
+    self.assertTrue(os.path.isfile(cn.CONFIG_FILE_PATH))
+    value =  config.get(KEY)
+    self.assertTrue(VALUE, value)
+    
+
+  def testGet(self):
+    if IGNORE_TESTS:
+      return
+    with self.assertRaises(KeyError):
+      value =  config.get(KEY)
+
     
 
 

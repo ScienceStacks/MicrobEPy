@@ -768,7 +768,8 @@ class TestFunctions(unittest.TestCase):
     if IGNORE_TEST:
       return
     path = util.getDBPath()
-    self.assertTrue("microbepy" in path)
+    self.assertTrue( (cn.PROJECT_DB in path) 
+        or (cn.SYNTHETIC_DB in path))
 
   def testMakeNormalizedDF(self):
     if IGNORE_TEST:

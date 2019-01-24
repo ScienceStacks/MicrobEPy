@@ -431,27 +431,29 @@ def addNullRow(df, null=np.nan):
 
 def getDBPath():
   """
-  There are 3 possibilities for the database path
-  1. in the Data directory at the root of the microbepy project
-  2. in the Data directory at the root of a containing project
-  3. it is pointed by the cn.CONFIG_FILE
+  The correct choice of a path depends on the runtime environment:
+  1. Running with .microbepy/config.yml in the home
+     directory (includes case of being installed)
+      SQLDB_PATH: <the path>
+  2. Running within the microbepy project: 
+      microbepy/Data/data_model/sythetic.db
+  3. Running as a subproject:
+      <containing project>/Data/data_model/microbepy.db
+  :return str:
+  :raises KeyError: configuration file exists but no DB path
+  :raises ValueError: cannot find .git file for project root
   """
-  yaml_dict = config.setup(create_config=False)
-  if yaml_dict[cn.SQLDB_PATH_NAME] is not None:
-    path = yaml_dict[cn.SQLDB_PATH_NAME]
-  else:
-    filename = cn.SQLDB_FILE
-    try:
-      srcdir = getIdentifiedDirectory(key_directory=ALT_DATA_DIR)
-    except:
-      srcdir = None
-    if srcdir is not None:
-      path = os.path.join(srcdir, ALT_DATA_DIR)
-      path = os.path.join(path, filename)
-    else:
-      path = getDataModelPath(filename)
+  try:
+    path = config.get(key=cn.SQLDB_PATH_NAME)
+  except KeyError:
+    path = None
   if path is None:
-    raise ValueError("***You must setup %s" % cn.CONFIG_FILE)
+    try:
+      gitbase_path = getIdentifiedDirectory(key_directory=GIT_DIR)
+    except:
+      raise ValueError("Cannot find project directory.")
+    path =  getPath([gitbase_path, "Data", "data_model"], 
+        cn.SYNTHETIC_DB)
   return path
 
 def getDBConnection(path=None):
@@ -1127,8 +1129,7 @@ def getRootDataDirectory():
 
 def getIdentifiedDirectory(key_directory=None):
   """
-  The root directory is the root of the enclosing project
-  (since microbepy is intended to be a submodule).
+  Finds the directory that contains the specified directory.
   :return str: path to top folder of enclosed project
   """
   if key_directory is None:
