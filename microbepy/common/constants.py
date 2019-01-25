@@ -5,110 +5,57 @@ from microbepy.common.schema import TableSchemas
 from pathlib import Path
 import os
 
-
-# Database
-PROJECT_NAME = "microbepy"
-PROJECT_DB = "%s.db" % PROJECT_NAME
-SYNTHETIC_DB = "synthetic.db"
-
-# Species
-SPECIES_MIX_DVH = 'D'
-SPECIES_MIX_MMP = 'M'
-SPECIES_MIX_BOTH = 'B'  # One M and one D
-SPECIES_MIX_EPD = 'E'  # Endpoint dilution
-SPECIES_MIX_LINE = 'L'
-SPECIES_MIX_UNKNOWN = 'U'
-SPECIES_MIXES = [SPECIES_MIX_DVH, SPECIES_MIX_MMP, 
-    SPECIES_MIX_BOTH, SPECIES_MIX_EPD, SPECIES_MIX_LINE,
-    SPECIES_MIX_UNKNOWN]
-SPECIES_DICT = {
-    SPECIES_MIX_DVH: "DVH",
-    SPECIES_MIX_MMP: "MMP",
-    }
-
-# Transfers
-TRANSFER_1000G = 152
-TRANSFER_DEFAULT = TRANSFER_1000G
-
-# Lines
-LINE_WT = 'WT'
-LINE_HA2 = 'HA2'
-LINE_HR2 = 'HR2'
-LINE_AN1 = 'AN1'  # AN_Dv-Ancestor-1, AN_Mm-Ancestor-1
-LINE_AN2 = 'AN2'  # AN_Dv-Ancestor-2, AN_Mm-Ancestor-2
-LINE_ANC = 'ANC'  # AN_Coculture-Ancestor
-LINE_AN = 'AN'  # TODO: Is this needed
-LINE_ALL = 'all'
-LINE_UE3 = "UE3"
-LINE_CIS = [LINE_HA2, LINE_HR2, LINE_UE3]
-
-# Mutations
-MUTATION_SEPARATOR = "."  # Separates components of a mutation key
-
-# Isolates
-ISOLATE_DEFAULT = '*'  # Default value for an isolate component
-ISOLATE_SEPARATOR = "."  # Separates components of an isolate key
-ISOLATE_UNKNOWN = "isolate_unknown"
-#
-ISOLATE_LINE = "isolate_line"
-ISOLATE_EPD = "isolate_epd"  # EPD isolate
-ISOLATE_CLONE = "isolate_clone"
-ISOLATE_ANC = "isolate_anc"
-ISOLATE_ANX = "isolate_anx"
-ISOLATE_PAIR = "isolate_pair"  # (dvh, mmp)
-
-# Experiments
-EXPERIMENT_CI = "CI"
-EXPERIMENT_SC = "SC"
-EXPERIMENT_NULL = ""
-
 # None values
 #NONE = np.nan
 NONE = None
 
-# Column in the Data Model
+
+###############################################
+# Data Model
+###############################################
+# Column in the Data Model for Tables genotype and genotype_phenotype
 AA_CHANGE = 'aa_change'  # str amino acid
 ACCESSION = "accession"  # str  reference number
 CHANGED_NT = 'changed_nt'  # str nucleotide sequence
 CLONE = "clone"  # Number of the clone
 CODON_CHANGE = 'codon_change'  # str codon
-COG = "cog"
+COG = "cog"  # clusters of orthologous groups
 COG_DESC = "cog_desc"
 COG_FUN = "cog_fun"
 COMMUNITY = "community"  # Value ISOLATE_{CLONE, EPD, LINE}
-EC = "ec"
+EC = "ec"  # Enzyme commission classification
 EC_DESC = "ec_desc"
 EFFECT = 'effect'  # str HIGH, MODERATE, MODIFIER, LOW
 EPD_ID = 'endpoint_dilution_id'  # int
 EXPERIMENT = "experiment"  # str SC (single cell), CI (clonal isolate)
 GATK = "gatk"  # float percent predicted by GATK
 GENE_DESC = "gene_desc"  # phrase describing the GENE function
-GENE_GI = "gene_gi"
+GENE_GI = "gene_gi"  # Gene name (same as GENE_ID; retained for consistency)
 GENE_ID = 'gene_id'  # str name of gene
 GENE_NAME = "gene_name"
 GENE_POSITION = "gene_position"  # <gene>.<position>
 GGENE_ID = 'ggene_id'  # str name of gene if non-null; else gene_position
-GO = "go"
+GO = "go"  # Gene ontology classification
 INITIAL_NT = 'initial_nt'  # str original nucleotide sequence
 INITIAL_CODON = 'initial_codon'  # str original codon
 IS_LOW_COVERAGE_ISOLATE = 'is_low_coverage_isolate'  # bool
 IS_AN_MUTATION = 'is_an_mutation'  # bool
-LINE = 'line'
-KEY_CULTURE = 'key_culture'
-KEY_ISOLATE = 'key_isolate'  # str 6 component isolate specification
-KEY_MUTATION = 'key_mutation'
+LINE = 'line'  # Evolutionary line
+KEY_CULTURE = 'key_culture' # An arbitrary number assigned to the culture in which a community is grown
+KEY_ISOLATE = 'key_isolate'  # str 6 component isolate specification. See microbepy.common.isolate
+KEY_MUTATION = 'key_mutation' # Position, gene_id (if within a gene), changed_nt
 LOCUS_ID = "locus_id"
 MUTATION = 'mutation'
-POSITION = 'position'
+POSITION = 'position'  # position in the genome
 PREDICTOR = "predictor"
-RATE = 'rate'
+RATE = 'rate' # growth rate (phenotype)
 READ_NUMBER = "read_number"
 RELATIVE_POSITION = 'relative_position'  # relative position of mutation within the gene
-SAMTOOLS = "samtools"
+SAMTOOLS = "samtools"  # reporting from samtools
 SCAFFOLD_ID = "scaffold_id"
 SOURCE = 'source'
-SPECIES = 'species'
-SPECIES_MIX = 'species_mix'
+SPECIES = 'species'  # M for MMP; D for DVH; * for mixed community
+SPECIES_MIX = 'species_mix'  # M for MMP, D for DVH, B for both
 START = 'start'  # Start BP of a gene
 STOP = 'stop'  # Stop position of a gene
 STRAND = 'strand'  # Direction of the strand
@@ -118,7 +65,7 @@ TRANSFER = "transfer"  # Transfer number
 TYPE = 'type'
 VARIANT_ID = "variant_id"
 VARSCAN = "varscan"
-YIELD = 'yield'
+YIELD = 'yield'  # culture yield (phenotype)
 
 # Columns in files used as inputs to create data model
 FREQ = "freq"
@@ -187,13 +134,9 @@ VALUE = "value"
 VARIABLE = "variable"
 XAXIS = 'xaxis'
 
-# Columns in the raw mutation data
-MUTATION_RAW_COLUMNS = [VARIANT_ID,
-    SOURCE, POSITION, INITIAL_NT, CHANGED_NT, EFFECT,
-    TYPE, AA_CHANGE, GENE_ID,
-    PREDICTOR, FREQ_PREDICTOR, READ_NUMBER]
-
-# Table schemas in the data model
+###########################
+# Tables
+###########################
 TABLE_CULTURE = "culture"
 TABLE_MUTATION = "mutation"
 TABLE_ISOLATE = "isolate"
@@ -222,6 +165,7 @@ TABLE_SCHEMAS.column_schemas.addSchema(
     SOURCE, INITIAL_NT, CHANGED_NT, EFFECT, TYPE, READ_NUMBER,
     AA_CHANGE, GENE_ID, GGENE_ID, KEY_MUTATION,
     ], str)
+
 # Specify the columns in each table
 TABLE_SCHEMAS.addSchema(TABLE_CULTURE,
     [KEY_CULTURE, RATE, YIELD, SPECIES_MIX],
@@ -284,6 +228,9 @@ TABLE_SCHEMAS.addFD(GENE_POSITION, GENE_ID)
 TABLE_SCHEMAS.addFD(GGENE_ID, GENE_ID)
 TABLE_SCHEMAS.addFD(GENE_POSITION, GGENE_ID)
 
+###########################
+# Diciontary of data values
+###########################
 # Mutations
 EFFECT_NONE = NONE
 EFFECT_HIGH = 'HIGH'
@@ -293,24 +240,75 @@ EFFECT_LOW = 'LOW'
 EFFECTS = [EFFECT_HIGH, EFFECT_MODERATE, 
     EFFECT_LOW, EFFECT_MODIFIER, EFFECT_NONE]
 
+# Species
+SPECIES_MIX_DVH = 'D'
+SPECIES_MIX_MMP = 'M'
+SPECIES_MIX_BOTH = 'B'  # One M and one D
+SPECIES_MIX_EPD = 'E'  # Endpoint dilution
+SPECIES_MIX_LINE = 'L'
+SPECIES_MIX_UNKNOWN = 'U'
+SPECIES_MIXES = [SPECIES_MIX_DVH, SPECIES_MIX_MMP, 
+    SPECIES_MIX_BOTH, SPECIES_MIX_EPD, SPECIES_MIX_LINE,
+    SPECIES_MIX_UNKNOWN]
+SPECIES_DICT = {
+    SPECIES_MIX_DVH: "DVH",
+    SPECIES_MIX_MMP: "MMP",
+    }
+
+# Transfers
+TRANSFER_1000G = 152
+TRANSFER_DEFAULT = TRANSFER_1000G
+
+# Lines
+LINE_WT = 'WT'
+LINE_HA2 = 'HA2'
+LINE_HR2 = 'HR2'
+LINE_AN1 = 'AN1'  # AN_Dv-Ancestor-1, AN_Mm-Ancestor-1
+LINE_AN2 = 'AN2'  # AN_Dv-Ancestor-2, AN_Mm-Ancestor-2
+LINE_ANC = 'ANC'  # AN_Coculture-Ancestor
+LINE_AN = 'AN'  # TODO: Is this needed
+LINE_ALL = 'all'
+LINE_UE3 = "UE3"
+LINE_CIS = [LINE_HA2, LINE_HR2, LINE_UE3]
+
+# Mutations
+MUTATION_SEPARATOR = "."  # Separates components of a mutation key
+
+# Isolates
+ISOLATE_DEFAULT = '*'  # Default value for an isolate component
+ISOLATE_SEPARATOR = "."  # Separates components of an isolate key
+ISOLATE_UNKNOWN = "isolate_unknown"
+#
+ISOLATE_LINE = "isolate_line"
+ISOLATE_EPD = "isolate_epd"  # EPD isolate
+ISOLATE_CLONE = "isolate_clone"
+ISOLATE_ANC = "isolate_anc"
+ISOLATE_ANX = "isolate_anx"
+ISOLATE_PAIR = "isolate_pair"  # (dvh, mmp)
+
+# Experiments
+EXPERIMENT_CI = "CI"
+EXPERIMENT_SC = "SC"
+EXPERIMENT_NULL = ""
+
+###################################################
+# Internal constants
+###################################################
+
+# Database
+PROJECT_NAME = "microbepy"
+PROJECT_DB = "%s.db" % PROJECT_NAME
+SYNTHETIC_DB = "synthetic.db"
+
+# Columns in the raw mutation data
+MUTATION_RAW_COLUMNS = [VARIANT_ID,
+    SOURCE, POSITION, INITIAL_NT, CHANGED_NT, EFFECT,
+    TYPE, AA_CHANGE, GENE_ID,
+    PREDICTOR, FREQ_PREDICTOR, READ_NUMBER]
+
 # CGI Matrices
 CGI_VALUES_BINARY = 'cgi_values_binary'
 CGI_VALUES_POSITION = 'cgi_values_position'
-
-# Isolates
-# The following isolates are excluded from the analysis because of
-# low coverage for the reads
-LOW_COVERAGE_ISOLATES = [
-    'HA2.152.01.02.D.CI', 
-    'HA2.152.01.03.D.CI', 
-    'HA2.152.05.02.D.CI', 
-    'HR2.152.10.03.D.CI', 
-    'UE3.152.03.01.D.CI',
-    'HA2.152.08.02.M.CI', 
-    'HA2.152.08.03.M.CI', 
-    'HA2.152.09.02.M.CI', 
-    'UE3.152.03.02.M.CI',
-    ]
 
 # The gene_description data are incomplete and so
 # several genes are not present that do have mutations
@@ -361,6 +359,20 @@ EXT_MIN = "min"
 EXT_MAX = "max"
 EXT_VALUES = [EXT_MIN, EXT_MAX]
       
+# Isolates
+# The following isolates are excluded from the analysis because of
+# low coverage for the reads
+LOW_COVERAGE_ISOLATES = [
+    'HA2.152.01.02.D.CI', 
+    'HA2.152.01.03.D.CI', 
+    'HA2.152.05.02.D.CI', 
+    'HR2.152.10.03.D.CI', 
+    'UE3.152.03.01.D.CI',
+    'HA2.152.08.02.M.CI', 
+    'HA2.152.08.03.M.CI', 
+    'HA2.152.09.02.M.CI', 
+    'UE3.152.03.02.M.CI',
+    ]
 # File paths
 HOME_PATH = str(Path.home())
 CONFIG_DIR = ".microbepy"  # Name of the directory with config info
