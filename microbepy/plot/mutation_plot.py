@@ -408,6 +408,7 @@ class MutationLinePlot(MutationPlot):
     Does a subplots of mutation correlation significance levels.
     :param bool is_time_lag: construct time lag subplots
     :param dict kwargs: non-transfer parameters passed to next level
+    :return dict: key is pair of transfers, value is data_frame
     """
     NCOLS = 3
     NPLOTS = 9
@@ -420,6 +421,7 @@ class MutationLinePlot(MutationPlot):
     #
     nrows = 2 if (len(pairs) == 4) else 3
     fig = plt.figure(figsize=parms[cn.PLT_FIGSIZE])
+    result = {}
     for idx, pair in enumerate(pairs):
       idx += 1
       ax = fig.add_subplot(nrows, NCOLS, plot_pos[idx])
@@ -435,8 +437,10 @@ class MutationLinePlot(MutationPlot):
         parms[cn.PLT_COLORBAR] = True
       else:
         parms[cn.PLT_COLORBAR] = False
-      self.plotSiglvl(transfer=pair[0], other_transfer=pair[1],
+      df = self.plotSiglvl(transfer=pair[0], other_transfer=pair[1],
           fig=fig, ax=ax, parms=parms, is_plot=is_plot, **kwargs)
+      result[pair] = df
+    return result
 
   def plotSiglvl(self, transfer=cn.TRANSFER_DEFAULT,
       other_transfer=None,
@@ -453,6 +457,7 @@ class MutationLinePlot(MutationPlot):
     :param Matplotlib.Axes ax:
     :param PlotParms parms: Parameters for the plot
     :param bool is_plot: Overrides constructor plotting directive
+    :return pd.DataFrame: columns, rows are mutations
     """
     def makeLabel(transfer, column):
       return "%d-%s" % (transfer, column)
@@ -494,3 +499,4 @@ class MutationLinePlot(MutationPlot):
     if parms.isTrue(cn.PLT_COLORBAR):
       fig.colorbar(plot, cmap='jet')
     parms.do(is_plot=is_plot)
+    return df_plot
