@@ -52,7 +52,6 @@ def main():
         author_email='jlheller@uw.edu',
         packages=packages,
         install_requires=getPipRequirements(),
-        package_data={'microbepy': ['data_base/microbepy.db']},
         )
     # Other actions
     from microbepy.common import config
