@@ -94,8 +94,10 @@ class TestMutationIsolatePlot(unittest.TestCase):
     # Smoke test
     if IGNORE_TEST:
       return
-    self.mutation_plot.plotTransfers()
+    df = self.mutation_plot.plotTransfers()
     self.mutation_plot.plotTransfers(is_cluster_mutations=False)
+    self.assertTrue(helpers.isValidDataFrame(df, df.columns))
+    self.assertTrue(cn.TRANSFER in df.columns)
 
   def testOrderMutations(self):
     if IGNORE_TEST:

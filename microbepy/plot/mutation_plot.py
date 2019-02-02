@@ -230,6 +230,7 @@ class MutationLinePlot(MutationPlot):
     Does a stacked bar plot of mutation frequency for all transfers.
     :params str species:
     :param bool is_cluster_mutations: Group similar mutations together
+    :return pd.DataFrame: row=mutation, col=line + transfer, value is fraction
     """
     if is_cluster_mutations:
       permitted_mutations = self._orderMutations(
@@ -240,6 +241,7 @@ class MutationLinePlot(MutationPlot):
     transfers = self.getTransfers()
     num_transfers = len(transfers)
     fig, axes = plt.subplots(nrows=num_transfers, ncols=1)
+    dfs = []
     for idx, transfer in enumerate(transfers):
       parms[cn.PLT_YTICKLABELS] = True
       if species is None:
@@ -258,11 +260,14 @@ class MutationLinePlot(MutationPlot):
         parms[cn.PLT_LEGEND] = True
         parms[cn.PLT_XLABEL] = True
         parms[cn.PLT_XTICKLABELS] = True
-      self.plotLine(species, transfer, parms=parms, is_plot=False,
+      df = self.plotLine(species, transfer, parms=parms, is_plot=False,
           ax=axes[idx], permitted_mutations=permitted_mutations,
           **kwargs)
+      df[cn.TRANSFER] = transfer
+      dfs.append(df)
     if self._is_plot:
       plt.show()
+    return pd.concat(dfs)
     
 
   def plotLine(self, species, transfer, 
@@ -278,6 +283,7 @@ class MutationLinePlot(MutationPlot):
     :param list-str permitted_mutations: to use and how they
        are ordered if None, then use alphabetical order
     :params dict kwargs: parameters passed to select mutations
+    :return pd.DataFrame: row=mutation, col=line, value is fraction
     """
     if is_plot is None:
       is_plot = self._is_plot
@@ -323,6 +329,7 @@ class MutationLinePlot(MutationPlot):
       #ax.legend()
     if is_plot:
       plt.show()
+    return df_plot
 
   def _getFrequentMutations(self, species=cn.SPECIES_MIX_DVH, 
       min_lines=2):
@@ -408,6 +415,7 @@ class MutationLinePlot(MutationPlot):
     Does a subplots of mutation correlation significance levels.
     :param bool is_time_lag: construct time lag subplots
     :param dict kwargs: non-transfer parameters passed to next level
+    :return dict: key is pair of transfers, value is data_frame
     """
     NCOLS = 3
     NPLOTS = 9
@@ -420,6 +428,7 @@ class MutationLinePlot(MutationPlot):
     #
     nrows = 2 if (len(pairs) == 4) else 3
     fig = plt.figure(figsize=parms[cn.PLT_FIGSIZE])
+    result = {}
     for idx, pair in enumerate(pairs):
       idx += 1
       ax = fig.add_subplot(nrows, NCOLS, plot_pos[idx])
@@ -435,8 +444,10 @@ class MutationLinePlot(MutationPlot):
         parms[cn.PLT_COLORBAR] = True
       else:
         parms[cn.PLT_COLORBAR] = False
-      self.plotSiglvl(transfer=pair[0], other_transfer=pair[1],
+      df = self.plotSiglvl(transfer=pair[0], other_transfer=pair[1],
           fig=fig, ax=ax, parms=parms, is_plot=is_plot, **kwargs)
+      result[pair] = df
+    return result
 
   def plotSiglvl(self, transfer=cn.TRANSFER_DEFAULT,
       other_transfer=None,
@@ -453,6 +464,7 @@ class MutationLinePlot(MutationPlot):
     :param Matplotlib.Axes ax:
     :param PlotParms parms: Parameters for the plot
     :param bool is_plot: Overrides constructor plotting directive
+    :return pd.DataFrame: columns, rows are mutations
     """
     def makeLabel(transfer, column):
       return "%d-%s" % (transfer, column)
@@ -494,3 +506,4 @@ class MutationLinePlot(MutationPlot):
     if parms.isTrue(cn.PLT_COLORBAR):
       fig.colorbar(plot, cmap='jet')
     parms.do(is_plot=is_plot)
+    return df_plot
