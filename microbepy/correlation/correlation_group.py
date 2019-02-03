@@ -76,6 +76,7 @@ class CorrelationGroup(object):
   def _makeMatrix(self):
     """
     :return np.array: 2-d of correlation values by row
+        (typically mutations)
     """
     SMALL_VALUE = 1e-7
     df = self._df_corr.applymap(lambda x: SMALL_VALUE
