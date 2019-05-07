@@ -93,6 +93,8 @@ def makeSiglvlDF(df_binary, df_other=None):
   # Select common mutations
   mutations = list(set(df_binary.columns).intersection(df_other.columns))
   # Compute the count of co-occurrences for each attribute pair
+  if not df_binary.equals(df_other):
+    import pdb; pdb.set_trace()
   df_transpose = df_binary.copy()[mutations]
   df_transpose = df_transpose.transpose()
   df_corr_count = df_transpose.dot(df_other[mutations])
