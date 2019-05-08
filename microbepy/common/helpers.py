@@ -7,7 +7,7 @@ import os.path
 import pandas as pd
 import pickle
 
-DEBUG = False
+DEBUG = True
 
 
 def isValidDataFrame(df, expected_columns, min_rows=1,

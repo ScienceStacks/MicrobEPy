@@ -134,6 +134,12 @@ VALUE = "value"
 VARIABLE = "variable"
 XAXIS = 'xaxis'
 
+##########################
+# Column collections
+##########################
+COLUMNS_EXCLUDED = [READ_NUMBER, FREQ, GATK, VARSCAN, SOURCE, 
+    ACCESSION, SAMTOOLS, READ_NUMBER]
+
 ###########################
 # Tables
 ###########################
@@ -197,13 +203,17 @@ columns = TABLE_SCHEMAS.getColumns([
     TABLE_CULTURE_ISOLATE_LINK, TABLE_ISOLATE_MUTATION_LINK,
     TABLE_GENE_DESCRIPTION])
 TABLE_SCHEMAS.addSchema(TABLE_CULTURE_ISOLATE_MUTATION,
-    columns, [KEY_CULTURE, KEY_ISOLATE, KEY_MUTATION])
+    columns, [KEY_CULTURE, KEY_ISOLATE, KEY_MUTATION, READ_NUMBER])
 columns = TABLE_SCHEMAS.getColumns([
     TABLE_MUTATION,
     TABLE_ISOLATE_MUTATION_LINK,
     TABLE_ISOLATE,
     TABLE_GENE_DESCRIPTION,
     ])
+# Remove the non-genotype columns
+for col in COLUMNS_EXCLUDED:
+  if col in columns:
+    columns.remove(col)
 TABLE_SCHEMAS.addSchema(TABLE_GENOTYPE, 
     columns,
     [KEY_MUTATION, KEY_ISOLATE]
