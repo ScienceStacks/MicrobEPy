@@ -134,12 +134,6 @@ VALUE = "value"
 VARIABLE = "variable"
 XAXIS = 'xaxis'
 
-##########################
-# Column collections
-##########################
-COLUMNS_EXCLUDED = [READ_NUMBER, FREQ, GATK, VARSCAN, SOURCE, 
-    ACCESSION, SAMTOOLS, READ_NUMBER]
-
 ###########################
 # Tables
 ###########################
@@ -185,11 +179,11 @@ TABLE_SCHEMAS.addSchema(TABLE_MUTATION,
     EFFECT, TYPE, AA_CHANGE, GENE_ID, GGENE_ID,
     IS_AN_MUTATION, GENE_POSITION,
     MUTATION, KEY_MUTATION],
-    [KEY_MUTATION])
+    [])
 TABLE_SCHEMAS.addSchema(TABLE_ISOLATE_MUTATION_LINK,
     [KEY_ISOLATE, KEY_MUTATION,
     GATK, VARSCAN, SAMTOOLS, READ_NUMBER, FREQ],
-    [KEY_ISOLATE, KEY_MUTATION])
+    [])
 TABLE_SCHEMAS.addSchema(TABLE_CULTURE_ISOLATE_LINK,
     [KEY_ISOLATE, KEY_CULTURE],
     [KEY_ISOLATE, KEY_CULTURE])
@@ -210,13 +204,9 @@ columns = TABLE_SCHEMAS.getColumns([
     TABLE_ISOLATE,
     TABLE_GENE_DESCRIPTION,
     ])
-# Remove the non-genotype columns
-for col in COLUMNS_EXCLUDED:
-  if col in columns:
-    columns.remove(col)
 TABLE_SCHEMAS.addSchema(TABLE_GENOTYPE, 
     columns,
-    [KEY_MUTATION, KEY_ISOLATE]
+    []
     )
 columns = TABLE_SCHEMAS.getColumns([
     TABLE_MUTATION,
@@ -228,7 +218,7 @@ columns = TABLE_SCHEMAS.getColumns([
     ])
 TABLE_SCHEMAS.addSchema(TABLE_GENOTYPE_PHENOTYPE, 
     columns,
-    [KEY_MUTATION, KEY_ISOLATE, KEY_CULTURE, TRANSFER]
+    []
     )
 # Add functional dependencies
 TABLE_SCHEMAS.addFD(KEY_MUTATION, GENE_POSITION)
