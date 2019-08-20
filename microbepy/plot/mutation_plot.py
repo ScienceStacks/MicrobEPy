@@ -119,7 +119,8 @@ class MutationLinePlot(MutationPlot):
     """
     query = '''
         select distinct transfer from genotype
-        where species is null and is_an_mutation = 0
+        where key_isolate like '%%*.*.*.*' 
+            and is_an_mutation = 0
         '''
     df = util.readSQL(query)
     result = [int(s) for s in df[cn.TRANSFER].unique()]
@@ -163,7 +164,9 @@ class MutationLinePlot(MutationPlot):
     query = '''
     select distinct line, key_isolate, ggene_id, freq 
       from genotype
-      where species is null and is_an_mutation = 0 
+      where 
+          key_isolate like '%%*.*.*.*' 
+          and is_an_mutation = 0 
           and transfer = %s
       order by line, transfer, key_isolate, ggene_id
     ''' % str(transfer)
