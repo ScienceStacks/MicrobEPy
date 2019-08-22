@@ -9,8 +9,8 @@ import numpy as np
 import pandas as pd
 import unittest
 
-IGNORE_TEST = False
-IS_PLOT = False
+IGNORE_TEST = True
+IS_PLOT = True
 PROVIDER = ModelDataProvider(StudyContext(depvar=cn.RATE,
     mutation_column=cn.GGENE_ID))
 PROVIDER.do()
@@ -91,13 +91,13 @@ class TestMutationIsolatePlot(unittest.TestCase):
     self.assertEqual(set(lines), set(lines_mmp).union(lines_dvh))
 
   def testPlotTransfers(self):
-    # Smoke test
     if IGNORE_TEST:
       return
     df = self.mutation_plot.plotTransfers()
     self.mutation_plot.plotTransfers(is_cluster_mutations=False)
     self.assertTrue(helpers.isValidDataFrame(df, df.columns))
     self.assertTrue(cn.TRANSFER in df.columns)
+    _ = self.mutation_plot.plotTransfers(is_unit_fraction=True)
 
   def testOrderMutations(self):
     if IGNORE_TEST:
@@ -134,8 +134,6 @@ class TestMutationIsolatePlot(unittest.TestCase):
         nan_columns=df.columns))
 
   def testPlotSiglvl(self):
-    if IGNORE_TEST:
-      return
     # Smoke test
     self.mutation_plot.plotSiglvl(transfer=15,
         other_transfer=45, max_siglvl=0.05)
@@ -148,10 +146,8 @@ class TestMutationIsolatePlot(unittest.TestCase):
     self.mutation_plot.plotSiglvl(max_siglvl=0.05)
 
   def testPlotSiglvl(self):
-    if IGNORE_TEST:
-      return
     # Smoke test
-    self.mutation_plot.plotSiglvls(max_siglvl=0.05)
+    #self.mutation_plot.plotSiglvls(max_siglvl=0.05)
     self.mutation_plot.plotSiglvls(max_siglvl=0.05, is_time_lag=True)
 
 

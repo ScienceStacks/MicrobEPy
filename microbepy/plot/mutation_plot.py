@@ -19,11 +19,15 @@ SPECIES = {cn.SPECIES_MIX_DVH: "DVH",
     cn.SPECIES_MIX_MMP: "MMP"}
 FONTSIZE_TITLE = 16
 FONTSIZE_LABEL = 14
-MAX_LINES = 13
+MAX_LINES = 9
 MIN_FRACTION = 0.25
 MAX_SIGLVL = 0.01
 COLORBAR_MIN = 1.0
 COLORBAR_MAX = 4.0
+
+# The following lines are excluded because they have
+# only 1 transfer
+EXCLUDED_LINES = ["HE2", "HR1", "UA2", "UE2"]
 
 
 ########################################################################
@@ -175,10 +179,14 @@ class MutationLinePlot(MutationPlot):
         for i in df[cn.KEY_ISOLATE]]
     df = df[sel].copy()
     del df[cn.KEY_ISOLATE]
+    # Eliminate excluded lines
+    constraint = lambda r: not r[cn.LINE] in EXCLUDED_LINES
+    df = util.selectRows(df, [constraint])
     # Construct the matrix with all relevant lines
     df_matrix = util.makeMatrix(df, row_name=self._mutation_column,
         column_name=cn.LINE, value_name=cn.FREQ)
     lines = self.getLines()
+    lines = [l for l in lines if not l in EXCLUDED_LINES]
     for line in set(lines).difference(df_matrix.columns):
       df_matrix[line] = 0.0
     lines.sort()
@@ -202,6 +210,7 @@ class MutationLinePlot(MutationPlot):
     df_matrix = df_matrix.loc[permitted_mutations]
     # Convert from percent to fractions
     df_matrix = df_matrix.applymap(lambda v: 0.01*v)
+    df_matrix = df_matrix.sort_index()
     #
     return df_matrix
 
@@ -226,12 +235,14 @@ class MutationLinePlot(MutationPlot):
     return df_sort.index.tolist()
 
   def plotTransfers(self, species=None, 
-        parms=PlotParms(is_initialize=False), 
+        parms=PlotParms(is_initialize=False),
+        is_unit_fraction = False,
         is_cluster_mutations=True,
         **kwargs):
     """
     Does a stacked bar plot of mutation frequency for all transfers.
     :params str species:
+    :param bool is_unit_fraction: round fraction to 1
     :param bool is_cluster_mutations: Group similar mutations together
     :return pd.DataFrame: row=mutation, col=line + transfer, value is fraction
     """
@@ -265,7 +276,7 @@ class MutationLinePlot(MutationPlot):
         parms[cn.PLT_XTICKLABELS] = True
       df = self.plotLine(species, transfer, parms=parms, is_plot=False,
           ax=axes[idx], permitted_mutations=permitted_mutations,
-          **kwargs)
+          is_unit_fraction=is_unit_fraction, **kwargs)
       df[cn.TRANSFER] = transfer
       dfs.append(df)
     if self._is_plot:
@@ -275,6 +286,7 @@ class MutationLinePlot(MutationPlot):
 
   def plotLine(self, species, transfer, 
       parms=PlotParms(is_initialize=False),
+      is_unit_fraction=False,
       is_plot=None, ax=None, permitted_mutations=None, **kwargs):
     """
     Does a stacked bar plot of mutation frequency by line
@@ -286,6 +298,7 @@ class MutationLinePlot(MutationPlot):
     :param list-str permitted_mutations: to use and how they
        are ordered if None, then use alphabetical order
     :params dict kwargs: parameters passed to select mutations
+    :param bool is_unit_fraction: round non-zero fraction to 1
     :return pd.DataFrame: row=mutation, col=line, value is fraction
     """
     if is_plot is None:
@@ -296,6 +309,8 @@ class MutationLinePlot(MutationPlot):
     df_plot = self._makeLineDF(species=species, 
         permitted_mutations=permitted_mutations,
         transfer=transfer, **kwargs)
+    if is_unit_fraction:
+      df_plot = df_plot.applymap(lambda v: 1 if v> 0 else v)
     # Do the plot
     if not cn.PLT_FIGSIZE in parms:
       parms[cn.PLT_FIGSIZE] = (12, 8)
@@ -321,10 +336,13 @@ class MutationLinePlot(MutationPlot):
     xpos = int(len(df_plot)*0.5)
     ypos = MAX_LINES - 3
     ax.text(xpos, ypos, title, fontsize=FONTSIZE_TITLE)
-    #ax.set_title(title, fontsize=FONTSIZE_TITLE)
     ax.set_ylim([0, MAX_LINES])
     if parms.isTrue(cn.PLT_YLABEL):
-      ax.set_ylabel("Fraction", fontsize=FONTSIZE_LABEL)
+      if is_unit_fraction:
+        label = "No. Lines"
+      else:
+        label = "Fraction"
+      ax.set_ylabel(label , fontsize=FONTSIZE_LABEL)
     if parms.isTrue(cn.PLT_XLABEL):
       ax.set_xlabel(self._mutation_column, fontsize=FONTSIZE_LABEL)
     if parms.isTrue(cn.PLT_LEGEND):
@@ -395,7 +413,7 @@ class MutationLinePlot(MutationPlot):
     Constructs a the dataframe used for heatmap.
     :param int transfer:
     :param float max_siglvl:
-    :return pd.DataFrame: mutions, mutations,
+    :return pd.DataFrame: mutations, mutations,
         values are -log10 significance level
     """
     df_matrix = self._makeMutationSiglvlMatrix(transfer=transfer,
@@ -452,34 +470,63 @@ class MutationLinePlot(MutationPlot):
       result[pair] = df
     return result
 
-  def plotSiglvl(self, transfer=cn.TRANSFER_DEFAULT,
+  def plotSiglvl(self, max_siglvl=MAX_SIGLVL, 
+      transfer=cn.TRANSFER_DEFAULT,
       other_transfer=None,
-      max_siglvl=MAX_SIGLVL,
+      **kwargs):
+    """
+    Constructs a heatmap of the mutation coocurrence significance
+    levels.
+    :param float max_siglvl: maximum significance level
+    :return pd.DataFrame: columns, rows are mutations
+    """
+    df_plot = self._plotSiglvlDF(transfer=transfer,
+        other_transfer=other_transfer,
+        max_siglvl=max_siglvl)
+    mutations = df_plot.columns.tolist()
+    # Do the plot
+    self._plotTransferCompare(df_plot, 
+        heat_range = [COLORBAR_MIN, COLORBAR_MAX],
+        transfer=transfer, other_transfer=other_transfer,
+        **kwargs)
+    return df_plot
+
+  def _plotTransferCompare(self, 
+      df_plot,
+      heat_range,
+      transfer=cn.TRANSFER_DEFAULT,
+      other_transfer=None,
       ax=None,
       fig=None,
       parms=PlotParms(),
       is_plot=None):
     """
-    Constructs a heatmap of the mutation coocurrence significance
-    levels.
+    Constructs a heatmap comparing values for mutations from two transfers.
+    :param pd.DataFrame df_plot: index and columns are mutations;
+        values are plotted on the heatmap
+    :param float, float: values on the heatmap range
     :param int transfer:
     :param int other_transfer: Allow comparisons across time
     :param Matplotlib.Axes ax:
     :param PlotParms parms: Parameters for the plot
     :param bool is_plot: Overrides constructor plotting directive
-    :return pd.DataFrame: columns, rows are mutations
     """
-    def makeLabel(transfer, column):
-      return "%d-%s" % (transfer, column)
+    def makeLabel(transfer, column, is_include_column=False):
+      if is_include_column:
+        label = "%d-%s" % (transfer, column)
+      else:
+        label = "%d" % transfer
+      return label
+    #
+    def setValue(a_dict, key, default):
+      if not key in a_dict.keys():
+        a_dict[key] = default
     #
     if is_plot is None:
       is_plot = self._is_plot
     elif not self._is_plot:
       is_plot = self._is_plot
     #
-    df_plot = self._plotSiglvlDF(transfer=transfer,
-        other_transfer=other_transfer,
-        max_siglvl=max_siglvl)
     mutations = df_plot.columns.tolist()
     # Do the plot
     if not cn.PLT_COLORBAR in parms:
@@ -490,15 +537,17 @@ class MutationLinePlot(MutationPlot):
       if fig is None:
         fig = plt.figure(figsize=parms[cn.PLT_FIGSIZE])
       ax = fig.add_subplot(1, 1, 1)
-    parms[cn.PLT_YLABEL] = makeLabel(other_transfer, 
-        self._mutation_column)
     parms[cn.PLT_XLABEL] = ""
-    xpos = 0.8*len(mutations)
-    ypos = 0.05*len(mutations)
-    ax.text(xpos, ypos, makeLabel(transfer, 
-        self._mutation_column))
-    plot = ax.pcolor(df_plot, cmap='jet', vmin=COLORBAR_MIN,
-        vmax=COLORBAR_MAX)
+    setValue(parms, cn.PLT_COLORBAR, True)
+    xpos = 1.05*len(mutations)
+    ypos = -0.05*len(mutations)
+    parms[cn.PLT_XLABEL] = ""
+    xlabel = makeLabel(transfer, self._mutation_column)
+    parms[cn.PLT_YLABEL] = makeLabel(
+        other_transfer, self._mutation_column)
+    ax.text(xpos, ypos, xlabel)
+    plot = ax.pcolor(df_plot, cmap='jet', vmin=heat_range[0],
+        vmax=heat_range[1])
     labels = df_plot.columns.tolist()
     if parms.isTrue(cn.PLT_XAXISTICKTOP):
       ax.xaxis.tick_top()
@@ -506,7 +555,13 @@ class MutationLinePlot(MutationPlot):
     ax.set_xticklabels(labels, rotation=90)
     ax.set_yticks(np.arange(0.5, len(mutations)))
     ax.set_yticklabels(mutations)
+    parms.do(is_plot=False)
     if parms.isTrue(cn.PLT_COLORBAR):
-      fig.colorbar(plot, cmap='jet')
-    parms.do(is_plot=is_plot)
-    return df_plot
+      # Colorbar positions: left, bottom, width, height
+      cbaxes = fig.add_axes([.45, 0.2, 0.01, 0.5]) 
+      _ = fig.colorbar(plot, cax = cbaxes, cmap='jet')  
+    if is_plot:
+      new_parms=PlotParms()
+      new_parms[cn.PLT_XLABEL] = ""
+      new_parms[cn.PLT_YLABEL] = ""
+      new_parms.do(is_plot=is_plot)
