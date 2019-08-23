@@ -10,11 +10,14 @@ import matplotlib.pyplot as plt
 class PlotParms(dict):
   """Container of plot parameters."""
 
-  def __init__(self, is_initialize=True):
+  def __init__(self, is_initialize=True,
+      fontsize_label=12, fontsize_title=14):
     """
     :param bool is_initialize: Set default values
     """
     super(self.__class__, self).__init__()
+    self.fontsize_label = fontsize_label
+    self.fontsize_title = fontsize_title
     if is_initialize:
       self.setattr(cn.PLT_FIGSIZE, (6, 4))
       self.setattr(cn.PLT_XLABEL, "Observed")
@@ -54,9 +57,11 @@ class PlotParms(dict):
       self.setattr(attr, True)
     
   def do(self, is_plot=True):
-    plt.xlabel(self[cn.PLT_XLABEL])
-    plt.ylabel(self[cn.PLT_YLABEL])
-    plt.title(self[cn.PLT_TITLE])
+    plt.xlabel(self[cn.PLT_XLABEL],
+        fontsize=self.fontsize_label)
+    plt.ylabel(self[cn.PLT_YLABEL],
+        fontsize=self.fontsize_label)
+    plt.title(self[cn.PLT_TITLE], fontsize=self.fontsize_title)
     # if no entry for PLT_LEGEND, take no action
     if cn.PLT_LEGEND in self:
       if self[cn.PLT_LEGEND] is None:

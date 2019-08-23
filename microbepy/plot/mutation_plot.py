@@ -473,6 +473,7 @@ class MutationLinePlot(MutationPlot):
   def plotSiglvl(self, max_siglvl=MAX_SIGLVL, 
       transfer=cn.TRANSFER_DEFAULT,
       other_transfer=None,
+      is_center_colorbar = True,
       **kwargs):
     """
     Constructs a heatmap of the mutation coocurrence significance
@@ -488,12 +489,14 @@ class MutationLinePlot(MutationPlot):
     self._plotTransferCompare(df_plot, 
         heat_range = [COLORBAR_MIN, COLORBAR_MAX],
         transfer=transfer, other_transfer=other_transfer,
+        is_center_colorbar=is_center_colorbar,
         **kwargs)
     return df_plot
 
   def _plotTransferCompare(self, 
       df_plot,
       heat_range,
+      is_center_colorbar=True,
       transfer=cn.TRANSFER_DEFAULT,
       other_transfer=None,
       ax=None,
@@ -504,6 +507,7 @@ class MutationLinePlot(MutationPlot):
     Constructs a heatmap comparing values for mutations from two transfers.
     :param pd.DataFrame df_plot: index and columns are mutations;
         values are plotted on the heatmap
+    :param bool is_center_colorbar: center the colorbar in the plot
     :param float, float: values on the heatmap range
     :param int transfer:
     :param int other_transfer: Allow comparisons across time
@@ -545,23 +549,31 @@ class MutationLinePlot(MutationPlot):
     xlabel = makeLabel(transfer, self._mutation_column)
     parms[cn.PLT_YLABEL] = makeLabel(
         other_transfer, self._mutation_column)
-    ax.text(xpos, ypos, xlabel)
+    ax.text(xpos, ypos, xlabel, fontsize=parms.fontsize_label)
     plot = ax.pcolor(df_plot, cmap='jet', vmin=heat_range[0],
         vmax=heat_range[1])
     labels = df_plot.columns.tolist()
     if parms.isTrue(cn.PLT_XAXISTICKTOP):
       ax.xaxis.tick_top()
     ax.set_xticks(np.arange(0.5, len(labels)))
-    ax.set_xticklabels(labels, rotation=90)
+    ax.set_xticklabels(labels, rotation=90,
+        fontsize=parms.fontsize_label)
     ax.set_yticks(np.arange(0.5, len(mutations)))
-    ax.set_yticklabels(mutations)
+    ax.set_yticklabels(mutations,
+        fontsize=parms.fontsize_label)
     parms.do(is_plot=False)
     if parms.isTrue(cn.PLT_COLORBAR):
-      # Colorbar positions: left, bottom, width, height
-      cbaxes = fig.add_axes([.45, 0.2, 0.01, 0.5]) 
-      _ = fig.colorbar(plot, cax = cbaxes, cmap='jet')  
+      if is_center_colorbar:
+        # Colorbar positions: left, bottom, width, height
+        cbaxes = fig.add_axes([.45, 0.2, 0.01, 0.5]) 
+        cb = fig.colorbar(plot, cax = cbaxes, cmap='jet')
+        cb.ax.tick_params(labelsize=parms.fontsize_label)
+      else:
+        cb = fig.colorbar(plot, cmap='jet')
+        cb.ax.tick_params(labelsize=parms.fontsize_label)
     if is_plot:
-      new_parms=PlotParms()
+      new_parms=PlotParms(fontsize_label=parms.fontsize_label,
+          fontsize_title=parms.fontsize_label)
       new_parms[cn.PLT_XLABEL] = ""
       new_parms[cn.PLT_YLABEL] = ""
       new_parms.do(is_plot=is_plot)

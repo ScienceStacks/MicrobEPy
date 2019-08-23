@@ -9,8 +9,8 @@ import numpy as np
 import pandas as pd
 import unittest
 
-IGNORE_TEST = True
-IS_PLOT = True
+IGNORE_TEST = False
+IS_PLOT = False
 PROVIDER = ModelDataProvider(StudyContext(depvar=cn.RATE,
     mutation_column=cn.GGENE_ID))
 PROVIDER.do()
@@ -134,11 +134,13 @@ class TestMutationIsolatePlot(unittest.TestCase):
         nan_columns=df.columns))
 
   def testPlotSiglvl(self):
+    if IGNORE_TEST:
+      return
     # Smoke test
     self.mutation_plot.plotSiglvl(transfer=15,
         other_transfer=45, max_siglvl=0.05)
     self.mutation_plot.plotSiglvl(transfer=45,
-        other_transfer=76, max_siglvl=0.05)
+        other_transfer=76, max_siglvl=0.05, is_center_colorbar=False)
     self.mutation_plot.plotSiglvl(transfer=76,
         other_transfer=118, max_siglvl=0.05)
     self.mutation_plot.plotSiglvl(transfer=118,
