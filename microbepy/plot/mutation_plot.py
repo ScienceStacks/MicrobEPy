@@ -430,10 +430,29 @@ class MutationLinePlot(MutationPlot):
     df_plot = sorter.deleteNanRowsAndColumns()
     return df_plot
 
-  def plotSiglvls(self, is_time_lag=False, 
+  def plotSiglvls(self, is_time_lag=False, max_siglvl=MAX_SIGLVL,
       parms=PlotParms(), **kwargs):
     """
     Does a subplots of mutation correlation significance levels.
+    :param bool is_time_lag: construct time lag subplots
+    :param dict kwargs: non-transfer parameters passed to next level
+    :return dict: key is pair of transfers, value is data_frame
+    """
+    def func_df(transfer, other_transfer):
+      return self._plotSiglvlDF(transfer=transfer,
+          max_siglvl=max_siglvl,
+          other_transfer=other_transfer)
+    #
+    return self._plotTransfers(func_df, is_time_lag, 
+        parms=parms, **kwargs)
+
+  def _plotTransfers(self, func_df, is_time_lag, 
+      parms=PlotParms(), **kwargs):
+    """
+    Does a subplots of mutation mutations over transfers.
+    :param Function func_df: has kwargs transfer, other_transfer;
+        returns a dataframe of mutations as columns and index;
+        values are used in the heatmap.
     :param bool is_time_lag: construct time lag subplots
     :param dict kwargs: non-transfer parameters passed to next level
     :return dict: key is pair of transfers, value is data_frame
@@ -465,7 +484,13 @@ class MutationLinePlot(MutationPlot):
         parms[cn.PLT_COLORBAR] = True
       else:
         parms[cn.PLT_COLORBAR] = False
-      df = self.plotSiglvl(transfer=pair[0], other_transfer=pair[1],
+      transfer = pair[0]
+      other_transfer = pair[1]
+      df = func_df(transfer=transfer, other_transfer=other_transfer)
+      self._plotTransferCompare(df, 
+          heat_range = [COLORBAR_MIN, COLORBAR_MAX],
+          transfer=transfer, other_transfer=other_transfer,
+          is_center_colorbar=True,
           fig=fig, ax=ax, parms=parms, is_plot=is_plot, **kwargs)
       result[pair] = df
     return result
@@ -484,8 +509,6 @@ class MutationLinePlot(MutationPlot):
     df_plot = self._plotSiglvlDF(transfer=transfer,
         other_transfer=other_transfer,
         max_siglvl=max_siglvl)
-    mutations = df_plot.columns.tolist()
-    # Do the plot
     self._plotTransferCompare(df_plot, 
         heat_range = [COLORBAR_MIN, COLORBAR_MAX],
         transfer=transfer, other_transfer=other_transfer,

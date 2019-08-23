@@ -148,8 +148,10 @@ class TestMutationIsolatePlot(unittest.TestCase):
     self.mutation_plot.plotSiglvl(max_siglvl=0.05)
 
   def testPlotSiglvl(self):
+    if IGNORE_TEST:
+      return
     # Smoke test
-    #self.mutation_plot.plotSiglvls(max_siglvl=0.05)
+    self.mutation_plot.plotSiglvls(max_siglvl=0.05)
     self.mutation_plot.plotSiglvls(max_siglvl=0.05, is_time_lag=True)
 
 
