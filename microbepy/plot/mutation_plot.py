@@ -19,7 +19,7 @@ COLORS = ['red', 'green', 'blue']
 SPECIES = {cn.SPECIES_MIX_DVH: "DVH",
     cn.SPECIES_MIX_MMP: "MMP"}
 FONTSIZE_TITLE = 16
-FONTSIZE_LABEL = 12
+FONTSIZE_LABEL = 8
 MAX_LINES = 9
 MIN_FRACTION = 0.25
 MAX_SIGLVL = 0.01
@@ -515,11 +515,11 @@ class MutationLinePlot(MutationPlot):
     :return dict: key is pair of transfers, value is data_frame
     """
     NCOLS = 3
-    NPLOTS = 9
-    plot_pos = {1:1, 2:3, 3:4, 4:6, 5: 7}
+    plot_pos = {1:1, 2:3, 3:4, 4:6}
+    NPLOTS = 6
     transfers = self.getTransfers()
     if is_time_lag:
-      pairs = [p for p in zip(transfers[0:-1], transfers[1:])]
+      pairs = [p for p in zip(transfers[:-1], transfers[1:])]
     else:
       pairs = [p for p in zip(transfers[:-1], transfers[:-1])]
     #
@@ -621,8 +621,6 @@ class MutationLinePlot(MutationPlot):
       is_plot = self._is_plot
     elif not self._is_plot:
       is_plot = self._is_plot
-    #
-    mutations = df_plot.columns.tolist()
     # Do the plot
     if not cn.PLT_COLORBAR in parms:
       parms[cn.PLT_COLORBAR] = True
@@ -632,6 +630,19 @@ class MutationLinePlot(MutationPlot):
       if fig is None:
         fig = plt.figure(figsize=parms[cn.PLT_FIGSIZE])
       ax = fig.add_subplot(1, 1, 1)
+    # Order the columns
+    columns = df_plot.columns.tolist()
+    missing_columns = set(ordered_columns).difference(columns)
+    extended_ordered_columns = list(ordered_columns)
+    extended_ordered_columns.extend(
+        set(columns).difference(ordered_columns))
+    for col in missing_columns:
+      df_plot[col] = np.nan
+      df_plot.loc[col, :] = np.nan
+    df_plot = df_plot.reindex(extended_ordered_columns)
+    df_plot = df_plot[extended_ordered_columns]
+    mutations = df_plot.columns.tolist()
+    # Set up plot information
     parms[cn.PLT_XLABEL] = ""
     setValue(parms, cn.PLT_COLORBAR, True)
     xpos = 1.05*len(mutations)
@@ -641,12 +652,7 @@ class MutationLinePlot(MutationPlot):
     parms[cn.PLT_YLABEL] = makeLabel(
         transfer, self._mutation_column)
     ax.text(xpos, ypos, xlabel, fontsize=parms.fontsize_label)
-    # Order the columns
-    columns = [c for c in ordered_columns if c in df_plot.columns]
-    columns.extend(set(df_plot.columns).difference(ordered_columns))
-    df_plot = df_plot.reindex(columns)
-    df_plot = df_plot[columns]
-    mutations = df_plot.columns.tolist()
+    #
     # Construct the plot
     plot = ax.pcolor(df_plot, cmap='jet', vmin=heat_range[0],
         vmax=heat_range[1])
@@ -668,10 +674,18 @@ class MutationLinePlot(MutationPlot):
     ax.set_yticks(np.arange(0.5, len(mutations)))
     ax.set_yticklabels(mutations,
         fontsize=parms.fontsize_label)
+    #parms[cn.PLT_YLABEL] = ""
     parms.do(is_plot=False)
     if is_plot:
-      new_parms=PlotParms(fontsize_label=parms.fontsize_label,
-          fontsize_title=parms.fontsize_label)
-      new_parms[cn.PLT_XLABEL] = ""
-      new_parms[cn.PLT_YLABEL] = ""
-      new_parms.do(is_plot=is_plot)
+      parms[cn.PLT_YLABEL] = ""
+      parms.do(is_plot=False)
+      ylabel = makeLabel(transfer, self._mutation_column)
+      xpos = -3
+      ypos = 0.5*len(mutations)
+      ypos = -1
+      ax.set_ylabel(ylabel, fontsize=parms.fontsize_label,
+          x=xpos, y=ypos)
+      #plt.show()
+      parms.do(is_plot=is_plot)
+    else:
+      parms.do(is_plot=is_plot)

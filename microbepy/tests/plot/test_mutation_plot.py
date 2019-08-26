@@ -144,8 +144,7 @@ class TestMutationIsolatePlot(unittest.TestCase):
     self.assertTrue(helpers.isValidDataFrame(df, columns))
 
   def testPlotCoFraction(self):
-    if IGNORE_TEST:
-      return
+    # TESTING
     # Smoke test
     self.mutation_plot.plotCoFraction()
     self.mutation_plot.plotCoFraction(is_time_lag=True)
