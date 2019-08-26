@@ -146,8 +146,15 @@ class TestMutationIsolatePlot(unittest.TestCase):
   def testPlotCoFraction(self):
     # TESTING
     # Smoke test
-    self.mutation_plot.plotCoFraction()
-    self.mutation_plot.plotCoFraction(is_time_lag=True)
+    self.mutation_plot.plotCoFraction(is_center_colorbar=False)
+    self.mutation_plot.plotCoFraction(transfer=cn.TRANSFER_DEFAULT,
+        other_transfer=15, is_center_colorbar=False)
+
+  def testPlotCoFractions(self):
+    if IGNORE_TEST:
+      return
+    # Smoke test
+    self.mutation_plot.plotCoFractions()
 
 
 

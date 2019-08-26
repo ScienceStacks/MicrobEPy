@@ -462,7 +462,7 @@ class MutationLinePlot(MutationPlot):
     length = max(len(df_binary_columns), len(df_binary_rows))
     return df_counts.applymap(lambda v: v / length)
 
-  def plotCoFraction(self, is_time_lag=False,
+  def plotCoFractions(self, is_time_lag=False,
       min_fraction=0.2,
       parms=PlotParms(), **kwargs):
     """
@@ -503,6 +503,19 @@ class MutationLinePlot(MutationPlot):
         heat_range = [COLORBAR_MIN, COLORBAR_MAX],
         **kwargs)
 
+  def _getOrderedMutations(self, df_plot):
+    """
+    Calculate the mutation ordering from clustermap.
+    :param pd.DataFrame df_plot: mutations are rows and columns
+    Notes:
+      1. Closes current plot
+    """
+    cg = sns.clustermap(df_plot)
+    plt.close()
+    ordered_mutations = [df_plot.index[i] 
+        for i in cg.dendrogram_row.reordered_ind]
+    return ordered_mutations
+
   def _plotTransfers(self, funcDF, is_time_lag, 
       parms=PlotParms(), **kwargs):
     """
@@ -527,10 +540,7 @@ class MutationLinePlot(MutationPlot):
     df = funcDF(transfer=cn.TRANSFER_1000G,
         other_transfer=cn.TRANSFER_1000G)
     df = df.fillna(0)
-    cg = sns.clustermap(df)
-    ordered_columns = [df.index[i] 
-        for i in cg.dendrogram_row.reordered_ind]
-    plt.close()
+    ordered_columns = self._getOrderedMutations(df)
     # Set up for plots
     nrows = 2 if (len(pairs) == 4) else 3
     fig = plt.figure(figsize=parms[cn.PLT_FIGSIZE])
@@ -575,12 +585,38 @@ class MutationLinePlot(MutationPlot):
     df_plot = self._plotSiglvlDF(transfer=transfer,
         other_transfer=other_transfer,
         max_siglvl=max_siglvl)
+    ordered_columns = self._getOrderedMutations(df_plot)
     self._plotTransferCompare(df_plot, 
         heat_range = [COLORBAR_MIN, COLORBAR_MAX],
+        ordered_columns=ordered_columns,
         transfer=transfer, other_transfer=other_transfer,
         is_center_colorbar=is_center_colorbar,
         **kwargs)
     return df_plot
+
+  def plotCoFraction(self,
+      min_fraction=MIN_FRACTION,
+      transfer=cn.TRANSFER_DEFAULT,
+      other_transfer=None,
+      is_center_colorbar = True,
+      parms=PlotParms(),
+      **kwargs):
+    """
+    Constructs a heatmap of the mutation coocurrence fractions.
+    :param int transfer: Transfer for which plot is done
+    :return pd.DataFrame: columns, rows are mutations
+    """
+    df = self._makeCoFractionDF(transfer=transfer,
+        other_transfer=other_transfer, species=None, **kwargs)
+    ordered_columns = self._getOrderedMutations(df)
+    self._plotTransferCompare(df, 
+        heat_range=[0, 1.0],
+        ordered_columns=ordered_columns,
+        parms=parms,
+        transfer=transfer, other_transfer=other_transfer,
+        is_center_colorbar=is_center_colorbar,
+        **kwargs)
+    return df
 
   def _plotTransferCompare(self, 
       df_plot,
@@ -612,7 +648,6 @@ class MutationLinePlot(MutationPlot):
       else:
         label = "%d" % transfer
       return label
-    #
     def setValue(a_dict, key, default):
       if not key in a_dict.keys():
         a_dict[key] = default
@@ -621,6 +656,8 @@ class MutationLinePlot(MutationPlot):
       is_plot = self._is_plot
     elif not self._is_plot:
       is_plot = self._is_plot
+    if ordered_columns is None:
+      ordered_columns = df_plot.columns.tolist()
     # Do the plot
     if not cn.PLT_COLORBAR in parms:
       parms[cn.PLT_COLORBAR] = True
