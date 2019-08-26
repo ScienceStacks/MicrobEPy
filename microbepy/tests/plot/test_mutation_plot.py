@@ -20,25 +20,6 @@ SMALL = 1e-8
 class TestMutationIsolatePlot(unittest.TestCase):
 
   def setUp(self):
-    self.mutation_plot = MutationIsolatePlot(provider=PROVIDER,
-        is_plot=IS_PLOT)
-
-  def testMakeMutationIsolateDF(self):
-    if IGNORE_TEST:
-      return
-    df = self.mutation_plot._makeMutationIsolateDF(cn.SPECIES_MIX_DVH)
-    self.assertTrue(helpers.isValidDataFrame(df, df.columns))
-
-  def testPlot(self):
-    if IGNORE_TEST:
-      return
-    # Smoke tests
-    self.mutation_plot.plot(cn.SPECIES_MIX_DVH)
-
-
-class TestMutationIsolatePlot(unittest.TestCase):
-
-  def setUp(self):
     self.mutation_plot = MutationLinePlot(is_plot=IS_PLOT)
 
   def testMakeLineDF(self):
@@ -153,6 +134,22 @@ class TestMutationIsolatePlot(unittest.TestCase):
     # Smoke test
     self.mutation_plot.plotSiglvls(max_siglvl=0.05)
     self.mutation_plot.plotSiglvls(max_siglvl=0.05, is_time_lag=True)
+
+  def testMakeCoFractionDF(self):
+    if IGNORE_TEST:
+      return
+    df = self.mutation_plot._makeCoFractionDF(transfer=15,
+        other_transfer=15)
+    columns = df.columns
+    self.assertTrue(helpers.isValidDataFrame(df, columns))
+
+  def testPlotCoFraction(self):
+    if IGNORE_TEST:
+      return
+    # Smoke test
+    self.mutation_plot.plotCoFraction()
+    self.mutation_plot.plotCoFraction(is_time_lag=True)
+
 
 
 if __name__ == '__main__':

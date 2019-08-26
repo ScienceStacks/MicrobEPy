@@ -12,13 +12,14 @@ from microbepy.plot.util_plot import PlotParms
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
 
 COLORS = ['red', 'green', 'blue']
 SPECIES = {cn.SPECIES_MIX_DVH: "DVH",
     cn.SPECIES_MIX_MMP: "MMP"}
 FONTSIZE_TITLE = 16
-FONTSIZE_LABEL = 14
+FONTSIZE_LABEL = 12
 MAX_LINES = 9
 MIN_FRACTION = 0.25
 MAX_SIGLVL = 0.01
@@ -393,6 +394,8 @@ class MutationLinePlot(MutationPlot):
       df_line = self._makeLineDF(species=species, transfer=transfer,
           **kwargs)
       df_binary = df_line.applymap(
+          lambda v: 0 if np.isnan(v) else v)
+      df_binary = df_line.applymap(
           lambda v: 1.0 if v > min_fraction else 0)
       return df_binary.transpose()
     #
@@ -430,6 +433,58 @@ class MutationLinePlot(MutationPlot):
     df_plot = sorter.deleteNanRowsAndColumns()
     return df_plot
 
+  def _makeCoFractionDF(self, transfer=cn.TRANSFER_DEFAULT,
+      min_fraction=MIN_FRACTION,
+      other_transfer=None, species=None, **kwargs):
+    """
+    Constructs a dataframe of the fraction of lines in which
+    pairs of mutations occur.
+    :param int transfer:
+    :param str species: 'M', or 'D'
+    :return pd.DataFrame: columns and index are mutations
+        values are fraction of lines in which mutations co-occur
+    """
+    def makeDF(transfer):
+      df_line = self._makeLineDF(species=species, transfer=transfer,
+          **kwargs)
+      df_binary = df_line.applymap(
+          lambda v: 0 if np.isnan(v) else v)
+      df_binary = df_line.applymap(
+          lambda v: 1.0 if v > min_fraction else 0)
+      return df_binary.transpose()
+    #
+    if other_transfer is None:
+      other_transfer = transfer
+    #
+    df_binary_rows = makeDF(transfer)
+    df_binary_columns = makeDF(other_transfer)
+    df_counts = df_binary_rows.T.dot(df_binary_columns)
+    length = max(len(df_binary_columns), len(df_binary_rows))
+    return df_counts.applymap(lambda v: v / length)
+
+  def plotCoFraction(self, is_time_lag=False,
+      min_fraction=0.2,
+      parms=PlotParms(), **kwargs):
+    """
+    Does a subplots of the fraction of lines in which mutations co-occur.
+    :param bool is_time_lag: construct time lag subplots
+    :param dict kwargs: non-transfer parameters passed to next level
+    :return dict: key is pair of transfers, value is data_frame
+    """
+    def funcDF(transfer, other_transfer):
+      df = self._makeCoFractionDF(transfer=transfer,
+          other_transfer=other_transfer, species=None, **kwargs)
+      drop_indices = [i for i in df.index
+          if max(df.loc[i, :]) < min_fraction]
+      drop_columns = [c for c in df.columns
+          if max(df[c]) < min_fraction]
+      df = df.drop(drop_columns, axis=1)
+      df = df.drop(drop_indices, axis=0)
+      return df
+    #
+    return self._plotTransfers(funcDF, is_time_lag, 
+        parms=parms, heat_range=[0, 1.0], **kwargs)
+
   def plotSiglvls(self, is_time_lag=False, max_siglvl=MAX_SIGLVL,
       parms=PlotParms(), **kwargs):
     """
@@ -438,19 +493,21 @@ class MutationLinePlot(MutationPlot):
     :param dict kwargs: non-transfer parameters passed to next level
     :return dict: key is pair of transfers, value is data_frame
     """
-    def func_df(transfer, other_transfer):
+    def funcDF(transfer, other_transfer):
       return self._plotSiglvlDF(transfer=transfer,
           max_siglvl=max_siglvl,
           other_transfer=other_transfer)
     #
-    return self._plotTransfers(func_df, is_time_lag, 
-        parms=parms, **kwargs)
+    return self._plotTransfers(funcDF, is_time_lag, 
+        parms=parms, 
+        heat_range = [COLORBAR_MIN, COLORBAR_MAX],
+        **kwargs)
 
-  def _plotTransfers(self, func_df, is_time_lag, 
+  def _plotTransfers(self, funcDF, is_time_lag, 
       parms=PlotParms(), **kwargs):
     """
     Does a subplots of mutation mutations over transfers.
-    :param Function func_df: has kwargs transfer, other_transfer;
+    :param Function funcDF: has kwargs transfer, other_transfer;
         returns a dataframe of mutations as columns and index;
         values are used in the heatmap.
     :param bool is_time_lag: construct time lag subplots
@@ -466,6 +523,15 @@ class MutationLinePlot(MutationPlot):
     else:
       pairs = [p for p in zip(transfers[:-1], transfers[:-1])]
     #
+    # Calculate the column order
+    df = funcDF(transfer=cn.TRANSFER_1000G,
+        other_transfer=cn.TRANSFER_1000G)
+    df = df.fillna(0)
+    cg = sns.clustermap(df)
+    ordered_columns = [df.index[i] 
+        for i in cg.dendrogram_row.reordered_ind]
+    plt.close()
+    # Set up for plots
     nrows = 2 if (len(pairs) == 4) else 3
     fig = plt.figure(figsize=parms[cn.PLT_FIGSIZE])
     result = {}
@@ -486,10 +552,10 @@ class MutationLinePlot(MutationPlot):
         parms[cn.PLT_COLORBAR] = False
       transfer = pair[0]
       other_transfer = pair[1]
-      df = func_df(transfer=transfer, other_transfer=other_transfer)
+      df = funcDF(transfer=transfer, other_transfer=other_transfer)
       self._plotTransferCompare(df, 
-          heat_range = [COLORBAR_MIN, COLORBAR_MAX],
           transfer=transfer, other_transfer=other_transfer,
+          ordered_columns=ordered_columns,
           is_center_colorbar=True,
           fig=fig, ax=ax, parms=parms, is_plot=is_plot, **kwargs)
       result[pair] = df
@@ -519,6 +585,7 @@ class MutationLinePlot(MutationPlot):
   def _plotTransferCompare(self, 
       df_plot,
       heat_range,
+      ordered_columns=None,
       is_center_colorbar=True,
       transfer=cn.TRANSFER_DEFAULT,
       other_transfer=None,
@@ -530,6 +597,7 @@ class MutationLinePlot(MutationPlot):
     Constructs a heatmap comparing values for mutations from two transfers.
     :param pd.DataFrame df_plot: index and columns are mutations;
         values are plotted on the heatmap
+    :param list-str ordered_columns: order in which columns appear
     :param bool is_center_colorbar: center the colorbar in the plot
     :param float, float: values on the heatmap range
     :param int transfer:
@@ -569,12 +637,28 @@ class MutationLinePlot(MutationPlot):
     xpos = 1.05*len(mutations)
     ypos = -0.05*len(mutations)
     parms[cn.PLT_XLABEL] = ""
-    xlabel = makeLabel(transfer, self._mutation_column)
+    xlabel = makeLabel(other_transfer, self._mutation_column)
     parms[cn.PLT_YLABEL] = makeLabel(
-        other_transfer, self._mutation_column)
+        transfer, self._mutation_column)
     ax.text(xpos, ypos, xlabel, fontsize=parms.fontsize_label)
+    # Order the columns
+    columns = [c for c in ordered_columns if c in df_plot.columns]
+    columns.extend(set(df_plot.columns).difference(ordered_columns))
+    df_plot = df_plot.reindex(columns)
+    df_plot = df_plot[columns]
+    mutations = df_plot.columns.tolist()
+    # Construct the plot
     plot = ax.pcolor(df_plot, cmap='jet', vmin=heat_range[0],
         vmax=heat_range[1])
+    if parms.isTrue(cn.PLT_COLORBAR):
+      if is_center_colorbar:
+        # Colorbar positions: left, bottom, width, height
+        cbaxes = fig.add_axes([.45, 0.2, 0.01, 0.5]) 
+        cb = fig.colorbar(plot, cax = cbaxes, cmap='jet')
+        cb.ax.tick_params(labelsize=parms.fontsize_label)
+      else:
+        cb = fig.colorbar(plot, cmap='jet')
+        cb.ax.tick_params(labelsize=parms.fontsize_label)
     labels = df_plot.columns.tolist()
     if parms.isTrue(cn.PLT_XAXISTICKTOP):
       ax.xaxis.tick_top()
@@ -585,15 +669,6 @@ class MutationLinePlot(MutationPlot):
     ax.set_yticklabels(mutations,
         fontsize=parms.fontsize_label)
     parms.do(is_plot=False)
-    if parms.isTrue(cn.PLT_COLORBAR):
-      if is_center_colorbar:
-        # Colorbar positions: left, bottom, width, height
-        cbaxes = fig.add_axes([.45, 0.2, 0.01, 0.5]) 
-        cb = fig.colorbar(plot, cax = cbaxes, cmap='jet')
-        cb.ax.tick_params(labelsize=parms.fontsize_label)
-      else:
-        cb = fig.colorbar(plot, cmap='jet')
-        cb.ax.tick_params(labelsize=parms.fontsize_label)
     if is_plot:
       new_parms=PlotParms(fontsize_label=parms.fontsize_label,
           fontsize_title=parms.fontsize_label)

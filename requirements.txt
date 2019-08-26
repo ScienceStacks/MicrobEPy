@@ -4,3 +4,4 @@ xlrd
 pyyaml
 flake8
 coveralls
+seaborn
