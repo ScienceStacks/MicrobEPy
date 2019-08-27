@@ -139,9 +139,12 @@ class TestMutationIsolatePlot(unittest.TestCase):
     if IGNORE_TEST:
       return
     df = self.mutation_plot._makeCoFractionDF(transfer=15,
-        other_transfer=15)
+        other_transfer=15, threshold_frac=0.2)
     columns = df.columns
     self.assertTrue(helpers.isValidDataFrame(df, columns))
+    df1 = self.mutation_plot._makeCoFractionDF(transfer=15,
+        other_transfer=15, threshold_frac=0.3)
+    self.assertGreaterEqual(len(df), len(df1))
 
   def testPlotCoFraction(self):
     # TESTING
