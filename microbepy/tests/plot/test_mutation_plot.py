@@ -9,8 +9,8 @@ import numpy as np
 import pandas as pd
 import unittest
 
-IGNORE_TEST = False
-IS_PLOT = False
+IGNORE_TEST = True
+IS_PLOT = True
 PROVIDER = ModelDataProvider(StudyContext(depvar=cn.RATE,
     mutation_column=cn.GGENE_ID))
 PROVIDER.do()
@@ -19,8 +19,13 @@ SMALL = 1e-8
 
 class TestMutationIsolatePlot(unittest.TestCase):
 
-  def setUp(self):
+  def init(self):
     self.mutation_plot = MutationLinePlot(is_plot=IS_PLOT)
+
+  def setUp(self):
+    if IGNORE_TEST:
+      return
+    self.init()
 
   def testMakeLineDF(self):
     if IGNORE_TEST:
@@ -135,8 +140,25 @@ class TestMutationIsolatePlot(unittest.TestCase):
     self.mutation_plot.plotSiglvls(max_siglvl=0.05)
     self.mutation_plot.plotSiglvls(max_siglvl=0.05, is_time_lag=True)
 
+  def testMakeCoFractionDifferencedDF(self):
+    if IGNORE_TEST:
+      return
+    df = self.mutation_plot._makeCoFractionDifferencedDF(
+        transfer=152,
+        other_transfer=45)
+    self.assertGreater(df.sum().sum(), 0)
+    df = self.mutation_plot._makeCoFractionDifferencedDF(
+        transfer=45,
+        other_transfer=45)
+    self.assertEqual(df.sum().sum(), 0)
+
   def testMakeCoFractionDF(self):
-    # TESTING
+    if IGNORE_TEST:
+      return
+    df = self.mutation_plot._makeCoFractionDF(transfer=45,
+        other_transfer=45, threshold_frac=0.1)
+    self.assertGreater(len(df), 0)
+    #
     df = self.mutation_plot._makeCoFractionDF(transfer=45,
         other_transfer=15, threshold_frac=0.1,
         is_difference_frac=True)
@@ -156,13 +178,16 @@ class TestMutationIsolatePlot(unittest.TestCase):
     # Smoke test
     self.mutation_plot.plotCoFraction(is_center_colorbar=False)
     self.mutation_plot.plotCoFraction(transfer=cn.TRANSFER_DEFAULT,
-        other_transfer=15, is_center_colorbar=False)
+        other_transfer=15, is_center_colorbar=False,
+        is_differenced=True)
 
   def testPlotCoFractions(self):
-    if IGNORE_TEST:
-      return
     # Smoke test
-    self.mutation_plot.plotCoFractions()
+    # TESTING
+    self.init()
+    self.mutation_plot.plotCoFractions(threshold_frac=0.3,
+        is_time_lag=True, is_differenced=True)
+    self.mutation_plot.plotCoFractions(threshold_frac=0.3)
 
 
 

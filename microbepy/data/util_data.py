@@ -461,6 +461,24 @@ def makeIsolateData(**kwargs):
   df = makeCultureIsolateMutationDF(**kwargs)
   return filterOutlierCultures(df)
 
+def addRowsColumns(df, labels, value, is_columns=True, is_rows=False):
+  """
+  Adds the labels to the dataframe
+  :param pd.DataFrame df:
+  :param list-str labels:
+  :param object value:
+  :return pd.DataFrame:
+  """
+  df_result = df.copy()
+  for label in labels:
+    if is_columns:
+      if not label in df.columns:
+        df_result[label] = value
+    if is_rows:
+      if not label in df.index:
+        df_result.loc[label, :] = value
+  return df_result
+
 def addColumns(df, columns, value):
   """
   Adds the columns to the dataframe
@@ -471,5 +489,6 @@ def addColumns(df, columns, value):
   """
   df_result = df.copy()
   for column in columns:
-    df_result[column] = value
+    if not column in df.columns:
+      df_result[column] = value
   return df_result

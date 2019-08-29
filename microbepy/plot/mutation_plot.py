@@ -119,6 +119,7 @@ class MutationLinePlot(MutationPlot):
     """
     self._mutation_column = mutation_column
     self._is_plot = is_plot
+    self.ordered_mutations = self._getOrderedMutations()
 
   def getTransfers(self):
     """
@@ -469,10 +470,10 @@ class MutationLinePlot(MutationPlot):
     df_binary_columns = makeDF(other_transfer)
     col_rows = df_binary_rows.columns
     col_cols = df_binary_columns.columns
-    df_binary_rows = util_data.addColumns(df_binary_rows,
-        set(col_cols).difference(col_rows), 0)
-    df_binary_columns = util_data.addColumns(df_binary_columns,
-        set(col_rows).difference(col_cols), 0)
+    df_binary_rows = util_data.addRowsColumns(df_binary_rows,
+        col_cols, 0, is_columns=True, is_rows=True)
+    df_binary_columns = util_data.addRowsColumns(df_binary_columns,
+        col_rows, 0, is_columns=True, is_rows=True)
     if is_difference_frac:
       df_binary_columns = df_binary_columns * (1 - df_binary_rows)
       
@@ -480,28 +481,37 @@ class MutationLinePlot(MutationPlot):
     length = max(len(df_binary_columns), len(df_binary_rows))
     df_result = df_counts.applymap(lambda v: v / length)
     # Eliminate small fractions
-    drop_indices = [i for i in df_result.index
-        if max(df_result.loc[i, :]) < threshold_frac]
-    drop_columns = [c for c in df_result.columns
-        if max(df_result[c]) < threshold_frac]
-    df_result = df_result.drop(drop_columns, axis=1)
-    df_result = df_result.drop(drop_indices, axis=0)
+#    drop_indices = [i for i in df_result.index
+#        if max(df_result.loc[i, :]) < threshold_frac]
+#    drop_columns = [c for c in df_result.columns
+#        if max(df_result[c]) < threshold_frac]
+#    df_result = df_result.drop(drop_columns, axis=1)
+#    df_result = df_result.drop(drop_indices, axis=0)
     #
     return df_result
 
   def plotCoFractions(self, is_time_lag=False,
       threshold_frac=THRESHOLD_FRAC,
+      is_difference_frac=False,
+      is_differenced=False,
       parms=PlotParms(), **kwargs):
     """
     Does a subplots of the fraction of lines in which mutations co-occur.
     :param bool is_time_lag: construct time lag subplots
+    :param bool is_differenced: Computes the difference in
+        count fractions
     :param dict kwargs: non-transfer parameters passed to next level
     :return dict: key is pair of transfers, value is data_frame
     """
     def funcDF(transfer, other_transfer):
-      df = self._makeCoFractionDF(transfer=transfer, 
-          threshold_frac=threshold_frac,
-          other_transfer=other_transfer, species=None, **kwargs)
+      if is_differenced:
+        df = self._makeCoFractionDifferencedDF(
+            threshold_frac=threshold_frac,
+            transfer=transfer, other_transfer=other_transfer)
+      else:
+        df = self._makeCoFractionDF(transfer=transfer,
+            is_difference_frac=is_difference_frac,
+            other_transfer=other_transfer, species=None, **kwargs)
       return df
     #
     return self._plotTransfers(funcDF, is_time_lag, 
@@ -533,13 +543,12 @@ class MutationLinePlot(MutationPlot):
     Notes:
       1. Closes current plot
     """
-    df = self._makeCoFractionDF(transfer=cn.TRANSFER_1000G)
+    df = self._makeCoFractionDF(transfer=cn.TRANSFER_1000G,
+        threshold_frac=0)
     df = df.fillna(0)
     cg = sns.clustermap(df)
     plt.close()
-    ordered_mutations = [df.index[i] 
-        for i in cg.dendrogram_row.reordered_ind]
-    return ordered_mutations
+    return [df.index[i] for i in cg.dendrogram_row.reordered_ind]
 
   def _plotTransfers(self, funcDF, is_time_lag, 
       parms=PlotParms(), **kwargs):
@@ -565,7 +574,6 @@ class MutationLinePlot(MutationPlot):
     df = funcDF(transfer=cn.TRANSFER_1000G,
         other_transfer=cn.TRANSFER_1000G)
     df = df.fillna(0)
-    ordered_columns = self._getOrderedMutations()
     # Set up for plots
     nrows = 2 if (len(pairs) == 4) else 3
     fig = plt.figure(figsize=parms[cn.PLT_FIGSIZE])
@@ -591,7 +599,7 @@ class MutationLinePlot(MutationPlot):
       df = df.applymap(lambda v: np.nan if v == 0 else v)
       self._plotTransferCompare(df, 
           transfer=transfer, other_transfer=other_transfer,
-          ordered_columns=ordered_columns,
+          ordered_columns=self.ordered_mutations,
           is_center_colorbar=True,
           fig=fig, ax=ax, parms=parms, is_plot=is_plot, **kwargs)
       result[pair] = df
@@ -611,34 +619,64 @@ class MutationLinePlot(MutationPlot):
     df_plot = self._plotSiglvlDF(transfer=transfer,
         other_transfer=other_transfer,
         max_siglvl=max_siglvl)
-    ordered_columns = self._getOrderedMutations()
     self._plotTransferCompare(df_plot, 
         heat_range = [COLORBAR_MIN, COLORBAR_MAX],
-        ordered_columns=ordered_columns,
+        ordered_mutations=self.ordered_mutations,
         transfer=transfer, other_transfer=other_transfer,
         is_center_colorbar=is_center_colorbar,
         **kwargs)
     return df_plot
 
+  def _makeCoFractionDifferencedDF(self,
+      transfer=cn.TRANSFER_DEFAULT,
+      other_transfer=None,
+      **kwargs):
+    """
+    Calculates the threshold difference of fractions between
+    two transfer times.
+    """
+    def makeDF(tfr):
+      df = self._makeCoFractionDF(transfer=tfr,
+          other_transfer=tfr, species=None, **kwargs)
+      return util_data.addRowsColumns(df, self.ordered_mutations, 0,
+          is_columns=True, is_rows=True)
+    #
+    df_this = makeDF(transfer)
+    df_other = makeDF(other_transfer)
+    df = df_this - df_other
+    return df
+
   def plotCoFraction(self,
       threshold_frac=THRESHOLD_FRAC,
       transfer=cn.TRANSFER_DEFAULT,
       other_transfer=None,
+      is_difference_frac=False,
+      is_differenced=False,
       is_center_colorbar = True,
       parms=PlotParms(),
       **kwargs):
     """
     Constructs a heatmap of the mutation coocurrence fractions.
     :param int transfer: Transfer for which plot is done
+    :param bool is_differenced: Computes the difference in
+        count fractions
     :return pd.DataFrame: columns, rows are mutations
     """
-    df = self._makeCoFractionDF(transfer=transfer,
-        other_transfer=other_transfer, species=None, **kwargs)
-    ordered_columns = self._getOrderedMutations()
-    df = df.applymap(lambda v: np.nan if v < threshold_frac else v)
+    if is_differenced:
+      df = self._makeCoFractionDifferencedDF(
+          threshold_frac=threshold_frac,
+          transfer=transfer, other_transfer=other_transfer,
+          **kwargs)
+      df = df.applymap(lambda v: np.nan 
+          if np.abs(v) < threshold_frac else v)
+    else:
+      df = self._makeCoFractionDF(transfer=transfer,
+          is_difference_frac=is_difference_frac,
+          other_transfer=other_transfer, species=None, **kwargs)
+      df = df.applymap(lambda v: np.nan if v < threshold_frac else v)
     self._plotTransferCompare(df, 
         heat_range=[0, 1.0],
-        ordered_columns=ordered_columns,
+        ordered_columns=self.ordered_mutations,
         parms=parms,
         transfer=transfer, other_transfer=other_transfer,
         is_center_colorbar=is_center_colorbar,
