@@ -7,6 +7,7 @@ from microbepy.common.study_context import StudyContext
 from microbepy.common import util
 from microbepy.correlation import genome_correlation
 from microbepy.data.model_data_provider import ModelDataProvider
+from microbepy.data import util_data
 from microbepy.plot.util_plot import PlotParms
 
 import matplotlib.pyplot as plt
@@ -437,6 +438,7 @@ class MutationLinePlot(MutationPlot):
 
   def _makeCoFractionDF(self, transfer=cn.TRANSFER_DEFAULT,
       threshold_frac=THRESHOLD_FRAC,
+      is_difference_frac=False,
       other_transfer=None, species=None, **kwargs):
     """
     Constructs a dataframe of the fraction of lines in which
@@ -444,6 +446,8 @@ class MutationLinePlot(MutationPlot):
     :param float theshold_frac: threshold fraction for co-occurence
     :param int transfer:
     :param str species: 'M', or 'D'
+    :param bool is_difference_frac: Multiple other_transfer
+        times 1 - its value in transfer.
     :return pd.DataFrame: columns and index are mutations
         values are fraction of lines in which mutations co-occur
     """
@@ -454,6 +458,8 @@ class MutationLinePlot(MutationPlot):
           lambda v: 0 if np.isnan(v) else v)
       df_binary = df_line.applymap(
           lambda v: 1.0 if v > threshold_frac else 0)
+      if df_binary.isnull().sum().sum() > 0:
+        raise ValueError("Unexpected null or nan.")
       return df_binary.transpose()
     #
     if other_transfer is None:
@@ -461,6 +467,15 @@ class MutationLinePlot(MutationPlot):
     #
     df_binary_rows = makeDF(transfer)
     df_binary_columns = makeDF(other_transfer)
+    col_rows = df_binary_rows.columns
+    col_cols = df_binary_columns.columns
+    df_binary_rows = util_data.addColumns(df_binary_rows,
+        set(col_cols).difference(col_rows), 0)
+    df_binary_columns = util_data.addColumns(df_binary_columns,
+        set(col_rows).difference(col_cols), 0)
+    if is_difference_frac:
+      df_binary_columns = df_binary_columns * (1 - df_binary_rows)
+      
     df_counts = df_binary_rows.T.dot(df_binary_columns)
     length = max(len(df_binary_columns), len(df_binary_rows))
     df_result = df_counts.applymap(lambda v: v / length)

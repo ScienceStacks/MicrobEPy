@@ -243,5 +243,11 @@ class TestFunctions(unittest.TestCase):
     self.assertTrue(helpers.isValidDataFrame(df, df_initial.columns,
         nan_columns=df_initial.columns))
 
+  def testAddColumns(self):
+    df = pd.DataFrame()
+    df['a'] = range(10)
+    dff = ud.addColumns(df, 'b', -1)
+    self.assertTrue(helpers.isValidDataFrame(dff, ['a', 'b']))
+
 if __name__ == '__main__':
     unittest.main()

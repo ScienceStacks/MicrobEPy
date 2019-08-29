@@ -460,3 +460,16 @@ def makeIsolateData(**kwargs):
   """
   df = makeCultureIsolateMutationDF(**kwargs)
   return filterOutlierCultures(df)
+
+def addColumns(df, columns, value):
+  """
+  Adds the columns to the dataframe
+  :param pd.DataFrame df:
+  :param list-str columns:
+  :param object value:
+  :return pd.DataFrame:
+  """
+  df_result = df.copy()
+  for column in columns:
+    df_result[column] = value
+  return df_result

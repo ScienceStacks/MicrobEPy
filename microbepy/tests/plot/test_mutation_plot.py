@@ -136,8 +136,12 @@ class TestMutationIsolatePlot(unittest.TestCase):
     self.mutation_plot.plotSiglvls(max_siglvl=0.05, is_time_lag=True)
 
   def testMakeCoFractionDF(self):
-    if IGNORE_TEST:
-      return
+    # TESTING
+    df = self.mutation_plot._makeCoFractionDF(transfer=45,
+        other_transfer=15, threshold_frac=0.1,
+        is_difference_frac=True)
+    self.assertTrue(helpers.isValidDataFrame(df, df.columns))
+    #
     df = self.mutation_plot._makeCoFractionDF(transfer=15,
         other_transfer=15, threshold_frac=0.2)
     columns = df.columns
@@ -147,7 +151,8 @@ class TestMutationIsolatePlot(unittest.TestCase):
     self.assertGreaterEqual(len(df), len(df1))
 
   def testPlotCoFraction(self):
-    # TESTING
+    if IGNORE_TEST:
+      return
     # Smoke test
     self.mutation_plot.plotCoFraction(is_center_colorbar=False)
     self.mutation_plot.plotCoFraction(transfer=cn.TRANSFER_DEFAULT,
