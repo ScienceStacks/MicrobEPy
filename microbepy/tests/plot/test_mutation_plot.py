@@ -181,6 +181,7 @@ class TestMutationIsolatePlot(unittest.TestCase):
         other_transfer=15, is_center_colorbar=False,
         is_differenced=True)
 
+  # FIXME: Don't believe the values.
   def testPlotCoFractions(self):
     # Smoke test
     # TESTING
