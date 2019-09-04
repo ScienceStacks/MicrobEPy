@@ -51,7 +51,7 @@ class MutationCofraction(object):
   def getLines(self):
     """
     Obtains the lines present for one or both species.
-    :return list-int: transfers sorted low to high
+    :return list-str: lines sorted by name
     """
     def query(species):
       query = '''
@@ -176,19 +176,20 @@ class MutationCofraction(object):
     if other_transfer is None:
       other_transfer = transfer
     #
-    df_binary_rows = makeDF(transfer)
-    df_binary_columns = makeDF(other_transfer)
-    col_rows = df_binary_rows.columns
-    col_cols = df_binary_columns.columns
-    df_binary_rows = util_data.addRowsColumns(df_binary_rows,
-        col_cols, 0, is_columns=True, is_rows=True)
-    df_binary_columns = util_data.addRowsColumns(df_binary_columns,
-        col_rows, 0, is_columns=True, is_rows=True)
+    df_binary_transfer = makeDF(transfer)
+    df_binary_other = makeDF(other_transfer)
+    col_transfer = df_binary_transfer.columns
+    col_other = df_binary_other.columns
+    df_binary_transfer = util_data.addRowsColumns(df_binary_transfer,
+        col_other, 0, is_columns=True, is_rows=True)
+    df_binary_other = util_data.addRowsColumns(df_binary_other,
+        col_transfer, 0, is_columns=True, is_rows=True)
     if is_difference_frac:
-      df_binary_columns = df_binary_columns * (1 - df_binary_rows)
-      
-    df_counts = df_binary_rows.T.dot(df_binary_columns)
-    length = max(len(df_binary_columns), len(df_binary_rows))
+      df_binary_other = df_binary_other * (1 - df_binary_transfer)
+    # 
+    df_counts = df_binary_transfer.T.dot(df_binary_other)
+    length = max(len(df_binary_other.index),
+        len(df_binary_transfer.index))
     df_result = df_counts.applymap(lambda v: v / length)
     return df_result
 

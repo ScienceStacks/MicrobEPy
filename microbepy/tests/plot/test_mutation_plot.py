@@ -2,22 +2,21 @@ from microbepy.common import constants as cn
 from microbepy.common import helpers
 from microbepy.common.study_context import StudyContext
 from microbepy.data.model_data_provider import ModelDataProvider
-from microbepy.plot.mutation_plot  \
-    import MutationIsolatePlot, MutationLinePlot
+from microbepy.plot.mutation_plot import MutationLinePlot
 
 import numpy as np
 import pandas as pd
 import unittest
 
 IGNORE_TEST = False
-IS_PLOT = False
+IS_PLOT = True
 PROVIDER = ModelDataProvider(StudyContext(depvar=cn.RATE,
     mutation_column=cn.GGENE_ID))
 PROVIDER.do()
 SMALL = 1e-8
 
 
-class TestMutationIsolatePlot(unittest.TestCase):
+class TestMutationLinePlot(unittest.TestCase):
 
   def init(self):
     self.mutation_plot = MutationLinePlot(is_plot=IS_PLOT)
@@ -27,54 +26,11 @@ class TestMutationIsolatePlot(unittest.TestCase):
       return
     self.init()
 
-  def testMakeLineDF(self):
-    if IGNORE_TEST:
-      return
-    df_DVH = self.mutation_plot._makeLineDF(
-          species=cn.SPECIES_MIX_DVH, 
-          transfer=cn.TRANSFER_DEFAULT)
-    df_MMP = self.mutation_plot._makeLineDF(
-          species=cn.SPECIES_MIX_MMP, 
-          transfer=cn.TRANSFER_DEFAULT)
-    df_both = self.mutation_plot._makeLineDF(
-          species=None,
-          transfer=cn.TRANSFER_DEFAULT)
-    self.assertEqual(len(df_DVH) + len(df_MMP), len(df_both))
-    for transfer in self.mutation_plot.getTransfers():
-      df = self.mutation_plot._makeLineDF(
-          species=cn.SPECIES_MIX_DVH, 
-          transfer=transfer)
-      self.assertTrue(helpers.isValidDataFrame(df, df.columns))
-
   def testPlotLine(self):
     # Smoke tests
     if IGNORE_TEST:
       return
-    self.mutation_plot.plotLine(cn.SPECIES_MIX_DVH, 
-        cn.TRANSFER_DEFAULT)
-
-  def testGetFrequentMutations(self):
-    if IGNORE_TEST:
-      return
-    mutations_2 = self.mutation_plot._getFrequentMutations(min_lines=2)
-    mutations_3 = self.mutation_plot._getFrequentMutations(min_lines=3)
-    self.assertGreater(len(mutations_2), len(mutations_3))
-    #
-    mutations_dvh = self.mutation_plot._getFrequentMutations(
-        species=cn.SPECIES_MIX_DVH)
-    mutations_mmp = self.mutation_plot._getFrequentMutations(
-        species=cn.SPECIES_MIX_MMP)
-    self.assertGreater(len(mutations_dvh), len(mutations_mmp))
-
-  def testGetLines(self):
-    if IGNORE_TEST:
-      return
-    lines = self.mutation_plot.getLines()
-    self.assertGreater(len(lines), 0)
-    #
-    lines_mmp = self.mutation_plot.getLines(cn.SPECIES_MIX_MMP)
-    lines_dvh = self.mutation_plot.getLines(cn.SPECIES_MIX_DVH)
-    self.assertEqual(set(lines), set(lines_mmp).union(lines_dvh))
+    self.mutation_plot.plotLine(cn.TRANSFER_DEFAULT)
 
   def testPlotTransfers(self):
     if IGNORE_TEST:
@@ -84,28 +40,6 @@ class TestMutationIsolatePlot(unittest.TestCase):
     self.assertTrue(helpers.isValidDataFrame(df, df.columns))
     self.assertTrue(cn.TRANSFER in df.columns)
     _ = self.mutation_plot.plotTransfers(is_unit_fraction=True)
-
-  def testOrderMutations(self):
-    if IGNORE_TEST:
-      return
-    mutations_all = self.mutation_plot._orderMutations()
-    mutations_DVH = self.mutation_plot._orderMutations(
-        species=cn.SPECIES_MIX_DVH)
-    mutations_MMP = self.mutation_plot._orderMutations(
-        species=cn.SPECIES_MIX_MMP)
-    mutations_union = set(mutations_DVH).union(mutations_MMP)
-    empty = mutations_union.symmetric_difference(mutations_all)
-    self.assertEqual(len(empty), 0)
-
-  def testMakeMutationSiglvlMatrix(self):
-    if IGNORE_TEST:
-      return
-    df_matrix = self.mutation_plot._makeMutationSiglvlMatrix()
-    self.assertEqual(set(df_matrix.columns), set(df_matrix.index))
-    values = []
-    for col in df_matrix:
-      self.assertTrue(all([(v <= 1 + SMALL) and (v >= -SMALL) 
-          for v in df_matrix[col]]))
 
   def testPlotSiglvlDF(self):
     if IGNORE_TEST:
@@ -140,56 +74,24 @@ class TestMutationIsolatePlot(unittest.TestCase):
     self.mutation_plot.plotSiglvls(max_siglvl=0.05)
     self.mutation_plot.plotSiglvls(max_siglvl=0.05, is_time_lag=True)
 
-  def testMakeCoFractionDifferencedDF(self):
-    if IGNORE_TEST:
-      return
-    df = self.mutation_plot._makeCoFractionDifferencedDF(
-        transfer=152,
-        other_transfer=45)
-    self.assertGreater(df.sum().sum(), 0)
-    df = self.mutation_plot._makeCoFractionDifferencedDF(
-        transfer=45,
-        other_transfer=45)
-    self.assertEqual(df.sum().sum(), 0)
-
-  def testMakeCoFractionDF(self):
-    if IGNORE_TEST:
-      return
-    df = self.mutation_plot._makeCoFractionDF(transfer=45,
-        other_transfer=45, threshold_frac=0.1)
-    self.assertGreater(len(df), 0)
-    #
-    df = self.mutation_plot._makeCoFractionDF(transfer=45,
-        other_transfer=15, threshold_frac=0.1,
-        is_difference_frac=True)
-    self.assertTrue(helpers.isValidDataFrame(df, df.columns))
-    #
-    df = self.mutation_plot._makeCoFractionDF(transfer=15,
-        other_transfer=15, threshold_frac=0.2)
-    columns = df.columns
-    self.assertTrue(helpers.isValidDataFrame(df, columns))
-    df1 = self.mutation_plot._makeCoFractionDF(transfer=15,
-        other_transfer=15, threshold_frac=0.3)
-    self.assertGreaterEqual(len(df), len(df1))
-
-  def testPlotCoFraction(self):
+  def testPlotCofraction(self):
     if IGNORE_TEST:
       return
     # Smoke test
-    self.mutation_plot.plotCoFraction(is_center_colorbar=False)
-    self.mutation_plot.plotCoFraction(transfer=cn.TRANSFER_DEFAULT,
+    self.mutation_plot.plotCofraction(is_center_colorbar=False)
+    self.mutation_plot.plotCofraction(transfer=cn.TRANSFER_DEFAULT,
         other_transfer=15, is_center_colorbar=False,
         is_differenced=True)
 
   # FIXME: Don't believe the values.
-  def testPlotCoFractions(self):
+  def testPlotCofractions(self):
     # Smoke test
     if IGNORE_TEST:
       return
     self.init()
-    self.mutation_plot.plotCoFractions(threshold_frac=0.3,
+    self.mutation_plot.plotCofractions(threshold_frac=0.3,
         is_time_lag=True, is_differenced=True)
-    self.mutation_plot.plotCoFractions(threshold_frac=0.3)
+    self.mutation_plot.plotCofractions(threshold_frac=0.3)
 
 
 

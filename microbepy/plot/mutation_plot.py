@@ -3,11 +3,11 @@
 from microbepy.common import constants as cn
 from microbepy.common.dataframe_sorter import DataframeSorter
 from microbepy.common.isolate import Isolate
-from microbepy.common.study_context import StudyContext
 from microbepy.common import util
 from microbepy.correlation import genome_correlation
 from microbepy.data.model_data_provider import ModelDataProvider
 from microbepy.data import util_data
+from microbepy.plot.mutation_cofraction import MutationCofraction
 from microbepy.plot.util_plot import PlotParms
 
 import matplotlib.pyplot as plt
@@ -18,7 +18,8 @@ import seaborn as sns
 
 COLORS = ['red', 'green', 'blue']
 SPECIES = {cn.SPECIES_MIX_DVH: "DVH",
-    cn.SPECIES_MIX_MMP: "MMP"}
+    cn.SPECIES_MIX_MMP: "MMP",
+    None: "both"}
 FONTSIZE_TITLE = 16
 FONTSIZE_LABEL = 8
 MAX_LINES = 9
@@ -28,89 +29,13 @@ MAX_SIGLVL = 0.01
 COLORBAR_MIN = 1.0
 COLORBAR_MAX = 4.0
 
-# The following lines are excluded because they have
-# only 1 transfer
-EXCLUDED_LINES = ["HE2", "HR1", "UA2", "UE2"]
 
-
-########################################################################
-class MutationPlot(object):
-  """
-  Common code
-  """
-
-  @staticmethod
-  def _pruneColumns(df, species):
-    columns = [c for c in df.columns if c[0] == species]
-    for col in set(df.columns).difference(columns):
-       del df[col]
-
-
-########################################################################
-class MutationIsolatePlot(MutationPlot):
-  """
-  Plot mutations with counts by isolates
-  """
-
-  def __init__(self, mutation_column=cn.GGENE_ID,
-      provider=None, constraints=None,
-      is_plot=True):
-    """
-    :param str mutation_column:
-    :param ModelDataProvider provider:
-    :param bool is_plot:
-    """
-    self._provider = provider
-    self._mutation_column = mutation_column
-    self._is_plot = is_plot
-    if self._provider is None:
-      context = StudyContext(depvar=cn.RATE,
-          mutation_column=mutation_column)
-      provider = ModelDataProvider(context, 
-          constraints=constraints)
-      provider.do()
-    else:
-      self._mutation_column = provider.context.mutation_column
-    self.df_X = provider.df_X
-
-  def _makeMutationDF(self, species):
-    """
-    :param str species:
-    :return pd.DataFrame: columns are lines, index is mutation
-    """
-    index = self.df_X.index.tolist()
-    df = self.df_X.copy()
-    self.__class__._pruneColumns(df, species)
-    df[cn.LINE] = [Isolate.create(p[0]).line for p in index]
-    df_result = pd.DataFrame()
-    for idx, line in enumerate(set(df[cn.LINE])):
-      df_result[line] = df[df[cn.LINE] == line].sum()
-    df_result = df_result.drop([cn.LINE], axis=0)
-    return df_result
-
-  def plot(self, species):
-    """
-    Does a stacked bar plot of mutation frequency by isolate with 
-    colors by line.
-    :param str species:
-    """
-    df_plot = self._makeMutationDF(species)
-    ax = df_plot.plot(kind='bar', stacked=True, figsize=(20,8), legend=None)
-    ax.set_title("%s Mutations" % SPECIES[species], fontsize=FONTSIZE_TITLE)
-    ax.set_ylabel("Isolate Count", fontsize=FONTSIZE_LABEL)
-    ax.set_xlabel("Gene", fontsize=FONTSIZE_LABEL)
-    plt.legend()
-    if self._is_plot:
-      plt.show()
-
-
-#####################################################################
-class MutationLinePlot(MutationPlot):
+class MutationLinePlot(object):
   """
   Plot mutations by occurrences within Lines.
   """
 
-  def __init__(self, mutation_column=cn.GGENE_ID,
+  def __init__(self, mutation_column=cn.GGENE_ID, species=None,
       is_plot=True):
     """
     :param str mutation_column:
@@ -118,151 +43,31 @@ class MutationLinePlot(MutationPlot):
     """
     self._mutation_column = mutation_column
     self._is_plot = is_plot
-    self.ordered_mutations = self._getOrderedMutations()
+    self._species = species
+    self.cofraction = MutationCofraction(species=self._species,
+        mutation_column=mutation_column)
 
-  def getTransfers(self):
-    """
-    :return list-int: transfers sorted low to high
-    """
-    query = '''
-        select distinct transfer from genotype
-        where key_isolate like '%%*.*.*.*' 
-            and is_an_mutation = 0
-        '''
-    df = util.readSQL(query)
-    result = [int(s) for s in df[cn.TRANSFER].unique()]
-    result.sort()
-    return result
-
-  def getLines(self, species=None):
-    """
-    Obtains the lines present for one or both species.
-    :param str species:
-    :return list-int: transfers sorted low to high
-    """
-    def query(species):
-      query = '''
-          select distinct line from genotype
-          where is_an_mutation = 0
-              and key_mutation like '%s%%'
-          ''' % species
-      df = util.readSQL(query)
-      return df[cn.LINE].unique()
-    #
-    if species is not None:
-      result = query(species)
-    else:
-      result_dvh = query(cn.SPECIES_MIX_DVH)
-      result_mmp = query(cn.SPECIES_MIX_MMP)
-      result = list(set(result_dvh).intersection(result_mmp))
-    result.sort()
-    return result
-
-  def _makeLineDF(self, species=None, permitted_mutations=None,
-       transfer=cn.TRANSFER_DEFAULT):
-    """
-    :param str species:
-    :param list-str permitted_mutations:
-    :return pd.DataFrame: columns are mutation with values of freq
-        indexed by line
-    """
-    # Get the data
-    query = '''
-    select distinct line, key_isolate, ggene_id, freq 
-      from genotype
-      where 
-          key_isolate like '%%*.*.*.*' 
-          and is_an_mutation = 0 
-          and transfer = %s
-      order by line, transfer, key_isolate, ggene_id
-    ''' % str(transfer)
-    df = util.readSQL(query)
-    sel = [Isolate.create(i).epd_id == cn.ISOLATE_DEFAULT
-        for i in df[cn.KEY_ISOLATE]]
-    df = df[sel].copy()
-    del df[cn.KEY_ISOLATE]
-    # Eliminate excluded lines
-    constraint = lambda r: not r[cn.LINE] in EXCLUDED_LINES
-    df = util.selectRows(df, [constraint])
-    # Construct the matrix with all relevant lines
-    df_matrix = util.makeMatrix(df, row_name=self._mutation_column,
-        column_name=cn.LINE, value_name=cn.FREQ)
-    lines = self.getLines()
-    lines = [l for l in lines if not l in EXCLUDED_LINES]
-    for line in set(lines).difference(df_matrix.columns):
-      df_matrix[line] = 0.0
-    lines.sort()
-    df_matrix = df_matrix[lines]
-    # Select the species
-    if species is not None:
-      df_transpose = df_matrix.transpose()
-      self.__class__._pruneColumns(df_transpose, species)
-      df_matrix = df_transpose.transpose()
-    # Adjust for permitted mutations
-    if permitted_mutations is None:
-      permitted_mutations = set(self._getFrequentMutations(
-          species=species))
-    for mutation in df_matrix.index:
-      if not mutation in permitted_mutations:
-        df_matrix = df_matrix.drop(mutation)
-    for mutation in permitted_mutations:
-      if not mutation in df_matrix.index:
-        row = {k: 0 for k in df_matrix.columns}
-        df_matrix.loc[mutation] = row
-    df_matrix = df_matrix.loc[permitted_mutations]
-    # Convert from percent to fractions
-    df_matrix = df_matrix.applymap(lambda v: 0.01*v)
-    df_matrix = df_matrix.sort_index()
-    #
-    return df_matrix
-
-  def _orderMutations(self, species=None):
-    """
-    Orders mutations based on similarities in occurrences in lines.
-    :param str species:
-    :return list-str:
-    """
-    transfers = self.getTransfers()
-    df_lines = pd.DataFrame()
-    for transfer in transfers:
-      df = self._makeLineDF(species=species, permitted_mutations=None,
-          transfer=transfer)
-      for column in df.columns:
-        new_column = "%s_%d" % (column, transfer)
-        df_lines[new_column] = df[column]
-    #
-    sorter = DataframeSorter(df_lines)
-    df_sort = sorter.orderRows()
-    return df_sort.index.tolist()
-
-  def plotTransfers(self, species=None, 
+  def plotTransfers(self,
         parms=PlotParms(is_initialize=False),
         is_unit_fraction = False,
-        is_cluster_mutations=True,
-        **kwargs):
+        is_cluster_mutations=True):
     """
     Does a stacked bar plot of mutation frequency for all transfers.
-    :params str species:
     :param bool is_unit_fraction: round fraction to 1
     :param bool is_cluster_mutations: Group similar mutations together
     :return pd.DataFrame: row=mutation, col=line + transfer, value is fraction
     """
-    if is_cluster_mutations:
-      permitted_mutations = self._orderMutations(
-          species=species, **kwargs)
-    else:
-      permitted_mutations = self._getFrequentMutations(
-          species=species)
-    transfers = self.getTransfers()
+    permitted_mutations = self.cofraction.ordered_mutations
+    transfers = self.cofraction.transfers
     num_transfers = len(transfers)
     fig, axes = plt.subplots(nrows=num_transfers, ncols=1)
     dfs = []
     for idx, transfer in enumerate(transfers):
       parms[cn.PLT_YTICKLABELS] = True
-      if species is None:
+      if self._species is None:
         parms[cn.PLT_TITLE] = "%d" % transfer
       else:
-        parms[cn.PLT_TITLE] = "%s, %d" % (species, transfer)
+        parms[cn.PLT_TITLE] = "%s, %d" % (self._species, transfer)
       if idx == 0:
         parms[cn.PLT_YLABEL] = True
       else:
@@ -275,9 +80,10 @@ class MutationLinePlot(MutationPlot):
         parms[cn.PLT_LEGEND] = True
         parms[cn.PLT_XLABEL] = True
         parms[cn.PLT_XTICKLABELS] = True
-      df = self.plotLine(species, transfer, parms=parms, is_plot=False,
+      df = self.plotLine(transfer, 
+          parms=parms, is_plot=False,
           ax=axes[idx], permitted_mutations=permitted_mutations,
-          is_unit_fraction=is_unit_fraction, **kwargs)
+          is_unit_fraction=is_unit_fraction)
       df[cn.TRANSFER] = transfer
       dfs.append(df)
     if self._is_plot:
@@ -285,14 +91,13 @@ class MutationLinePlot(MutationPlot):
     return pd.concat(dfs)
     
 
-  def plotLine(self, species, transfer, 
+  def plotLine(self, transfer, 
       parms=PlotParms(is_initialize=False),
       is_unit_fraction=False,
       is_plot=None, ax=None, permitted_mutations=None):
     """
     Does a stacked bar plot of mutation frequency by line
     with colors
-    :params str species: If None, do both
     :params int transfer:
     :params PlotParms parms:
     :params Axis ax: axis to use in plot
@@ -306,7 +111,7 @@ class MutationLinePlot(MutationPlot):
     parms.setTrueIfAbsent(cn.PLT_XLABEL)
     parms.setTrueIfAbsent(cn.PLT_XTICKLABELS)
     #
-    df_plot = self._makeLineDF(species=species, 
+    df_plot = self.cofraction.makeLineDF(
         permitted_mutations=permitted_mutations,
         transfer=transfer)
     if is_unit_fraction:
@@ -333,7 +138,7 @@ class MutationLinePlot(MutationPlot):
     if cn.PLT_TITLE in parms:
       title = parms[cn.PLT_TITLE]
     else:
-      title = "%s Mutations" % SPECIES[species]
+      title = "%s Mutations" % SPECIES[self._species]
     xpos = int(len(df_plot)*0.5)
     ypos = MAX_LINES - 3
     ax.text(xpos, ypos, title, fontsize=FONTSIZE_TITLE)
@@ -353,35 +158,11 @@ class MutationLinePlot(MutationPlot):
       plt.show()
     return df_plot
 
-  def _getFrequentMutations(self, species=cn.SPECIES_MIX_DVH, 
-      min_lines=2):
-    """
-    :param str species:
-    :param int min_lines: minimum number of lines in which
-        mutation occurs
-    :return list-str: 
-    """
-    query = '''
-        select distinct %s, count(distinct line) as %s
-          from genotype
-          where is_an_mutation = 0
-          group by %s
-          order by count(distinct line) DESC
-        ''' % (self._mutation_column, cn.COUNT, self._mutation_column)
-    df = util.readSQL(query)
-    mutations = [r[self._mutation_column] for _, r in df.iterrows()
-        if r[cn.COUNT] >= min_lines]
-    if species is not None:
-      mutations = [m for m in mutations if m[0] == species]
-    mutations.sort()
-    return mutations
-
-  def _makeMutationSiglvlMatrix(self, species=None,
+  def _makeMutationSiglvlMatrix(self,
        transfer=cn.TRANSFER_DEFAULT, 
        other_transfer=None, min_fraction=MIN_FRACTION):
     """
     Creates a significance level matrix for mutations.
-    :param str species:
     :param int transfer: transfer time for row mutations
     :param int other_transfer: transfer time for column mutations
     :param float min_fraction: minimum fractional occurrence of
@@ -389,7 +170,7 @@ class MutationLinePlot(MutationPlot):
     :return pd.DataFrame: row index and columns are mutations
     """
     def makeDF(transfer):
-      df_line = self._makeLineDF(species=species, transfer=transfer)
+      df_line = self.cofraction.makeLineDF(transfer=transfer)
       df_binary = df_line.applymap(
           lambda v: 0 if np.isnan(v) else v)
       df_binary = df_line.applymap(
@@ -429,59 +210,7 @@ class MutationLinePlot(MutationPlot):
     df_plot = sorter.deleteNanRowsAndColumns()
     return df_plot
 
-  def _makeCoFractionDF(self, transfer=cn.TRANSFER_DEFAULT,
-      threshold_frac=THRESHOLD_FRAC,
-      is_difference_frac=False,
-      other_transfer=None, species=None):
-    """
-    Constructs a dataframe of the fraction of lines in which
-    pairs of mutations occur.
-    :param float theshold_frac: threshold fraction for co-occurence
-    :param int transfer:
-    :param str species: 'M', or 'D'
-    :param bool is_difference_frac: Multiple other_transfer
-        times 1 - its value in transfer.
-    :return pd.DataFrame: columns and index are mutations
-        values are fraction of lines in which mutations co-occur
-    """
-    def makeDF(transfer):
-      df_line = self._makeLineDF(species=species, transfer=transfer)
-      df_binary = df_line.applymap(
-          lambda v: 0 if np.isnan(v) else v)
-      df_binary = df_line.applymap(
-          lambda v: 1.0 if v > threshold_frac else 0)
-      if df_binary.isnull().sum().sum() > 0:
-        raise ValueError("Unexpected null or nan.")
-      return df_binary.transpose()
-    #
-    if other_transfer is None:
-      other_transfer = transfer
-    #
-    df_binary_rows = makeDF(transfer)
-    df_binary_columns = makeDF(other_transfer)
-    col_rows = df_binary_rows.columns
-    col_cols = df_binary_columns.columns
-    df_binary_rows = util_data.addRowsColumns(df_binary_rows,
-        col_cols, 0, is_columns=True, is_rows=True)
-    df_binary_columns = util_data.addRowsColumns(df_binary_columns,
-        col_rows, 0, is_columns=True, is_rows=True)
-    if is_difference_frac:
-      df_binary_columns = df_binary_columns * (1 - df_binary_rows)
-      
-    df_counts = df_binary_rows.T.dot(df_binary_columns)
-    length = max(len(df_binary_columns), len(df_binary_rows))
-    df_result = df_counts.applymap(lambda v: v / length)
-    # Eliminate small fractions
-#    drop_indices = [i for i in df_result.index
-#        if max(df_result.loc[i, :]) < threshold_frac]
-#    drop_columns = [c for c in df_result.columns
-#        if max(df_result[c]) < threshold_frac]
-#    df_result = df_result.drop(drop_columns, axis=1)
-#    df_result = df_result.drop(drop_indices, axis=0)
-    #
-    return df_result
-
-  def plotCoFractions(self, is_time_lag=False,
+  def plotCofractions(self, is_time_lag=False,
       threshold_frac=THRESHOLD_FRAC,
       is_difference_frac=False,
       is_differenced=False,
@@ -496,13 +225,13 @@ class MutationLinePlot(MutationPlot):
     """
     def funcDF(transfer, other_transfer):
       if is_differenced:
-        df = self._makeCoFractionDifferencedDF(
+        df = self.cofraction.makeCofractionDifferencedDF(
             transfer=transfer, other_transfer=other_transfer,
             threshold_frac=threshold_frac)
       else:
-        df = self._makeCoFractionDF(transfer=transfer,
+        df = self.cofraction.makeCofractionDF(transfer=transfer,
             is_difference_frac=is_difference_frac,
-            other_transfer=other_transfer, species=None)
+            other_transfer=other_transfer)
       return df
     #
     return self._plotTransfers(funcDF, is_time_lag, 
@@ -526,21 +255,6 @@ class MutationLinePlot(MutationPlot):
         heat_range = [COLORBAR_MIN, COLORBAR_MAX],
         **kwargs)
 
-  def _getOrderedMutations(self):
-    """
-    Calculate the mutation ordering from clustermap.
-    This is done relative to 1K generations mutations.
-    :param pd.DataFrame df_plot: mutations are rows and columns
-    Notes:
-      1. Closes current plot
-    """
-    df = self._makeCoFractionDF(transfer=cn.TRANSFER_1000G,
-        threshold_frac=0)
-    df = df.fillna(0)
-    cg = sns.clustermap(df)
-    plt.close()
-    return [df.index[i] for i in cg.dendrogram_row.reordered_ind]
-
   def _plotTransfers(self, funcDF, is_time_lag, 
       parms=PlotParms(), **kwargs):
     """
@@ -555,7 +269,7 @@ class MutationLinePlot(MutationPlot):
     NCOLS = 3
     plot_pos = {1:1, 2:3, 3:4, 4:6}
     NPLOTS = 6
-    transfers = self.getTransfers()
+    transfers = self.cofraction.transfers
     if is_time_lag:
       pairs = [p for p in zip(transfers[:-1], transfers[1:])]
     else:
@@ -590,7 +304,7 @@ class MutationLinePlot(MutationPlot):
       df = df.applymap(lambda v: np.nan if v == 0 else v)
       self._plotTransferCompare(df, 
           transfer=transfer, other_transfer=other_transfer,
-          ordered_columns=self.ordered_mutations,
+          ordered_columns=self.cofraction.ordered_mutations,
           is_center_colorbar=True,
           fig=fig, ax=ax, parms=parms, is_plot=is_plot, **kwargs)
       result[pair] = df
@@ -612,32 +326,13 @@ class MutationLinePlot(MutationPlot):
         max_siglvl=max_siglvl)
     self._plotTransferCompare(df_plot, 
         heat_range = [COLORBAR_MIN, COLORBAR_MAX],
-        ordered_mutations=self.ordered_mutations,
+        ordered_mutations=self.cofraction.ordered_mutations,
         transfer=transfer, other_transfer=other_transfer,
         is_center_colorbar=is_center_colorbar,
         **kwargs)
     return df_plot
 
-  def _makeCoFractionDifferencedDF(self,
-      transfer=cn.TRANSFER_DEFAULT,
-      threshold_frac=THRESHOLD_FRAC,
-      other_transfer=None):
-    """
-    Calculates the threshold difference of fractions between
-    two transfer times.
-    """
-    def makeDF(tfr):
-      df = self._makeCoFractionDF(transfer=tfr,
-          other_transfer=tfr, species=None)
-      return util_data.addRowsColumns(df, self.ordered_mutations, 0,
-          is_columns=True, is_rows=True)
-    #
-    df_this = makeDF(transfer)
-    df_other = makeDF(other_transfer)
-    df = df_this - df_other
-    return df
-
-  def plotCoFraction(self,
+  def plotCofraction(self,
       threshold_frac=THRESHOLD_FRAC,
       transfer=cn.TRANSFER_DEFAULT,
       other_transfer=None,
@@ -654,20 +349,20 @@ class MutationLinePlot(MutationPlot):
     :return pd.DataFrame: columns, rows are mutations
     """
     if is_differenced:
-      df = self._makeCoFractionDifferencedDF(
+      df = self.cofraction.makeCofractionDifferencedDF(
           threshold_frac=threshold_frac,
           transfer=transfer, other_transfer=other_transfer,
           **kwargs)
       df = df.applymap(lambda v: np.nan 
           if np.abs(v) < threshold_frac else v)
     else:
-      df = self._makeCoFractionDF(transfer=transfer,
+      df = self.cofraction.makeCofractionDF(transfer=transfer,
           is_difference_frac=is_difference_frac,
-          other_transfer=other_transfer, species=None, **kwargs)
+          other_transfer=other_transfer, **kwargs)
       df = df.applymap(lambda v: np.nan if v < threshold_frac else v)
     self._plotTransferCompare(df, 
         heat_range=[0, 1.0],
-        ordered_columns=self.ordered_mutations,
+        ordered_columns=self.cofraction.ordered_mutations,
         parms=parms,
         transfer=transfer, other_transfer=other_transfer,
         is_center_colorbar=is_center_colorbar,

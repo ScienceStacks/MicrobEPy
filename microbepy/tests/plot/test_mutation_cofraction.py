@@ -37,8 +37,12 @@ class TestMutationCofraction(unittest.TestCase):
       return
     df = self.cofraction.makeLineDF(
           transfer=cn.TRANSFER_DEFAULT)
+    self.assertEqual(len(df), NUM_MUTATIONS)
+    self.assertEqual(len(df.columns), NUM_LINES)
     self.assertTrue(helpers.isValidDataFrame(df, df.columns))
-
+    df_false = df.applymap(lambda v: (0 > v) or (v > 1))
+    self.assertEqual(df_false.sum().sum(), 0)
+    
   def testGetFrequentMutations(self):
     if IGNORE_TEST:
       return
@@ -46,21 +50,13 @@ class TestMutationCofraction(unittest.TestCase):
     mutations_3 = self.cofraction._getFrequentMutations(min_lines=3)
     self.assertGreater(len(mutations_2), len(mutations_3))
 
-  def testMakeCoFractionDifferencedDF(self):
-    if IGNORE_TEST:
-      return
-    df = self.cofraction.makeCofractionDifferencedDF(
-        transfer=152,
-        other_transfer=45)
-    self.assertGreater(df.sum().sum(), 0)
-    df = self.cofraction.makeCofractionDifferencedDF(
-        transfer=45,
-        other_transfer=45)
-    self.assertEqual(df.sum().sum(), 0)
-
   def testMakeCoFractionDF(self):
     if IGNORE_TEST:
       return
+    df = self.cofraction.makeCofractionDF(transfer=152,
+        other_transfer=152, threshold_frac=0.2)
+    self.assertGreater(df.sum().sum(), 0)
+    #
     df = self.cofraction.makeCofractionDF(transfer=45,
         other_transfer=45, threshold_frac=0.1)
     self.assertGreater(len(df), 0)
@@ -77,6 +73,18 @@ class TestMutationCofraction(unittest.TestCase):
     df1 = self.cofraction.makeCofractionDF(transfer=15,
         other_transfer=15, threshold_frac=0.3)
     self.assertGreaterEqual(len(df), len(df1))
+
+  def testMakeCoFractionDifferencedDF(self):
+    if IGNORE_TEST:
+      return
+    df = self.cofraction.makeCofractionDifferencedDF(
+        transfer=152,
+        other_transfer=45)
+    self.assertGreater(df.sum().sum(), 0)
+    df = self.cofraction.makeCofractionDifferencedDF(
+        transfer=45,
+        other_transfer=45)
+    self.assertEqual(df.sum().sum(), 0)
 
 
 if __name__ == '__main__':
