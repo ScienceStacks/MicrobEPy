@@ -9,8 +9,8 @@ import numpy as np
 import pandas as pd
 import unittest
 
-IGNORE_TEST = True
-IS_PLOT = True
+IGNORE_TEST = False
+IS_PLOT = False
 PROVIDER = ModelDataProvider(StudyContext(depvar=cn.RATE,
     mutation_column=cn.GGENE_ID))
 PROVIDER.do()
@@ -184,7 +184,8 @@ class TestMutationIsolatePlot(unittest.TestCase):
   # FIXME: Don't believe the values.
   def testPlotCoFractions(self):
     # Smoke test
-    # TESTING
+    if IGNORE_TEST:
+      return
     self.init()
     self.mutation_plot.plotCoFractions(threshold_frac=0.3,
         is_time_lag=True, is_differenced=True)
