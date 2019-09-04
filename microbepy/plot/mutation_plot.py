@@ -338,7 +338,8 @@ class MutationLinePlot(object):
       other_transfer=None,
       is_difference_frac=False,
       is_differenced=False,
-      is_center_colorbar = True,
+      is_center_colorbar=True,
+      is_compress=False,
       parms=PlotParms(),
       **kwargs):
     """
@@ -346,6 +347,8 @@ class MutationLinePlot(object):
     :param int transfer: Transfer for which plot is done
     :param bool is_differenced: Computes the difference in
         count fractions
+    :param bool is_compress: Eliminate rows/columns
+       with 0 values
     :return pd.DataFrame: columns, rows are mutations
     """
     if is_differenced:
@@ -360,6 +363,9 @@ class MutationLinePlot(object):
           is_difference_frac=is_difference_frac,
           other_transfer=other_transfer, **kwargs)
       df = df.applymap(lambda v: np.nan if v < threshold_frac else v)
+    if is_compress:
+      df.dropna(axis=0, how='all', inplace=True)
+      df.dropna(axis=1, how='all', inplace=True)
     self._plotTransferCompare(df, 
         heat_range=[0, 1.0],
         ordered_columns=self.cofraction.ordered_mutations,

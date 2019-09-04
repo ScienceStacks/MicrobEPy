@@ -76,8 +76,7 @@ class TestMutationLinePlot(unittest.TestCase):
 
   def testPlotCofraction(self):
     # Smoke test
-    if IGNORE_TEST:
-      return
+    # TESTING
     self.init()
     if False:
       self.mutation_plot.plotCofraction(is_center_colorbar=False)
@@ -87,8 +86,10 @@ class TestMutationLinePlot(unittest.TestCase):
     self.mutation_plot.plotCofraction(transfer=cn.TRANSFER_DEFAULT,
         other_transfer=15, is_center_colorbar=False,
         is_differenced=False)
+    self.mutation_plot.plotCofraction(transfer=cn.TRANSFER_DEFAULT,
+        other_transfer=15, is_center_colorbar=False,
+        is_differenced=False, is_compress=True)
 
-  # FIXME: Don't believe the values.
   def testPlotCofractions(self):
     # Smoke test
     if IGNORE_TEST:
