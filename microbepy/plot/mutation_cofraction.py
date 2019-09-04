@@ -188,9 +188,7 @@ class MutationCofraction(object):
       df_binary_other = df_binary_other * (1 - df_binary_transfer)
     # 
     df_counts = df_binary_transfer.T.dot(df_binary_other)
-    length = max(len(df_binary_other.index),
-        len(df_binary_transfer.index))
-    df_result = df_counts.applymap(lambda v: v / length)
+    df_result = df_counts.applymap(lambda v: v / len(self.lines))
     return df_result
 
   def _getOrderedMutations(self):

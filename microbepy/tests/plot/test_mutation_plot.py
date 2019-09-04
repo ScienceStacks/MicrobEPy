@@ -9,7 +9,7 @@ import pandas as pd
 import unittest
 
 IGNORE_TEST = False
-IS_PLOT = True
+IS_PLOT = False
 PROVIDER = ModelDataProvider(StudyContext(depvar=cn.RATE,
     mutation_column=cn.GGENE_ID))
 PROVIDER.do()
@@ -75,13 +75,18 @@ class TestMutationLinePlot(unittest.TestCase):
     self.mutation_plot.plotSiglvls(max_siglvl=0.05, is_time_lag=True)
 
   def testPlotCofraction(self):
+    # Smoke test
     if IGNORE_TEST:
       return
-    # Smoke test
-    self.mutation_plot.plotCofraction(is_center_colorbar=False)
+    self.init()
+    if False:
+      self.mutation_plot.plotCofraction(is_center_colorbar=False)
+      self.mutation_plot.plotCofraction(transfer=cn.TRANSFER_DEFAULT,
+          other_transfer=15, is_center_colorbar=False,
+          is_differenced=True)
     self.mutation_plot.plotCofraction(transfer=cn.TRANSFER_DEFAULT,
         other_transfer=15, is_center_colorbar=False,
-        is_differenced=True)
+        is_differenced=False)
 
   # FIXME: Don't believe the values.
   def testPlotCofractions(self):
