@@ -214,6 +214,7 @@ class MutationLinePlot(object):
       threshold_frac=THRESHOLD_FRAC,
       is_difference_frac=False,
       is_differenced=False,
+      is_compress=False,
       parms=PlotParms(), **kwargs):
     """
     Does a subplots of the fraction of lines in which mutations co-occur.
@@ -232,6 +233,9 @@ class MutationLinePlot(object):
         df = self.cofraction.makeCofractionDF(transfer=transfer,
             is_difference_frac=is_difference_frac,
             other_transfer=other_transfer)
+      if is_compress:
+        df.dropna(axis=0, how='all', inplace=True)
+        df.dropna(axis=1, how='all', inplace=True)
       return df
     #
     return self._plotTransfers(funcDF, is_time_lag, 
@@ -366,11 +370,10 @@ class MutationLinePlot(object):
     if is_compress:
       df.dropna(axis=0, how='all', inplace=True)
       df.dropna(axis=1, how='all', inplace=True)
-      ordered_columns=None
       is_include_missing_mutations = False
     else:
-      ordered_columns = self.cofraction.ordered_mutations
       is_include_missing_mutations = True
+    ordered_columns = self.cofraction.ordered_mutations
     self._plotTransferCompare(df, 
         heat_range=[0, 1.0],
         ordered_columns=ordered_columns,
